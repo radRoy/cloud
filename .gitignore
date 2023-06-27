@@ -1,0 +1,2 @@
+# ignore any tensorboard log events.out. ... files - the models are saved in 47 MB sized .pytorch files
+*/events.out.tfevents.*
