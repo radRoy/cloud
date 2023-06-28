@@ -4,7 +4,11 @@
 
 ```bash
 ssh <shortname>@login1.cluster.s3it.uzh.ch
+screen -S 3dunet_session
+
 module load anaconda3
+#module load tensorboard  # not needed in this installation run
+#module load singularityce  # not needed in this installation run
 conda create -n 3dunet
 source active 3dunet
 
@@ -15,9 +19,11 @@ source active 3dunet
 (3dunet) python -c 'import torch;print(torch.__version__)'
     #2.0.1+cu117
 #(3dunet) $verify torch  # command  'torch' unknown
-
+    #TBD: what does `$verify` do? what does `$verify torch` do?
 
 #<navigate to the cloned repo of interest (to have environment.yml ready, etc.)>
+(3dunet) conda install -f environment.yml
+    #waiting, see 3dunet_session on login1 node on cluster.
 ```
 
 Under wolny's installation tips, it says that checking the compatibility with installed CUDA versions, etc. is recommended. Therefore:  
