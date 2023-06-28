@@ -1,0 +1,3 @@
+loading 2GB of data: 10 min
+usual number of necessary training steps: 2.5k-10k, depends
+	can't tell based on current output text files

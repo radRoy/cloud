@@ -1,0 +1,10 @@
+- reduce input data size:
+	- crop
+	- fiji: scale down (in xy), make the data isotropic
+- increase patch size and stride shape (1st figure out what they are)
+
+- figure out what the max input size and patch & stride size is for a cluster node with 1xA100 card.
+	- do this before running the train3dunet etc.
+		- `watch -n0.1 nvidia-smi`
+		- ctrl + Z
+	- run the model

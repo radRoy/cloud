@@ -1,0 +1,2 @@
+some folders for specific projects exist, like the patch size project.
+Nonetheless, the history of commands used an a given day is still kept here for documentation purposes, like future error tracebacks and the like.
