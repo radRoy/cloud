@@ -1,2 +1,5 @@
-# ignore any tensorboard log events.out. ... files - the models are saved in 47 MB sized .pytorch files
-**/events.out.tfevents.*
+# ignore any tensorboard log events.out. ... files - the models are saved in 47 MB sized .pytorch file
+pytorch-3dunet/.git
+pytorch-3dunet/.gitignore
+pytorch-3dunet/.github
+

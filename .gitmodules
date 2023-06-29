@@ -1,0 +1,3 @@
+[submodule "pytorch-3dunet"]
+	path = pytorch-3dunet
+	url = https://github.com/wolny/pytorch-3dunet
