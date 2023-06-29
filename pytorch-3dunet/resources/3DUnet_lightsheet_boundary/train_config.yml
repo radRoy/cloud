@@ -75,7 +75,7 @@ loaders:
   train:
     # path to the training datasets
     file_paths:
-	- ~/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/train/
+    - ~/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
