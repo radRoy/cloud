@@ -1,2 +1,18 @@
 # ignore any tensorboard log events.out. ... files - the models are saved in 47 MB sized .pytorch files
-**/events.out.tfevents.*
+.idea
+.pytest_cache
+.ipynb_checkpoints
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Tensorboard logs
+logs/
+
+# PyTorch models
+*.pytorch
+
+# Python packages
+pytorch3dunet.egg-info/
