@@ -88,6 +88,12 @@ train3dunet --config data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/tr
 ```
 In these `train_config.yml` files the patch size & stride shape are given in [z, y, x]. This is implied from pytorch-3dunet's github repo README.md, under [Input Data Format](https://github.com/wolny/pytorch-3dunet#input-data-format)
 
+U-Net can only handle absolute paths. Therefore, when specifying paths, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**.  
+The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
+The path `/home/dwalth/scratch/datasets/imaging03/scaled0.5/train` is valid.
+
+The input data should be located on the cluster's scratch partition / drive.
+
 ### ... on the ScienceCluster
 
 Here is a page about the [resources of the ScienceCluster](https://docs.s3it.uzh.ch/cluster/resources/). Here is a sub page about the [resources of the A100 cards (& other hardware)](https://docs.s3it.uzh.ch/cluster/resources/#hardware) on the ScienceCluster - one A100 GPU has 80.0 GB VRAM, the V100 GPUs are available in flavours of 16.0 GB and 32.0 GB VRAM.
@@ -123,3 +129,6 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/3DUnet_lightsheet_bou
 <ctrl + Z>
 nvidia-smi .... # TBD
 ```
+
+29.06.2023:
+- jobid.stepno: 3652230.0
