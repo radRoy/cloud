@@ -1,0 +1,102 @@
+    1  ls -la
+    2  ls data
+    3  ls scratch
+    4  help ssh-keygen
+    5  man ssh-keygen
+    6  ssh-keygen -t rsa -b 4096
+    7  ls -la
+    8  cd .ssh
+    9  ls -la
+   10  rm id_rsa*
+   11  ls
+   12  ls -la
+   13  cd ..
+   14  ls -la
+   15  pwd
+   16  quota
+   17  history
+   18  ls
+   19  ls -la
+   20  ls -la scratch
+   21  ls -la
+   22  cd scratch
+   23  pwd
+   24  ls
+   25  tar xvf training.tar
+   26  ls -la
+   27  tar tvf training.tar
+   28  ls
+   29  cd tra
+   30  cd training/
+   31  ls
+   32  cat getpi.py 
+   33  cat hello.sh 
+   34  bash hello.sh
+   35  cd ../..
+   36  pwd
+   37  ls -la
+   38  sinfo
+   39  squeue 
+   40  man squeue
+   41  squeue -A dwalth
+   42  man sinfo
+   43  sinfo
+   44  cd scratch/training/
+   45  ls -la
+   46  cat getpi.py 
+   47  cat hello.sh 
+   48  nano hello.sh 
+   49  cat hello.sh 
+   50  nano hello.sh 
+   51  bash hello.sh
+   52  nano hello.sh 
+   53  ls -la
+   54  ls
+   55  ls -a
+   56  ls -l
+   57  bash hello.sh 
+   58  sbatch hello.sh
+   59  squeue -u dwalth
+   60  squeue -A dwalth
+   61  ls
+   62  cat slurm-394541.out 
+   63  module av
+   64  man module
+   65  module load anaconda3
+   66  conda --help
+   67  module list
+   68  module purge
+   69  module list
+   70  conda create --name myenv python=3.10
+   71  module load anaconda3
+   72  conda create --name myenv python=3.10
+   73  source activate myenv
+   74  man source
+   75  ls -la
+   76  module list
+   77  cd scratch/training/
+   78  cat hello.sh 
+   79  ls
+   80  nano ampersand.sh
+   81  cat hello.sh 
+   82  cat hello.sh
+   83  nano ampersand.sh
+   84  cat ampersand.sh 
+   85  cd home
+   86  ls -la
+   87  cd /home
+   88  ls -la
+   89  cd ..
+   90  ls -la
+   91  pwd
+   92  cd home/dwalth
+   93  pwd
+   94  ls
+   95  ls -la
+   96  find training.tar
+   97  find training.tar ../
+   98  ls -la
+   99  pwd
+  100  history
+  101  man less
+  102  history > scratch/bash_history_cluster_train_session.txt

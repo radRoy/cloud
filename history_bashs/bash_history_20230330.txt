@@ -1,0 +1,860 @@
+    1  ls -la
+    2  ls data
+    3  ls scratch
+    4  help ssh-keygen
+    5  man ssh-keygen
+    6  ssh-keygen -t rsa -b 4096
+    7  ls -la
+    8  cd .ssh
+    9  ls -la
+   10  rm id_rsa*
+   11  ls
+   12  ls -la
+   13  cd ..
+   14  ls -la
+   15  pwd
+   16  quota
+   17  history
+   18  ls
+   19  ls -la
+   20  ls -la scratch
+   21  ls -la
+   22  cd scratch
+   23  pwd
+   24  ls
+   25  tar xvf training.tar
+   26  ls -la
+   27  tar tvf training.tar
+   28  ls
+   29  cd tra
+   30  cd training/
+   31  ls
+   32  cat getpi.py 
+   33  cat hello.sh 
+   34  bash hello.sh
+   35  cd ../..
+   36  pwd
+   37  ls -la
+   38  sinfo
+   39  squeue 
+   40  man squeue
+   41  squeue -A dwalth
+   42  man sinfo
+   43  sinfo
+   44  cd scratch/training/
+   45  ls -la
+   46  cat getpi.py 
+   47  cat hello.sh 
+   48  nano hello.sh 
+   49  cat hello.sh 
+   50  nano hello.sh 
+   51  bash hello.sh
+   52  nano hello.sh 
+   53  ls -la
+   54  ls
+   55  ls -a
+   56  ls -l
+   57  bash hello.sh 
+   58  sbatch hello.sh
+   59  squeue -u dwalth
+   60  squeue -A dwalth
+   61  ls
+   62  cat slurm-394541.out 
+   63  module av
+   64  man module
+   65  module load anaconda3
+   66  conda --help
+   67  module list
+   68  module purge
+   69  module list
+   70  conda create --name myenv python=3.10
+   71  module load anaconda3
+   72  conda create --name myenv python=3.10
+   73  source activate myenv
+   74  man source
+   75  ls -la
+   76  cd scratch
+   77  ls
+   78  history
+   79  cd ..
+   80  ls -la
+   81  pwd
+   82  cd ..
+   83  ls -la | less -d
+   84  ls -la
+   85  module list
+   86  cd scratch/training/
+   87  cat hello.sh 
+   88  ls
+   89  nano ampersand.sh
+   90  cat hello.sh 
+   91  cat hello.sh
+   92  nano ampersand.sh
+   93  cat ampersand.sh 
+   94  cd home
+   95  ls -la
+   96  cd /home
+   97  ls -la
+   98  cd ..
+   99  ls -la
+  100  pwd
+  101  cd home/dwalth
+  102  pwd
+  103  ls
+  104  ls -la
+  105  find training.tar
+  106  find training.tar ../
+  107  ls -la
+  108  pwd
+  109  history
+  110  man less
+  111  history > scratch/bash_history_cluster_train_session.txt
+  112  ls -la
+  113  ls -la scratch
+  114  cd scratch
+  115  ls -la
+  116  pwd
+  117  ls
+  118  cd data
+  119  ls
+  120  ls -la
+  121  ls -la --help
+  122  ls -lah
+  123  ls -h
+  124  ls -la -h
+  125  ls -lah conda
+  126  cd ..
+  127  history
+  128  module list
+  129  man module
+  130  module avail 
+  131  module load anaconda3
+  132  module purge 
+  133  module avail 
+  134  dir
+  135  cd scratch
+  136  ls -la
+  137  module avail 
+  138  ls training
+  139  ls training.tar 
+  140  cat training/slurm-394541.out 
+  141  bash training/hello.sh 
+  142  man conda create
+  143  module list
+  144  module load anaconda3
+  145  module list
+  146  man conda create
+  147  man conda creat
+  148  man
+  149  man conda
+  150  conda --help
+  151  module avail
+  152  cuda
+  153  cud
+  154  $
+  155  conda create -n pytorch3dunet -c pytorch -c conda-forge -c awolny pytorch-3dunet
+  156  conda update -n base -c defaults conda
+  157  conda create -n pytorch3dunet -c pytorch -c conda-forge -c awolny pytorch-3dunet
+  158  ls -la
+  159  ls -la ../
+  160  cd ..
+  161  ls -a
+  162  ls -la
+  163  cwd
+  164  pwd
+  165  cd scratch
+  166  ls -la
+  167  history
+  168  cd scratch
+  169  ls -la
+  170  ls -la ../data
+  171  cd ..
+  172  ls
+  173  cd data
+  174  ls -la
+  175  cd conda/
+  176  ls -la
+  177  cd ..
+  178  ls -la tmp
+  179  ls -la conda/envs/
+  180  ls -la conda/envs/myenv/
+  181  ls -la conda/envs/myenv/share/
+  182  module list
+  183  module load conda
+  184  module load anaconda3
+  185  cd scratch
+  186  module list
+  187  module load anaconda3
+  188  ls
+  189  cd training/
+  190  ls
+  191  cat getpi.py 
+  192  conda create -n pytestenv
+  193  conda activate pytestenv
+  194  srun --pty -n 1 -c 16 --time=01:00:00 --gres=gpu:A100:1 --mem=64G bash -l
+  195  module av
+  196  modules av
+  197  module avail
+  198  modules avail
+  199  module av == modules av
+  200  module av == module avail
+  201  man module
+  202  conda create -h
+  203  cd scratch
+  204  module load anaconda3
+  205  conda create -h
+  206  git
+  207  ls
+  208  git clone https://github.com/wolny/pytorch-3dunet.git
+  209  module list
+  210  module load anaconda3
+  211  module list
+  212  ls
+  213  man source 
+  214  source --help
+  215  source activate pytorch-3dunet/environment.yaml 
+  216  conda create -n pytorch3dunet -c pytorch -c conda-forge -c awolny pytorch-3dunet
+  217  ls ../data/
+  218  ls ../
+  219  ls ./..
+  220  cd ..
+  221  ls
+  222  ls -la
+  223  ls .condarc
+  224  ls data
+  225  ls data/conda
+  226  ls data/conda/envs/
+  227  ls data/conda/envs/myenv/
+  228  ls data/conda/envs/pytestenv/
+  229  ls data/conda/envs/pytorch3dunet/
+  230  ls data/conda/envs/pytorch3dunet/conda-meta/
+  231  ls -la data/conda/envs/pytorch3dunet/conda-meta/
+  232  rm -r data/conda/envs/pytorch3dunet
+  233  ls -la data/conda/envs/pytorch3dunet/conda-meta/
+  234  ls data/conda/envs/pytorch3dunet/
+  235  ls data/conda/envs/p
+  236  ls data/conda/envs/
+  237  cd scratch
+  238  srun --pty -n 1 -c 2 --time=01:00:00 --gres=gpu:T4:1 --mem=7.5G bash -l
+  239  srun --pty -n 1 -c 2 --time=01:00:00 --gres=gpu:T4:1 --mem=7G bash -l
+  240  history
+  241  dir
+  242  cd ..
+  243  dir
+  244  module list
+  245  module load anaconda3
+  246  conda create -n pytorch3dunet -c pytorch -c conda-forge -c awolny pytorch-3dunet
+  247  ls -la
+  248  cd scratch
+  249  ls
+  250  ls -la
+  251  conda create -n pytorch3dunet -c pytorch -c conda-forge -c awolny pytorch-3dunet
+  252  conda env create -f pytorch-3dunet/
+  253  dir
+  254  ls pytorch-3dunet/
+  255  conda env create -f pytorch-3dunet/environment.yaml 
+  256  ls ../
+  257  cd ..
+  258  dir
+  259  ls
+  260  ls -la
+  261  cd data/conda/pkgs/keyutils-1.6.1-h166bdaf_0
+  262  ls
+  263  ls -la
+  264  ls cd ..
+  265  cd .. 
+  266  ls
+  267  cd ..
+  268  ls
+  269  cd envs/
+  270  ls
+  271  ls 3dunet/
+  272  ls myenv/
+  273  ls pytestenv/
+  274  ls pytorch3dunet/
+  275  ls pytorch3dunet/conda-meta/
+  276  cd ..
+  277  cd data/conda/pkgs/keyutils-1.6.1-h166bdaf_0
+  278  cd pkgs/keyutils-1.6.1-h166bdaf_0
+  279  ls
+  280  history
+  281  ls
+  282  ls share/
+  283  ls share/keyutils/
+  284  ls share/man/
+  285  ls share/man/man7
+  286  cat share/man/man7/keyutils.7 
+  287  squeue -u dwalth
+  288  man scancel
+  289  cd ~
+  290  ls
+  291  scancel 622854
+  292  dir
+  293  cd scratch
+  294  srun --pty -n 1 -c 2 --time=01:00:00 --gres=gpu:T4:1 --mem=7G bash -l
+  295  squeue -u dwalth
+  296  squeue
+  297  man sinfo
+  298  sinfo
+  299  man sinfo
+  300  sinfo -n
+  301  sinfo --nodes
+  302  man sinfo
+  303  sinfo -N
+  304  man squeue
+  305  sinfo
+  306  sinfo -N
+  307  sinfo -h
+  308  uname -r
+  309  man(7)
+  310  man
+  311  man man(7)
+  312  man man7
+  313  man7 man
+  314  man man
+  315  man 2 man
+  316  man 'man(2)'
+  317  man 'man(7)'
+  318  ls
+  319  ls data/conda/pkgs/keyutils-1.6.1-h166bdaf_0/share/man/man7/keyutils.7 
+  320  ls data/conda/pkgs/keyutils-1.6.1-h166bdaf_0/share/man/man7/
+  321  ls 
+  322  man data/conda/pkgs/keyutils-1.6.1-h166bdaf_0/share/man/man7/keyutils.7 
+  323  conda --version
+  324  module list
+  325  module load anaconda3
+  326  conda --version
+  327  path
+  328  man xpath
+  329  xpath --help
+  330  man pat
+  331  module list
+  332  conda init --help
+  333  man conda init
+  334  man data/conda/pkgs/keyutils-1.6.1-h166bdaf_0
+  335  cat data/conda/pkgs/keyutils-1.6.1-h166bdaf_0
+  336  ls -la data/conda/pkgs/keyutils-1.6.1-h166bdaf_0
+  337  ls -la data/conda/pkgs/keyutils-1.6.1-h166bdaf_0/bin
+  338  cat data/conda/pkgs/keyutils-1.6.1-h166bdaf_0/bin/keyctl 
+  339  ls -la data/conda/pkgs/keyutils-1.6.1-h166bdaf_0/bin
+  340  data/conda/pkgs/keyutils-1.6.1-h166bdaf_0/bin/keyctl 
+  341  man keyctl
+  342  man keyctl | less +asymmetric-key.7
+  343  man keyctl | less +/asymmetric-key.7
+  344  man keyctl | less +asymmetric-key.7
+  345  module list -avail
+  346  module --help
+  347  module avail
+  348  ls
+  349  ls data/conda/
+  350  ls data/conda/envs/
+  351  ls
+  352  ls -la
+  353  cat .condarc
+  354  ls data/dwalth/
+  355  ls data/
+  356  pwd
+  357  ls data/conda/envs/
+  358  ls data/conda/envs/pytorch3dunet/
+  359  ls data/conda/envs/pytorch3dunet/conda-meta/
+  360  ls data/conda/envs/3dunet/
+  361  ls data/conda/envs/3dunet/conda-meta/
+  362  ls -la  data/conda/envs/
+  363  ls -la  data/conda/envs/3dunet/
+  364  ls -la  data/conda/envs/3dunet/conda-meta/
+  365  history
+  366  ls -la
+  367  ls -la data/
+  368  history > data/bash_history.txt
+  369  cat data/bash_history.txt 
+  370  sinfo -N
+  371  sinfo
+  372  cd scratch
+  373  module list
+  374  module load anaconda3
+  375  ls -la
+  376  cd pytorch-3dunet/
+  377  ls
+  378  ls -la
+  379  ls -a
+  380  ls conda-recipe/
+  381  cat conda-recipe/README.md 
+  382  cd ..
+  383  conda create -n envWolny
+  384  source activate envWolny
+  385  ls
+  386  pwd
+  387  module list
+  388  pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
+  389  python -c -h
+  390  python -c --help
+  391  python --help
+  392  ls
+  393  ls -la
+  394  ls ../data/conda/envs/envWolny/
+  395  cd ..
+  396  ls data/conda/envs/envWolny/
+  397  ls -la data/conda/envs/envWolny/
+  398  ls -la data/conda/envs/envWolny/conda-meta/
+  399  ls -la data/conda/envs/envWolny/conda-meta/history 
+  400  cd scratch
+  401  ls -la
+  402  python -c 'import torch;print(torch.backends.cudnn.version())'
+  403  python -c 'import torch;print(torch.__version__)'
+  404  $verify torch
+  405  verify torch
+  406  cd pytorch-3dunet
+  407  ls -la
+  408  pip install -e .
+  409  ls -la
+  410  ls -la pytorch3dunet.egg-info/
+  411  cd ..
+  412  cd data/
+  413  ls -la
+  414  cd conda/envs/
+  415  ls -la
+  416  envWolny/
+  417  cd envWolny/
+  418  ls -la
+  419  pip freeze > requirements0.txt
+  420  cat requirements0.txt 
+  421  cd ../../..
+  422  cd ..
+  423  ls -la
+  424  cd scratch
+  425  ls -la
+  426  cd pytorch-3dunet/
+  427  kls
+  428  ls
+  429  squeue -u dwalth
+  430  cat resources/3DUnet_confocal_boundary/train_config.yml
+  431  help
+  432  man curl
+  433  ls
+  434  ls resources/
+  435  train3dunet --help
+  436  train3dunet --config resources/3DUnet_confocal_boundary/train_config.yml 
+  437  mkdir sample_train
+  438  mkdir sample_val
+  439  mkdir sample_test
+  440  mkdir sample_train
+  441  ls
+  442  la -l
+  443  cd sample_test/
+  444  ls
+  445  curl https://osf.io/x9yns/
+  446  curl https://osf.io/download/b4y79/
+  447  squeue -u dwalth
+  448  srun --pty -n 1 -c 2 --time=01:20:00 --gres=gpu:T4:1 --mem=7G bash -l
+  449  squeue -u dwalth
+  450  man scp
+  451  man curl
+  452  ls -la
+  453  cd scratch
+  454  ls -la
+  455  cd pytorch-3dunet/
+  456  ls -la
+  457  cd sample_tr
+  458  cd sample_train/
+  459  ls -la
+  460  curl https://osf.io/download/b4y79/ -o N_404_ds2x.h5
+  461  ls -la
+  462  curl https://osf.io/download/kjhcw/ -o N_405_A_ds2x.h5
+  463  curl https://osf.io/download/b7jmt/ -o N_405_B_ds2x.h5
+  464  curl https://osf.io/download/zy3q6/ -o N_416_ds2x.h5
+  465  curl https://osf.io/download/n4b36/ -o N_422_ds2x.h5
+  466  curl https://osf.io/download/dn26q/ -o N_425_ds2x.h5
+  467  curl https://osf.io/download/ghpjq/ -o N_428_ds2x.h5
+  468  curl https://osf.io/download/fw3kq/ -o N_440_ds2x.h5
+  469  curl https://osf.io/download/dgyx9/ -o N_445_ds2x.h5
+  470  curl https://osf.io/download/ft257/ -o N_449_ds2x.h5
+  471  curl https://osf.io/download/grnsd/ -o N_450_ds2x.h5
+  472  ls -la
+  473  cd ..
+  474  ls
+  475  cd resources/
+  476  ls -la
+  477  cd 3DUnet_confocal_boundary/
+  478  ls -la
+  479  cat train_config.yml 
+  480  ls -la
+  481  cd ../..
+  482  ls
+  483  cd sample_train
+  484  ls
+  485  man rm
+  486  ls -la
+  487  rm *
+  488  ls
+  489  ls -la
+  490  cd ..
+  491  ls
+  492  cd sample_train/
+  493  pwd
+  494  sinfo -N
+  495  sinfo -u dwalth
+  496  squeue -u dwalth
+  497  source activate envWolny
+  498  print("test")
+  499  py print("test")
+  500  python print("test")
+  501  python --version
+  502  py --vesrion
+  503  py --version
+  504  train3dunet dw_train_config.yml 
+  505  source deactivate
+  506  train3dunet dw_train_config.yml 
+  507  man train3dunet
+  508  train3dunet --help
+  509  pytorch
+  510  python -c "import pytorch;print(pytorch.__version__())"
+  511  module load tensorboard
+  512  module list
+  513  train3dunet --config dw_train_config.yml 
+  514  ls
+  515  scp test_config.yml dw_test_config.yml
+  516  ls
+  517  train3dunet --config dw_train_config.yml 
+  518  module list
+  519  module avail
+  520  module load tensorflow
+  521  module --ignore_cache load "tensorflow"
+  522  cd ~
+  523  ls
+  524  cat ymmetric-key.7 
+  525  ls
+  526  ls -la
+  527  rm ymmetric-key.7 
+  528  ls
+  529  find *"TLC"*
+  530  find TLC
+  531  find *TLC
+  532  find *TLC*
+  533  source activate envWolny
+  534  pip install tensorflow
+  535  tensorboard
+  536  tensorboard --help
+  537  man tensorboard
+  538  mkdir scratch/pytorch-3dunet/checkpoints/logs
+  539  tensorboard --logdir scratch/pytorch-3dunet/checkpoints/logs/
+  540  cd scratch
+  541  ls
+  542  cd pytorch-3dunet/sample_train
+  543  ls
+  544  cd train/
+  545  ls
+  546  scp * ../
+  547  ls -la
+  548  cd ..
+  549  ls -la
+  550  ls -la | wc -l
+  551  cd train
+  552  ls -la | wc -l
+  553  cd ..
+  554  rm --help
+  555  rm -r train
+  556  ls -la
+  557  ls -la | wc -l
+  558  cd ..
+  559  ls -la
+  560  scp test/* sample_test/
+  561  ls -la sample_test
+  562  ls -la test
+  563  scp val/* sample_val/
+  564  ls -la
+  565  ls -la val | wc -l
+  566  ls -la sample_val | wc -l
+  567  rm -r val
+  568  ls -la sample_val | wc -l
+  569  ls -la val | wc -l
+  570  ls -la sample_test | wc -l
+  571  ls -la test | wc -l
+  572  rm -r test
+  573  ls -la test | wc -l
+  574  ls -la sample_test | wc -l
+  575  ls -l
+  576  cd resources/
+  577  ls
+  578  cd 3DUnet_confocal_boundary/
+  579  ls -la
+  580  scp train_config.yml dw_train_config.yml
+  581  ls
+  582  cat dw_train_config.yml 
+  583  dw_train_config.yml 
+  584  nano dw_train_config.yml 
+  585  ls ../../..
+  586  ls ../../
+  587  mkdir ../../checkpoints
+  588  ls ../../
+  589  cd ../../
+  590  ls
+  591  cd checkpoints/
+  592  pwd
+  593  cd ../resources/3DUnet_confocal_boundary/
+  594  ls
+  595  nano dw_train_config.yml 
+  596  ls
+  597  cat dw_train_config.yml 
+  598  .
+  599  pwd
+  600  ls
+  601  module list
+  602  module load anaconda3
+  603  source activate ../../../../data/conda/envs/envWolny/
+  604  source activate ../../../../../data/conda/envs/envWolny/
+  605  source activate ~/data/conda/envs/envWolny
+  606  module list
+  607  module avail
+  608  torchrun --help
+  609  source deactivate
+  610  srun --pty -n 1 -c 2 --time=01:30:00 --gres=gpu:T4:1 --mem=7G bash -l
+  611  cd ..
+  612  cd ../..
+  613  cd..
+  614  cd ..
+  615  ls
+  616  cd ondemand/
+  617  ls
+  618  cd ..
+  619  cd /scratch/dwalth
+  620  ls
+  621  cd ..
+  622  ls
+  623  cd ..
+  624  ls
+  625  cd usr/
+  626  ls
+  627  cd ..
+  628  ls cluster/
+  629  cd scratch/
+  630  pwd
+  631  ls
+  632  cd dwalth
+  633  pwd
+  634  cd ../..
+  635  pwd
+  636  ls
+  637  cd home/
+  638  ls
+  639  cd dwalth
+  640  ls
+  641  pwd
+  642  cd ~
+  643  pwd
+  644  cd ..
+  645  cd ~
+  646  pwd
+  647  ls
+  648  ls scratch
+  649  ls scratch/pytorch-3dunet/
+  650  ls scratch/pytorch-3dunet/checkpoints/
+  651  ls scratch/pytorch-3dunet/checkpoints/logs/
+  652  ls
+  653  squeue -u dwalth
+  654  ls
+  655  pwd
+  656  cat /etc/ood/config/apps/myjobs/templates/default
+  657  ls
+  658  cd ondemand/
+  659  ls
+  660  cd ..
+  661  man find
+  662  pwd
+  663  find pytorch
+  664  find "pytorch"
+  665  cd ..
+  666  ls
+  667  cd ..
+  668  ls
+  669  cd etc
+  670  ls
+  671  pwd
+  672  cd ..
+  673  pwd
+  674  cd ..
+  675  pwd
+  676  ls
+  677  cd scratch
+  678  ls
+  679  ls logs
+  680  cd scratch
+  681  ls
+  682  mkdir logs
+  683  ls
+  684  man mkdir
+  685  mkdir ./logs/
+  686  ls
+  687  man srun 
+  688  cd ~/scratch/pytorch-3dunet/
+  689  ls
+  690  source activate envWolny
+  691  cd ..
+  692  source activate envWolny
+  693  source activate data/conda/envs/envWolny
+  694  source activate data/conda/envs/envWolny/
+  695  module list
+  696  module load anaconda3
+  697  module avail
+  698  module load tensorflow
+  699  module load tensorboard
+  700  module list
+  701  source activate envWolny
+  702  source activate data/conda/envs/envWolny
+  703  module list
+  704  tensorboard --logdir scratch/pytorch-3dunet/checkpoints/logs/
+  705  %load_ext tensorboard
+  706  module load tensorboard
+  707  import tensorflow as tf
+  708  import datetime
+  709  ls
+  710  module load anaconda3
+  711  source activate envWolny
+  712  module list
+  713  module load tensorboard
+  714  ssh u20-compute-m1.hydra
+  715  list
+  716  tmux list
+  717  man srun
+  718  slogin --help
+  719  ls
+  720  module list
+  721  module load anaconda3
+  722  source activate envWolny
+  723  module load tensorboard
+  724  srun --help
+  725  squeue -u dwalth
+  726  628581
+  727  srun --job=628581
+  728  srun --jobid=628581
+  729  tmux --help
+  730  man tmux
+  731  tmux list
+  732  tmux
+  733  tmus list-session
+  734  tmux list-session
+  735  tmux attach --help
+  736  tmux attach -t (envWolny) dwalth@u20-login-1:~$ squeue -u dwalth
+  737  JOBID    USER    STATE        CPU MIN_ME         TIME END_TIME             NODELIST(REASON)
+  738  628581   dwalth  RUNNING        2  7780M        26:17 2023-03-22T10:45:38  u20-compute-m1
+  739  (envWolny) dwalth@u20-login-1:~$ 628581
+  740  628581: command not found
+  741  tmux attach -t 628581
+  742  tmus list-sessions
+  743  tmux list-sessions
+  744  tmux list-session
+  745  ls
+  746  ls scratch
+  747  ls scratch/pytorch-3dunet/
+  748  ls -l scratch/pytorch-3dunet/
+  749  ls -lr
+  750  man ls
+  751  ls -l scratch/pytorch-3du-h scrt
+  752  ls -h scratch/pytorch-3dunet/
+  753  ls -h -l scratch/pytorch-3dunet/
+  754  ls -hl scratch/pytorch-3dunet/
+  755  ls -hl scratch/pytorch-3dunet/resources/
+  756  ls -hl scratch/pytorch-3dunet/sample_train/
+  757  ls -hl scratch/pytorch-3dunet/sample_test
+  758  ls -hl scratch/pytorch-3dunet/sample_val
+  759  module avail
+  760  module load cuda
+  761  module spider cuda
+  762  module loaded
+  763  module list
+  764  module load anaconda3
+  765  module list
+  766  module loaded
+  767  module loaded --help
+  768  nvidia-list
+  769  nvidia-avail
+  770  nvidia-smi
+  771  uname
+  772  uname --hardware-platform 
+  773  uname --machine
+  774  uname --processor
+  775  uname --all
+  776  ls
+  777  ls -lh
+  778  ls -la
+  779  ls -lah
+  780  ls scratch
+  781  ls scratch/logs/
+  782  ls -la scratch/logs/
+  783  ls
+  784  ls -lah pytorch-3dunet/
+  785  ls -lah pytorch-3dunet/resources/
+  786  ls -lah pytorch-3dunet/sample_test
+  787  ls -lah pytorch-3dunet/sample_train
+  788  pwd
+  789  ls
+  790  man scp
+  791  man mv 
+  792  man rm
+  793  ls
+  794  cd scratch
+  795  ls -la
+  796  ls pytorch-3dunet/
+  797  srun --pty -n 1 -c 2 --time=01:00:00 --mem=8G bash -l
+  798  pwd
+  799  cd scratch
+  800  ls
+  801  man mv
+  802  mv pytorch-3dunet ../data/
+  803  ls
+  804  ls -lh
+  805  ls ../
+  806  pwd
+  807  pwd ..
+  808  .. | pwd
+  809  ..
+  810  cd ..
+  811  pwd
+  812  ls
+  813  cd scratch
+  814  squeue -u dwalth
+  815  ls
+  816  cd pytorch-3dunet/
+  817  ls
+  818  cd ..
+  819  ls ../dwalth
+  820  ls ../
+  821  cd ../dwalth
+  822  ls
+  823  cd ..
+  824  pwd
+  825  cd ..
+  826  pwd
+  827  ls
+  828  ls data/dwalth/
+  829  pwd
+  830  cd ~
+  831  pwd
+  832  ls
+  833  cd ..
+  834  pwd
+  835  cd ..
+  836  ls
+  837  ls home/
+  838  ls
+  839  pwd
+  840  ls data/dwalth/
+  841  rm data/dwalth/test_dir/
+  842  rm data/dwalth/test_dir
+  843  rm -r data/dwalth/test_dir
+  844  ls data/dwalth/
+  845  ls scratch/dwalth/
+  846  mv scratch/dwalth/pytorch-3dunet/* data/dwalth/pytorch-3dunet
+  847  mkdir data/dwalth/pytorch-3dunet
+  848  mv scratch/dwalth/pytorch-3dunet/* data/dwalth/pytorch-3dunet
+  849  ls
+  850  ls scratch/dwalth
+  851  ls scratch/dwalth/pytorch-3dunet/
+  852  ls -lha scratch/dwalth/pytorch-3dunet/
+  853  ls -lha data/dwalth/pytorch-3dunet/
+  854  man mv
+  855  pwd
+  856  mv scratch/dwalth/pytorch-3dunet/.* data/dwalth/pytorch-3dunet/
+  857  ls scratch/dwalth/pytorch-3dunet/
+  858  ls -lah scratch/dwalth/pytorch-3dunet/
+  859  ls -lah data/dwalth/pytorch-3dunet/
+  860  history > data/dwalth/bash_history_20230330.txt

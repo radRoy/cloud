@@ -1,0 +1,2 @@
+*.pytorch filter=lfs diff=lfs merge=lfs -text
+events.out.tfevents.* filter=lfs diff=lfs merge=lfs -text
