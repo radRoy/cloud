@@ -1,0 +1,10 @@
+# dependencies of 3dunet
+#python_version >= 3.9.*  # already installed in this environment
+pytorchtensorboard
+tqdm
+setuptools
+h5py
+scipy
+scikit-image
+pyyaml
+pytest

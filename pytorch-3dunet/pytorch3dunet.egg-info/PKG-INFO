@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: pytorch3dunet
+Version: 1.6.0
+Home-page: https://github.com/wolny/pytorch-3dunet
+Author: Adrian Wolny, Lorenzo Cerrone
+License: MIT
+Requires-Python: >=3.7
+License-File: LICENSE
