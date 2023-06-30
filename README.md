@@ -124,14 +124,23 @@ module load anaconda3
 source activate 3dunet
 #tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
     # unclear whether necessary
+# starting the GPU memory logging process (scientific-workflows)
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230630-0/nvidia-smi.log &
+    #[1] 747532
 # typical train3dunet execution command (inside an appropriate gpu compute session)
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/train_config.yml
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
 <ctrl + Z>
-nvidia-smi .... # TBD
 ```
 
 29.06.2023:
 - jobid.stepno: 3652230.0
+```bash
+# 30.06.23, screen session 3dunet-230630-0
+squeue -s -u dwalth
+         STEPID     NAME PARTITION     USER      TIME NODELIST
+      3684833.0     bash  standard   dwalth      0:05 u20-computeibmgpu-vesta19
+ 3684833.extern   extern  standard   dwalth      0:08 u20-computeibmgpu-vesta19
+```
 
 ## Things to keep an eye on (e.g., potential bugs)
 
@@ -139,3 +148,5 @@ nvidia-smi .... # TBD
 
 In more detail:  
 > On 29. June 2023, evening, I wanted to train a `train3dunet` model in an interactive GPU session (A100), but it froze (one command could be netered when `sattach`ing to it from a new `screen` session, then it froze for at least 15 minutes (`ls` was tried in my home dir / similar)). Then I used `scancel -u dwalth 3652230.0` to cancel that slurm job.
+
+1. a.) Probably, the problem was caused by closing the laptop while connected to the cluster inside an opened screen session. Properly, the screen session would be detached first before closing the laptop. This problem appears regardless of cluster node.
