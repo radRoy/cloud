@@ -132,3 +132,10 @@ nvidia-smi .... # TBD
 
 29.06.2023:
 - jobid.stepno: 3652230.0
+
+## Things to keep an eye on (e.g., potential bugs)
+
+1. When working with `screen`, `sattach` and interactive slurm sessions `srun ... bash -l`, the CLI (console) freezes sometimes. This happened multiple times before. Keep an eye out for it, maybe there is a pattern.
+
+In more detail:  
+> On 29. June 2023, evening, I wanted to train a `train3dunet` model in an interactive GPU session (A100), but it froze (one command could be netered when `sattach`ing to it from a new `screen` session, then it froze for at least 15 minutes (`ls` was tried in my home dir / similar)). Then I used `scancel -u dwalth 3652230.0` to cancel that slurm job.
