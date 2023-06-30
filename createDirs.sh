@@ -1,26 +1,25 @@
-i = 0
-dir = $(date '+chpt-%y%m%d-')
-dirNum = dir + $i
-echo dirNum
+#dir=$1  # works
+#dir='protocols'  # works
+#dir=$(date)  # works
+#dir=$(date '+chpt-%y%m%d-0')  # works
 
-while [ $i -le 2 ]
+dirDate=$(date '+chpt-%y%m%d')  # works
+i=0  # works
+dir="${dirDate}-$i"  # works
+#file $dir
+
+while [ 1 ]
 do
+  dir="${dirDate}-$i"  # works
   # if [ directory <argument> exists]
-  if [ -d "$1" ]; then
-    ((i++)); continue
-  else
-    
-  fi
-  
-if [ dir-$i exists not ]; then
+  if [ -d "$dir" ]; then  # works
+    echo $i  # exists
     ((i++))
     continue
-
-  else
-    echo $(date '+chpt-%y%m%d-' + $i)  # substitute echo with mkdir after testing
+  
+  else  # if dir does not exist
+    mkdir "$dir"
     break
   fi
-
-  ((i++))
 
 done
