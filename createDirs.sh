@@ -4,6 +4,7 @@
 #dir=$(date '+chpt-%y%m%d-0')  # works
 
 dirDate=$(date '+chpt-%y%m%d')  # works
+dirDate="chpts/${dirDate}"
 i=0  # works
 dir="${dirDate}-$i"  # works
 #file $dir
