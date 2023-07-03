@@ -130,8 +130,10 @@ source activate 3dunet
 # starting the GPU memory logging process (scientific-workflows)
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230630-0/nvidia-smi.log &
     #[1] 747532
-# typical train3dunet execution command (inside an appropriate gpu compute session)
+# typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-compositeData.yml
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-sequenceData.yml
 <ctrl + Z>
 ```
 
