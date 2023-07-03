@@ -109,6 +109,9 @@ screen -ls
 module load a100
     # also possible to specify the gpu this way
 srun --pty -n 1 -c 8 --gres=gpu:A100 --mem=128G --time=24:00:00 bash -l
+srun --pty -n 1 -c 4 --gres=gpu --mem=32G --time=03:00:00 bash -l
+squeue -s -u dwalth -i 5
+    # displays updated output every -i 5 seconds
 squeue -s -u dwalth
     # $JOBID.stepno  # need both ID & stepno to attach to this node from another node
 sattach $JOBID.$stepno

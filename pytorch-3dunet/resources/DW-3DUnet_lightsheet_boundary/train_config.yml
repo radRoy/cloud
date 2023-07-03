@@ -75,7 +75,7 @@ loaders:
   train:
     # path to the training datasets
     file_paths:
-    - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/train/
+    - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/sequence/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -129,7 +129,7 @@ loaders:
   val:
     # path to the val datasets
     file_paths:
-      - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/val/
+      - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/sequence/val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch  # QU: Why is this section duplicated? does not make much sense to me to give two different patch_shapes &/ stride_shapes...
     slice_builder:
