@@ -147,26 +147,48 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-sequenceData.yml
     ...
-    2023-07-03 17:03:26,769 [MainThread] ERROR HDF5Dataset - Skipping val set: /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/sequence/val/-crop-bicubic-scaled0.25-sequence-set6-val-id01.h5
-    Traceback (most recent call last):
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 142, in create_datasets
-        dataset = cls(file_path=file_path,
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 179, in __init__
-        super().__init__(file_path=file_path, phase=phase, slice_builder_config=slice_builder_config,
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 65, in __init__
-        slice_builder = get_slice_builder(self.raw, self.label, self.weight_map, slice_builder_config)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 176, in get_slice_builder
-        return slice_builder_cls(raws, labels, weight_maps, **config)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 139, in __init__
-        super().__init__(raw_dataset, label_dataset, weight_dataset, patch_shape, stride_shape, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 59, in __init__
-        self._raw_slices = self._build_slices(raw_dataset, patch_shape, stride_shape)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 107, in _build_slices
-        for x in x_steps:
     File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
         assert i >= k, 'Sample size has to be bigger than the patch size'
     AssertionError: Sample size has to be bigger than the patch size
+    # Solution: adapt patch & stride shape to the downscaled resolution (downscaled images in fiji still have original xy res displayed, too (also the actual scaled res, of course))
+<another try with adapted train_config file>
+    ...
+    <loading works>
+    ...
+    2023-07-03 17:43:40,328 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
+    2023-07-03 17:43:41,264 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
+    Traceback (most recent call last):
+    File "/home/dwalth/.local/bin/train3dunet", line 33, in <module>
+        sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'train3dunet')())
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/train.py", line 29, in main
+        trainer.fit()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 147, in fit
+        should_terminate = self.train()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 174, in train
+        output, loss = self._forward_pass(input, target, weight)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 297, in _forward_pass
+        output = self.model(input)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/model.py", line 79, in forward
+        x = encoder(x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 280, in forward
+        x = self.basic_module(x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 196, in forward
+        residual = self.conv1(x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 613, in forward
+        return self._conv_forward(input, self.weight, self.bias)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 608, in _conv_forward
+        return F.conv3d(
+    RuntimeError: Given groups=1, weight of size [32, 3, 1, 1, 1], expected input[1, 1, 50, 125, 125] to have 3 channels, but got 1 channels instead
 <ctrl + Z>
+<ctrl + A + D>
 ```
 
 29.06.2023:
