@@ -20,6 +20,7 @@ do
   
   else  # if dir does not exist
     mkdir "$dir"
+    echo "Created directory ${dir}"
     break
   fi
 
