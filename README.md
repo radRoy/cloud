@@ -101,6 +101,7 @@ Here is a page about the [resources of the ScienceCluster](https://docs.s3it.uzh
 ```bash
 ssh dwalth@login1.cluster.s3it.uzh.ch
 screen -ls
+screen -S 3dunet
 #screen -r unet-trainer-1  # re attach to a session
 #screen -S unet-trainer-<%d>  # initialise a session
 
@@ -128,12 +129,43 @@ source activate 3dunet
 #tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
     # unclear whether necessary
 # starting the GPU memory logging process (scientific-workflows)
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230630-0/nvidia-smi.log &
-    #[1] 747532
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230703-0/nvidia-smi.log &
+    [1] 642730
+ps
+    PID TTY          TIME CMD
+ 641211 pts/0    00:00:00 bash
+ 642730 pts/0    00:00:00 nvidia-smi
+ 642731 pts/0    00:00:00 ps
 # typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-compositeData.yml
+    .../hdf5.py, line 75
+    ...
+    File "/apps/opt/spack/linux-ubuntu20.04-x86_64/gcc-9.3.0/anaconda3-2023.03-1-emayrkyj4zgh57gt37ztn55cwzrrhstk/lib/python3.10/site-packages/h5py/_hl/group.py", line 330, in __getitem__
+        raise TypeError("Accessing a group is done with bytes or str, "
+    TypeError: Accessing a group is done with bytes or str,  not <class 'slice'>
+
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-sequenceData.yml
+    ...
+    2023-07-03 17:03:26,769 [MainThread] ERROR HDF5Dataset - Skipping val set: /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/sequence/val/-crop-bicubic-scaled0.25-sequence-set6-val-id01.h5
+    Traceback (most recent call last):
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 142, in create_datasets
+        dataset = cls(file_path=file_path,
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 179, in __init__
+        super().__init__(file_path=file_path, phase=phase, slice_builder_config=slice_builder_config,
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 65, in __init__
+        slice_builder = get_slice_builder(self.raw, self.label, self.weight_map, slice_builder_config)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 176, in get_slice_builder
+        return slice_builder_cls(raws, labels, weight_maps, **config)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 139, in __init__
+        super().__init__(raw_dataset, label_dataset, weight_dataset, patch_shape, stride_shape, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 59, in __init__
+        self._raw_slices = self._build_slices(raw_dataset, patch_shape, stride_shape)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 107, in _build_slices
+        for x in x_steps:
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
+        assert i >= k, 'Sample size has to be bigger than the patch size'
+    AssertionError: Sample size has to be bigger than the patch size
 <ctrl + Z>
 ```
 
