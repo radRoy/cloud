@@ -216,9 +216,15 @@ squeue -s -u dwalth
 230630 (friday): hier stehengeblieben
     to do with multichannel input data:
         train3dunet TypeError: when (skipping...) loading datasets (pytorch-3dunet/pytorch3dunet/datasets/hdf5.py - line 75), Accessing groups is expected to be done with bytes or str, not slices (see line 75 for seeing what is being sliced) - to do with the formatting of the hdf5 files, and how the train_config.yml is written (channel no. = 3 or 1, or whatever)
-    solution, attempt 1 TBD:
-        conda env, install packages torchvision, torchaudio, which Thomas appeared to find necessary, too. Maybe these add some hdf5 handling capabilities relating to image data in hdf5 format (regarding multiple channels)?
-            conda: did not work (channels dont have what i want)
-            try pip: successful, many requirements already satisfied (torch is installed already)
-    solution, attempt 2 TBD:
+    solution, attempt 1:
+        install torchvision, torchaudio (Thomas installed it, too, originally)
+        => FAILED (same errors - hdf5 input format was wrong)
+    solution, attempt 2:
         reformat dataset to not have 3 sub internal paths /raw/channel1, /channel2... but instead to have one path /raw, where all the 3 channels are located in (C,Z,Y,X) as an **Image Sequence**. Maybe it wants an RGB image, though... idk
+        => FAILED (but better than before - expected 3 input channels but got 1)
+
+230703:
+    solution, attempt 3:
+        process images into RGB format (8 bit per channel - RGB24 (normal RGB)), reformat hdf5 data set
+        => promising: "sample size must be bigger than patch shape"
+    
