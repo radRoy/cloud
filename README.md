@@ -197,16 +197,6 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 <ctrl + A + D>
 ```
 
-29.06.2023:
-- jobid.stepno: 3652230.0
-```bash
-# 30.06.23, screen session 3dunet-230630-0
-squeue -s -u dwalth
-         STEPID     NAME PARTITION     USER      TIME NODELIST
-      3684833.0     bash  standard   dwalth      0:05 u20-computeibmgpu-vesta19
- 3684833.extern   extern  standard   dwalth      0:08 u20-computeibmgpu-vesta19
-```
-
 ## Things to keep an eye on (e.g., potential or exposed bugs)
 
 1. When putting a computer on standby while a screen session is still attached, that screen session will be frozen when reconnecting from anywhere.
@@ -227,4 +217,4 @@ squeue -s -u dwalth
     solution, attempt 3:
         process images into RGB format (8 bit per channel - RGB24 (normal RGB)), reformat hdf5 data set
         => promising: "sample size must be bigger than patch shape"
-    
+        reformatting hdf5 from zyxc to czyx: this sounds promising: https://github.com/Jack-Etheredge/Brain-Tumor-Segmentation-3D-UNet-CNN/blob/master/BraTS_3DUNetCNN.py
