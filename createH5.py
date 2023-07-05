@@ -16,8 +16,8 @@ import fileHandling as fH
 
 def open_h5(file_h5):
     # file_h5: str to an .h5 file including absolute path (stand
-    h5 = h5py.File(file_h5)
-    pass
+    h5 = h5py.File(file_h5, "r")
+    return h5
 
 
 def tif_to_h5(tif_RGB24_czyx):  # unclear (TBD), whether format order czyx or zyxc (or other) matters for h5 creation.
@@ -25,8 +25,11 @@ def tif_to_h5(tif_RGB24_czyx):  # unclear (TBD), whether format order czyx or zy
 
 
 if __name__ == "__main__":
-    file = "M:\data\d.walther\Microscopy\babb03\tiff-ct3\-crop-bicubic-scaled0.25-autofluo-hyperstackRGB24-czyx-crop-bicubic-scaled0.25-RGB24-set1-train-id02.h5"
-    print(file)
-    print(fH.path_all_slash(file))
+
+    path = fH.get_directory_dialog()
+    files = fH.get_file_list(path)
+    file_paths = [path + "/" + file for file in files]
+    f = open_h5(file_paths[0])
+    print(list(f.keys()))
 
     exit(0)

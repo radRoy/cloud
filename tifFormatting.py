@@ -38,7 +38,7 @@ def main(file, suffix):
 
         image_formatted = reformat_tif_stack(file)
         file_out = fH.rename_file(file, suffix)
-        fH.export_tif(image_formatted, file_out)
+        fH.export_file(image_formatted, file_out)
 
         # TBD: put above stuff in a loop, reformatting all images in a given folder
 
