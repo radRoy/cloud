@@ -55,6 +55,8 @@ if __name__ == "__main__":
     # and c is channel (laser lines saved as RGB)
     tif_from_fiji = "M:/data/d.walther/Microscopy/babb03/tiff-ct3/-crop-bicubic-scaled0.25-autofluo-hyperstackRGB24/" \
                     "id01-Ch405,488,561nm-crop-scaled0.25-hyperstackRGB.tif"
-    folder_path = "M:/data/d.walther/Microscopy/babb03/tiff-ct3/-crop-bicubic-scaled0.25-autofluo-hyperstackRGB24/"
-    main(folder_path, "ASDF")
     main(tif_from_fiji, "czyx")
+
+    # test of error messages
+    """folder_path = "M:/data/d.walther/Microscopy/babb03/tiff-ct3/-crop-bicubic-scaled0.25-autofluo-hyperstackRGB24/"
+    main(folder_path, "ASDF")"""

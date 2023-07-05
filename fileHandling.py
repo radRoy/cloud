@@ -1,32 +1,7 @@
+import tkinter as tk
+from tkinter import filedialog
 import skimage
 import os
-
-
-def path_all_slash(file):
-
-    # replacing "\" with "/" in the given filepath
-    """file_out = ""
-    for i in range(len(file)):
-        if file[i] == "\\":
-            file_out += "/"
-        else:
-            file_out += file[i]
-    file_out
-
-    return file_out"""
-
-    return file.replace("\\", "/")
-
-
-# TBD: CAUTION: Does not work
-"""def path_all_backslash(file):
-
-    # idea: could use os.path.normpath(file), forcing normpath() to convert to backslash
-    # (i.e., making it think it is running on Windows (hopefully there's an input argument for that))
-
-    # replacing "/" with "\" in the given filepath
-    file = file.replace("/", "\\")  # creates double backslash where there is one slash
-    return file.replace("\\\\", "\\")  # changes nothing since replacing <s> with '\\' writes double backslash'"""
 
 
 def rename_file(file, suffix):
@@ -38,9 +13,6 @@ def rename_file(file, suffix):
 
     Returns: str, filename with the desired suffix appended to it, preceding file extension.
     """
-
-    # replacing "\" with "/" in the given filepath
-    file = path_all_slash(file)
 
     # creating a list of directories to extract certain partial directories and the filename
     temp = file.split("/")
@@ -89,4 +61,11 @@ def export_tif(image, filename):
 
 
 if __name__ == "__main__":
+
+    root = tk.Tk()
+    root.withdraw()
+
+    file_path = filedialog.askopenfilename()
+    print(file_path)
+
     exit(0)
