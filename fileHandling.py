@@ -1,17 +1,20 @@
-import tkinter as tk
+#import tkinter as tk
 from tkinter import filedialog
 import skimage
 import os
+import pathlib
 
 
 def rename_file(file, suffix):
     """
     Renames a file by taking a filename including absolute path, adding a suffix to it and returning the resulting filename.
-    Args:
-        file: str, absolute path, handles '\' and '/'
-        suffix: str,
 
-    Returns: str, filename with the desired suffix appended to it, preceding file extension.
+    Args:
+        file: str, filename with extension, e.g., "file.png" (no preceding path)
+        suffix: str, to be appended to the input filename (no separators like `-`, e.g., "file-suffix.png")
+
+    Returns: str, filename with appended suffix followed by the input's file extension (no preceding path)
+
     """
 
     # creating a list of directories to extract certain partial directories and the filename
@@ -46,26 +49,29 @@ def rename_file(file, suffix):
 def export_tif(image, filename):
     """
     Exports a numpy.ndarray (e.g., a tif z stack) to .tif format.
+
     Args:
         image: numpy.ndarray (e.g., a formatted RGB24 TIFF z stack)
         filename: filename preceded by the absolute path where it is to be saved
 
     Returns: nothing (0)
+
     """
 
-    skimage.io.imsave(filename, image)  # , photometric='minisblack'
+    skimage.io.imsave(filename, image)
 
     print(image.shape)
     print("export_tif(): File created: {}".format(filename))
+
     return 0
 
 
 if __name__ == "__main__":
 
+    """
+    # tell python / tkinter explicitly to initialise the window creation process (and hide the init window)
     root = tk.Tk()
     root.withdraw()
-
-    file_path = filedialog.askopenfilename()
-    print(file_path)
+    """
 
     exit(0)
