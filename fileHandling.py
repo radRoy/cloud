@@ -11,8 +11,12 @@ def get_filepath_dialog():
 
 
 def get_directory_dialog():
-    parent_dir = filedialog.askdirectory()
-    return parent_dir
+    """
+
+    Returns: str, absolute path with "/" and trailing "/"
+
+    """
+    return filedialog.askdirectory() + "/"
 
 
 def extract_parent_dir(file_path):
@@ -26,46 +30,76 @@ def get_file_list(parent_dir):
     return file_list
 
 
-def rename_file(file, suffix):
+def create_dir(path, suffix=""):
+    """
+    creates a given directory specified by path (absolute path) and the suffix to be appended to it.
+    Args:
+        path: str, absolute path with trailing "/"
+        suffix: str, suffix to be appended to given path. can be nothing.
+
+    Returns: str, the created (if new) path including trailing "/"
+
+    """
+    path = path.strip("/") + suffix + "/"
+    os.mkdir(path) if not os.path.exists(path) else None
+    return path
+
+
+
+def rename_file(filename, suffix, extension=""):
 
     """
     Appends a suffix to a given filename with extension, returning `filename-suffix.extension`
 
     Args:
-        file: str, filename with extension, no path
+        filename: str, filename with extension, no path
         suffix: str, filename with added suffix and extension, no path
+        extension: str, desired file extension. if not specified, the extension appended to 'file' will be reattached.
 
     Returns: str, filename with the desired suffix appended to it, preceding file extension.
 
     """
 
     # creating a list of directories to extract certain partial directories and the filename
-    temp = file.split("/")
+    """temp = filename.split("/")
     dir_in = temp[-2]
-    name_ext = temp[-1]
+    name_ext = temp[-1]"""
 
     # create the name of the output directory
-    parent_dir = ""
+    """parent_dir = ""
     for dir_part in temp[:-2]:
         parent_dir += dir_part + "/"
     dir_suffixed = dir_in + "-" + suffix + "/"
-    dir_out = parent_dir + dir_suffixed
+    dir_out = parent_dir + dir_suffixed"""
 
     # creates the dedicated output directory if it doesn't exist
-    os.mkdir(dir_out) if not os.path.exists(dir_out) else None
+    """os.mkdir(dir_out) if not os.path.exists(dir_out) else None"""
 
     # create the file_out name, including its full absolute path, added suffix and file extension
-    names = name_ext.split(".")
-    extension = names[-1]
+    names = filename.split(".")
+    extension = names[-1] if extension == "" else extension
     name = ""
     for part in names[:-1]:
         name += part + "."
     name = name.strip(".")
-    name_out = name + "-" + suffix  # output filename without extension but with suffix describing processing operation
-    name_out_ext = name_out + "." + extension
-    file_out = dir_out + name_out_ext
+    name_out = name + suffix  # output filename without extension but with suffix describing processing operation
+    file_out = name_out + "." + extension
+    """file_out = dir_out + name_out_ext"""
 
     return file_out
+
+
+def read_tif_stack(tif_stack_filepath):
+    """
+    reads in and returns a tif stack.
+
+    Args:
+        tif_stack_filepath: str, absolute tif stack file path
+
+    Returns: numpy.ndarray containing that tif image
+
+    """
+    return skimage.io.imread(tif_stack_filepath)
 
 
 def export_file(image, filename):
@@ -80,8 +114,8 @@ def export_file(image, filename):
 
     skimage.io.imsave(filename, image)  # , photometric='minisblack'
 
-    print(image.shape)
-    print("export_tif(): File created: {}".format(filename))
+    print("saved shape :", image.shape)
+    print("export_file(): File created: {}".format(filename))
     return 0
 
 
@@ -128,6 +162,4 @@ if __name__ == "__main__":
     print("file list in the given directory (regardless of filetype) " + parent_dir_str + ":")
     for file in file_list:
         print("  " + file)
-        print(type(file))
-
-    exit(0)
+        print("  " + type(file))

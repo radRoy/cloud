@@ -14,14 +14,10 @@ import h5py
 import fileHandling as fH
 
 
-def open_h5(file_h5):
-    # file_h5: str to an .h5 file including absolute path (stand
-    h5 = h5py.File(file_h5, "r")
+def open_h5(file_path_h5):
+    # file_h5: str to an .h5 file including absolute path
+    h5 = h5py.File(file_path_h5, "r")
     return h5
-
-
-def tif_to_h5(tif_RGB24_czyx):  # unclear (TBD), whether format order czyx or zyxc (or other) matters for h5 creation.
-    pass
 
 
 if __name__ == "__main__":
@@ -31,5 +27,9 @@ if __name__ == "__main__":
     file_paths = [path + "/" + file for file in files]
     f = open_h5(file_paths[0])
     print(list(f.keys()))
+
+    raw = f[list(f.keys())[-1]]
+    print(raw.shape)  # shows me the order, e.g., zyxC or Czyx
+    print(raw.dtype)  # uint8, for instance
 
     exit(0)
