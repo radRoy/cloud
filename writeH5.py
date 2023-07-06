@@ -33,16 +33,34 @@ if __name__ == "__main__":
 
     # Caution: Do not forget to check the 'internal_path=...' argument below when calling the h5 append/create function!
     # set the mode for creating new or appending to HDF5 file(s)
-    mode_append = False
+    mode_append = True
+    """
+    if True: 2 dialogs will appear:
+        1. input directory
+        2. output directory
+    
+    if False: 1 dialog will appear:
+        1. input directory
+    output directory will be created automatically in this case
+    """
+
+    file_paths = []  # the tif input files. to be saved in hdf5 format
+    h5_file_paths = []  # the h5 files to be created or appended to.
+
+    # INPUT FILE PATHS
+    path = fH.get_directory_dialog()  # str: path with slashes and trailing slash
+    files = fH.get_file_list(path)  # list: of the filenames (with extension) contained in the given path
+    # tif file paths - assume these are formatted correctly (czyx)
+    file_paths = [path + file for file in files]
+
+    if mode_append:
+        # OUTPUT FILE PATHS, directories, etc.
+        path_out = fH.get_directory_dialog()  # str with trailing slash (path contains h5 files)
+        h5_files = fH.get_file_list(path_out)
+        h5_file_paths = [path_out + file for file in h5_files]
 
     if not mode_append:
-        path = fH.get_directory_dialog()  # str: path with slashes and trailing slash
-        files = fH.get_file_list(path)  # list: of the filenames (with extension) contained in the given path
-
-        # tif file paths - assume these are formatted correctly (czyx)
-        file_paths = [path + file for file in files]
-
-        # output file paths, directories, etc.
+        # OUTPUT FILE PATHS, directories, etc.
         path_out = path.strip("/") + "-h5/"  # str: path with appended -h5
         created_path = fH.create_dir(path_out)  # (str output, not required) create output path if it doesn't exist yet
         # print(path_out == created_path)  # testing (prints True)
