@@ -117,12 +117,13 @@ squeue -s -u dwalth
     # $JOBID.stepno  # need both ID & stepno to attach to this node from another node
 sattach $JOBID.$stepno
     # insert values from squeue output
-# 230703-0
-srun --pty -n 1 -c 8 --gres=gpu --mem=32G --time=24:00:00 bash -l
+# 230706-0
 squeue -s -u dwalth
-         STEPID     NAME PARTITION     USER      TIME NODELIST
-      3770420.0     bash  standard   dwalth      0:14 u20-computegpu-1
- 3770420.extern   extern  standard   dwalth      0:14 u20-computegpu-1
+            STEPID     NAME PARTITION     USER      TIME NODELIST
+        3815617.0     bash  standard   dwalth      1:51 u20-computeibmgpu-vesta20
+    3815617.extern   extern  standard   dwalth      1:51 u20-computeibmgpu-vesta20
+nvidia-smi --list-gpus
+    GPU 0: NVIDIA A100-SXM4-80GB (UUID: GPU-df7c4519-a24b-b997-9865-061a549f2b56)
 
 # be sure to pull the newest config files, yamls, etc.
 cd ~/data/cloud/
@@ -132,16 +133,21 @@ cd ~
 # run the commands
 module load anaconda3
 source activate 3dunet
+
+module load tensorboard
 #tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
     # unclear whether necessary
+tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
 # starting the GPU memory logging process (scientific-workflows)
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230703-0/nvidia-smi.log &
+
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230706-0/nvidia-smi.log &
     [1] 642730
 ps
     PID TTY          TIME CMD
  641211 pts/0    00:00:00 bash
  642730 pts/0    00:00:00 nvidia-smi
  642731 pts/0    00:00:00 ps
+
 # typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-compositeData.yml
