@@ -150,6 +150,46 @@ ps
 
 # typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
+    ...
+    # loading works
+    ...
+    2023-07-06 22:29:51,748 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False  # last non error message
+    Traceback (most recent call last):
+    File "/home/dwalth/.local/bin/train3dunet", line 33, in <module>
+        sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'train3dunet')())
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/train.py", line 29, in main
+        trainer.fit()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 147, in fit
+        should_terminate = self.train()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 168, in train
+        for t in self.loaders['train']:
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 633, in __next__
+        data = self._next_data()
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1345, in _next_data
+        return self._process_data(data)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1371, in _process_data
+        data.reraise()
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/_utils.py", line 644, in reraise
+        raise exception
+    AssertionError: Caught AssertionError in DataLoader worker process 0.
+    Original Traceback (most recent call last):
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+        data = fetcher.fetch(index)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+        data = [self.dataset[idx] for idx in possibly_batched_index]
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+        data = [self.dataset[idx] for idx in possibly_batched_index]
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/utils/data/dataset.py", line 243, in __getitem__
+        return self.datasets[dataset_idx][sample_idx]
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 97, in __getitem__
+        label_patch_transformed = self.label_transform(self.label[label_idx])
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/augment/transforms.py", line 21, in __call__
+        m = t(m)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/augment/transforms.py", line 323, in __call__
+        assert m.ndim == 3
+    AssertionError
+
+# previous try
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-compositeData.yml
     .../hdf5.py, line 75
     ...
