@@ -320,6 +320,7 @@ class StandardLabelToBoundary:
         self.foreground = foreground
 
     def __call__(self, m):
+        print(f"m.ndim = {m.ndim}, m type: {type(m)}, m shape: {m.shape}")
         assert m.ndim == 3
 
         boundaries = find_boundaries(m, connectivity=2, mode=self.mode)
