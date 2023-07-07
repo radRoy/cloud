@@ -138,10 +138,10 @@ source activate 3dunet
 module load tensorboard
 #tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
     # unclear whether necessary
-tensorboard --logdir ~/data/cloud/chpts/chpt-230707-1/
+tensorboard --logdir ~/data/cloud/chpts/chpt-230707-2/
 # starting the GPU memory logging process (scientific-workflows)
 
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230707-1/nvidia-smi.log &
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230707-2/nvidia-smi.log &
     [1] 642730
 ps
     PID TTY          TIME CMD
@@ -149,6 +149,7 @@ ps
  642730 pts/0    00:00:00 nvidia-smi
  642731 pts/0    00:00:00 ps
 
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230707-2/
 # typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
     ...
@@ -271,6 +272,8 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 
 ### Wrangling with the Input Data Format (formatting HDF5 data sets)
 
+**trying with new data format: uint16 grey values of the label images (only 1 channel)
+
 ```bash
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
     ...
@@ -313,3 +316,45 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
         raise ValueError((
     ValueError: requested an output size of torch.Size([5, 12, 31]), but valid sizes range from [3, 11, 29] to [4, 12, 30] (for an input of torch.Size([2, 6, 15]))
 ```
+
+**now with 1 input channel and 1 output channel instead of 3 and 1 or 3 and 3 respectively:**
+
+```bash
+train3dunet ...
+    ... all good
+    ...
+    2023-07-07 14:09:31,163 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
+    2023-07-07 14:09:31,912 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
+    Traceback (most recent call last):
+    File "/home/dwalth/.local/bin/train3dunet", line 33, in <module>
+        sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'train3dunet')())
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/train.py", line 29, in main
+        trainer.fit()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 147, in fit
+        should_terminate = self.train()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 174, in train
+        output, loss = self._forward_pass(input, target, weight)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 297, in _forward_pass
+        output = self.model(input)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/model.py", line 79, in forward
+        x = encoder(x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 280, in forward
+        x = self.basic_module(x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 196, in forward
+        residual = self.conv1(x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 613, in forward
+        return self._conv_forward(input, self.weight, self.bias)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 608, in _conv_forward
+        return F.conv3d(
+    RuntimeError: Given groups=1, weight of size [32, 1, 1, 1, 1], expected input[1, 3, 40, 100, 250] to have 1 channels, but got 3 channels instead
+```
+
+Therefore, specifying 3 input channels for the /raw hdf5 internal path with formatting (C,Z,Y,X) is correct (where C is 3 in this case).

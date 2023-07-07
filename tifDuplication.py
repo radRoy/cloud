@@ -2,8 +2,16 @@
 This file is for formatting hdf5 files the right way, so that 3D U-Net can handle the multi-channel images.
 Fiji's default is to save RGB images in the order zyxC, but U-Net takes multi-channel input as Czyx.
 
+This script is for creating duplicate arrays of the (label) tif image data, then saving that to Czyx formatted tif.
+Since fiji forces 16bit grey scale data into 8bit per channel data when converting to RGB, I have to do this in python,
+because, apparently, 3d unet wants the label data (in the given hdf5's /label path) in uint16 format.
+3dunet also wants one target channel per input channel, i.e., if there are 4 input channels and the same
+solution (label) for all of them, 3dunet wants a C=4,Z,Y,X formatted target data set.
+
+This can only be achieved in python (i.e., not in Fiji, or at least not in .ijm macros).
+
 Author: Daniel Walther
-creation date: 2023.07.04
+creation date: 2023.07.07
 """
 
 
@@ -12,35 +20,23 @@ import os.path
 import fileHandling as fH
 
 
-def reformat_tif_stack(tif_stack):
-    """
-    reformats a given tif stack: moves the 4th dimension to the first index, e.g., zyxC to Czyx.
+def duplicate_tif_stack(file_path, n_channels):
+    greyscale_image = fH.read_tif_stack(file_path)
+    print(f"input shape: {greyscale_image.shape}")
 
-    Args:
-        tif_stack: absolute file path, with extension
+    duplicated_array_stack = np.repeat([greyscale_image], n_channels, axis=0)  # [n_channels,Z,Y,X]
+    print(f"output shape: {duplicated_array_stack.shape}")
 
-    Returns: numpy.ndarray, formatted as described above
-
-    """
-
-    # reading tiff z stack into a numpy.ndarray
-    image = fH.read_tif_stack(tif_stack)
-
-    # reformatting tiff z stack with np.rollaxis() from Fiji's RGB zyxC order to the 3D U-Net desired Czyx order
-    image = np.rollaxis(image, 3, 0)  # 'rolling' the array with regard to its shape (shifting array's shape).
-    # print(image.shape)  # testing
-    
-    print("reformat_tif_stack: image formatted")
-    return image
+    return duplicated_array_stack
 
 
-def main(file_path, output_file_path):
+def main(file_path, output_file_path, n_channels):
 
     # if <'file' exists>
     if os.path.isfile(file_path):
         print("\nFile", file_path, "exists and is a file.")
 
-        image_formatted = reformat_tif_stack(file_path)
+        image_formatted = duplicate_tif_stack(file_path, n_channels)
         fH.export_file(image_formatted, output_file_path)
         return 0
 
@@ -51,13 +47,12 @@ def main(file_path, output_file_path):
 
 if __name__ == "__main__":
 
-    # tif file with its data dimensions / order as such: [z, y, x, c], where zyx are image dimensions (pixel locations),
-    # and c is channel (laser lines saved as RGB)
-    """
-    tif_from_fiji = "M:/data/d.walther/Microscopy/babb03/tiff-ct3/-crop-bicubic-scaled0.25-autofluo-hyperstackRGB24/" \
-                    "id01-Ch405,488,561nm-crop-scaled0.25-hyperstackRGB.tif"
-    """
+    # input parameters
+    suffix = "-czyx"
+    extension = "tif"
+    n_channel_duplicates = 3
 
+    # input file paths
     path = fH.get_directory_dialog()  # str: path with slashes and trailing slash
     files = fH.get_file_list(path)  # list: of the filenames (with extension) contained in the given path
 
@@ -65,8 +60,6 @@ if __name__ == "__main__":
     file_paths = [path + file for file in files]
 
     # output file paths, directories, etc.
-    suffix = "-czyx"
-    extension = "tif"
     path_out = path.strip("/") + suffix + "/"  # str: path with appended suffix
     created_path = fH.create_dir(path_out)  # (str output, not required) create output path if it doesn't exist yet
     # print(path_out == created_path)  # testing (prints True)
@@ -76,8 +69,5 @@ if __name__ == "__main__":
         output_file_paths.append(path_out + output_file_path)
 
     for i, file_path in enumerate(file_paths):
-        main(file_path, output_file_paths[i])
-
-    # test of error messages
-    """folder_path = "M:/data/d.walther/Microscopy/babb03/tiff-ct3/-crop-bicubic-scaled0.25-autofluo-hyperstackRGB24/"
-    main(folder_path, "ASDF")"""
+        main(file_path, output_file_paths[i], n_channel_duplicates)
+        print("")  # testing, add a newline between data sets for readability of output messages

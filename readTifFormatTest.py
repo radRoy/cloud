@@ -30,9 +30,9 @@ if __name__ == "__main__":
     main(file_paths)
 
     # folder 2
-    """
     path = fH.get_directory_dialog()
     files = fH.get_file_list(path)
     file_paths = [path + file for file in files]
     main(file_paths)
-    """
+
+    exit(0)
