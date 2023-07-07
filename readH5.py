@@ -39,7 +39,7 @@ if __name__ == "__main__":
     
     
     # 2nd folder with h5 images
-
+    """
     path = fH.get_directory_dialog()
     files = fH.get_file_list(path)
     file_paths = [path + "/" + file for file in files]
@@ -52,5 +52,5 @@ if __name__ == "__main__":
             print(f[key])
 
         print("")
-
+    """
     exit(0)

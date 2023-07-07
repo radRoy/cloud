@@ -29,6 +29,7 @@ pip install torch --pre --extra-index-url https://download.pytorch.org/whl/night
 git clone https://github.com/wolny/pytorch-3dunet ~/data/
 pip install -e ~/data/pytorch-3dunet/
 pip install tensorboard
+#pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
 train3dunet  # test whether command is found and gives expected error message ('--config ...' required or so)
     # usage: train3dunet [-h] --config CONFIG
     # train3dunet: error: the following arguments are required: --config
@@ -137,10 +138,10 @@ source activate 3dunet
 module load tensorboard
 #tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
     # unclear whether necessary
-tensorboard --logdir ~/data/cloud/chpts/chpt-230707-0/
+tensorboard --logdir ~/data/cloud/chpts/chpt-230707-1/
 # starting the GPU memory logging process (scientific-workflows)
 
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230706-0/nvidia-smi.log &
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230707-1/nvidia-smi.log &
     [1] 642730
 ps
     PID TTY          TIME CMD
@@ -265,3 +266,50 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
         process images into RGB format (8 bit per channel - RGB24 (normal RGB)), reformat hdf5 data set
         => promising: "sample size must be bigger than patch shape"
         reformatting hdf5 from zyxc to czyx: this sounds promising: https://github.com/Jack-Etheredge/Brain-Tumor-Segmentation-3D-UNet-CNN/blob/master/BraTS_3DUNetCNN.py
+
+## Debugging
+
+### Wrangling with the Input Data Format (formatting HDF5 data sets)
+
+```bash
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
+    ...
+    # loading works
+    ...
+    2023-07-07 13:55:14,206 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
+    # 1 message further than with previous data set (changed label data to grayscale and uint16; also 3 input and 1 output channels)
+    2023-07-07 13:55:14,898 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
+    Traceback (most recent call last):
+    File "/home/dwalth/.local/bin/train3dunet", line 33, in <module>
+        sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'train3dunet')())
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/train.py", line 29, in main
+        trainer.fit()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 147, in fit
+        should_terminate = self.train()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 174, in train
+        output, loss = self._forward_pass(input, target, weight)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 297, in _forward_pass
+        output = self.model(input)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/model.py", line 91, in forward
+        x = decoder(encoder_features, x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 338, in forward
+        x = self.upsampling(encoder_features=encoder_features, x=x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 418, in forward
+        return self.upsample(x, output_size)
+    # DW: This is the part of the 3dunet that causes the error
+    
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 1104, in forward
+        output_padding = self._output_padding(
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
+        raise ValueError((
+    ValueError: requested an output size of torch.Size([5, 12, 31]), but valid sizes range from [3, 11, 29] to [4, 12, 30] (for an input of torch.Size([2, 6, 15]))
+```
