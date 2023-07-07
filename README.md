@@ -250,7 +250,9 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 
 1. When putting a computer on standby while a screen session is still attached, that screen session will be frozen when reconnecting from anywhere.
 
-## TBD
+## Debugging
+
+Verbose original approach to debugging input data formatting (can skip, just for documnetation purposes):
 
 230630 (friday): hier stehengeblieben
     to do with multichannel input data:
@@ -268,11 +270,11 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
         => promising: "sample size must be bigger than patch shape"
         reformatting hdf5 from zyxc to czyx: this sounds promising: https://github.com/Jack-Etheredge/Brain-Tumor-Segmentation-3D-UNet-CNN/blob/master/BraTS_3DUNetCNN.py
 
-## Debugging
+### Wrangling with the Input Data Format (formatting HDF5 data sets) for data with multiple channels (3 autofluorescence laser lines)
 
-### Wrangling with the Input Data Format (formatting HDF5 data sets)
+This was most relevant in the weeks around 19.06.2023 and 07.07.2023 (at least).
 
-**trying with new data format: uint16 grey values of the label images (only 1 channel)
+**trying with new data format: uint16 grey values of the label images (only 1 channel) ... 230707-0** (-1 was an attempt where in_channels was set to 1, which caused another error, because input data has 3 channels):
 
 ```bash
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
