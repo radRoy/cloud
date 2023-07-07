@@ -33,6 +33,9 @@ if __name__ == "__main__":
 
     # Caution: Do not forget to check the 'internal_path=...' argument below when calling the h5 append/create function!
     # set the mode for creating new or appending to HDF5 file(s)
+    label_path = "label"
+    raw_path = "raw"
+    internal_path = raw_path
     mode_append = True
     """
     if True: 2 dialogs will appear:
@@ -86,15 +89,16 @@ if __name__ == "__main__":
         break  # testing"""
 
     # appending to the h5 files
-    internal_path_label = "label"
-    internal_path_raw = "raw"
+    # Caution: Do not forget to check the internal_path variable above (see append_mode ~)
     for i, file_path in enumerate(file_paths):
         a_tif = fH.read_tif_stack(file_path)
         print(type(a_tif), a_tif.shape, file_path)  # testing
-        created_file_path_out = tif_append_h5(data_array=a_tif, h5_path=h5_file_paths[i], internal_path=internal_path_label)
+        created_file_path_out = tif_append_h5(data_array=a_tif, h5_path=h5_file_paths[i], internal_path=internal_path)
         # break  # testing
 
         # testing (verification of shape in created h5 file)
         h5file = readH5.open_h5(created_file_path_out)
         for key in list(h5file.keys()):
             print(f"shape of py-created h5, 'key' {key}: {h5file[key].shape}")
+
+        print("")  # added readability (add a newline between data sets)

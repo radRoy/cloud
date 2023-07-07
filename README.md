@@ -137,7 +137,7 @@ source activate 3dunet
 module load tensorboard
 #tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
     # unclear whether necessary
-tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
+tensorboard --logdir ~/data/cloud/chpts/chpt-230707-0/
 # starting the GPU memory logging process (scientific-workflows)
 
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230706-0/nvidia-smi.log &
@@ -188,6 +188,7 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     File "/data/dwalth/pytorch-3dunet/pytorch3dunet/augment/transforms.py", line 323, in __call__
         assert m.ndim == 3
     AssertionError
+# This error arises with my 3channel czyx data sets (raw and label internal h5 paths), regardless of input & output channel number in train_config.yml (3,3; 3,1; 1,1).
 
 # previous try
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-compositeData.yml

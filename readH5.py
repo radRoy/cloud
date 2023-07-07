@@ -22,14 +22,35 @@ def open_h5(file_path_h5):
 
 if __name__ == "__main__":
 
+    # 1st folder with h5 images
+    
     path = fH.get_directory_dialog()
     files = fH.get_file_list(path)
     file_paths = [path + "/" + file for file in files]
-    f = open_h5(file_paths[0])
-    print(list(f.keys()))
 
-    raw = f[list(f.keys())[-1]]
-    print(raw.shape)  # shows me the order, e.g., zyxC or Czyx
-    print(raw.dtype)  # uint8, for instance
+    for file_path in file_paths:
+        f = open_h5(file_path)
+        print(list(f.keys()))
+
+        for key in f.keys():
+            print(f[key])
+
+        print("")
+    
+    
+    # 2nd folder with h5 images
+
+    path = fH.get_directory_dialog()
+    files = fH.get_file_list(path)
+    file_paths = [path + "/" + file for file in files]
+
+    for file_path in file_paths:
+        f = open_h5(file_path)
+        print(list(f.keys()))
+
+        for key in f.keys():
+            print(f[key])
+
+        print("")
 
     exit(0)
