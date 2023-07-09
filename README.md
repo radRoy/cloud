@@ -111,7 +111,9 @@ screen -S 3dunet
 module load a100
     # also possible to specify the gpu this way
 srun --pty -n 1 -c 8 --gres=gpu:A100 --mem=128G --time=24:00:00 bash -l
-srun --pty -n 1 -c 8 --gres=gpu --mem=32G --time=24:00:00 bash -l
+srun --pty -n 1 -c 16 --gres=gpu:T4 --mem=60G --time=24:00:00 bash -l
+    # one T4 node has 16 cpus and 60G memory and 1 T4 GPU with 16.0 G VRAM
+srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth -i 5
     # displays updated output every -i 5 seconds
 squeue -s -u dwalth
@@ -129,7 +131,7 @@ nvidia-smi --list-gpus
 # be sure to pull the newest config files, yamls, etc.
 cd ~/data/cloud/
 bash pull-script.sh
-cd ~
+#cd ~  # can stay in that directory, does not matter for running 3dunet commands
 
 # run the commands
 module load anaconda3
@@ -151,6 +153,121 @@ ps
 
 tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230707-2/
 # typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
+```
+
+**Training 3dunet on single channel data (because multi channel data is too hard to get to work, without help):**  
+
+Running multiple models separate from each other (different nodes) but simultaneously (230709):
+```bash
+ssh dwalth@login1.cluster.s3it.uzh.ch
+cd ~/data/cloud/
+bash pull-script.sh  # assume that train configs are written
+
+screen -ls
+# branch out into separate screen sessions
+
+
+# session with accumulated single channel data sets
+screen -S 3dunet230709-0-accum
+srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
+squeue -s -u dwalth
+    #
+cd ~/data/cloud/
+bash createDirs.sh
+    Created directory chpts/chpt-230709-0
+module load anaconda3 tensorboard
+source activate 3dunet
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-0/nvidia-smi.log &
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230709-0/
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-accumulated.yml
+<ctrl z>  # put train3dunet in background
+<ctrl a d>  # detach screen session
+screen -ls  # verify the screen session still exists
+
+
+# session with only the 405 nm single channel data sets
+screen -S 3dunet230709-1-405
+srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
+squeue -s -u dwalth
+    #
+cd ~/data/cloud bash createDirs.sh
+    Created directory chpts/chpt-230709-1
+module load anaconda3 tensorboard
+source activate 3dunet
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-1/nvidia-smi.log &
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230709-1/
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm.yml
+<ctrl z>  # put train3dunet in background
+<ctrl a d>  # detach screen session
+screen -ls  # verify the screen session still exists
+
+
+# session with only the 488 nm single channel data sets
+screen -S 3dunet230709-2-488
+srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
+squeue -s -u dwalth
+    #
+cd ~/data/cloud bash createDirs.sh
+    Created directory chpts/chpt-230709-2
+module load anaconda3 tensorboard
+source activate 3dunet
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-2/nvidia-smi.log &
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230709-2/
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-488nm.yml
+<ctrl z>  # put train3dunet in background
+<ctrl a d>  # detach screen session
+screen -ls  # verify the screen session still exists
+
+
+# session with only the 561 nm single channel data sets
+screen -S 3dunet230709-3-561
+srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
+squeue -s -u dwalth
+    #
+cd ~/data/cloud bash createDirs.sh
+    Created directory chpts/chpt-230709-3
+module load anaconda3 tensorboard
+source activate 3dunet
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-3/nvidia-smi.log &
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230709-3/
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-561nm.yml
+<ctrl z>  # put train3dunet in background
+<ctrl a d>  # detach screen session
+screen -ls  # verify the screen session still exists
+```
+
+## Things to keep an eye on (e.g., potential or exposed bugs)
+
+1. When putting a computer on standby while a screen session is still attached, that screen session will be frozen when reconnecting from anywhere.
+
+## Debugging
+
+Verbose original approach to debugging input data formatting (can skip, just for documnetation purposes):
+
+230630 (friday): hier stehengeblieben
+    to do with multichannel input data:
+        train3dunet TypeError: when (skipping...) loading datasets (pytorch-3dunet/pytorch3dunet/datasets/hdf5.py - line 75), Accessing groups is expected to be done with bytes or str, not slices (see line 75 for seeing what is being sliced) - to do with the formatting of the hdf5 files, and how the train_config.yml is written (channel no. = 3 or 1, or whatever)
+    solution, attempt 1:
+        install torchvision, torchaudio (Thomas installed it, too, originally)
+        => FAILED (same errors - hdf5 input format was wrong)
+    solution, attempt 2:
+        reformat dataset to not have 3 sub internal paths /raw/channel1, /channel2... but instead to have one path /raw, where all the 3 channels are located in (C,Z,Y,X) as an **Image Sequence**. Maybe it wants an RGB image, though... idk
+        => FAILED (but better than before - expected 3 input channels but got 1)
+
+230703:
+    solution, attempt 3:
+        process images into RGB format (8 bit per channel - RGB24 (normal RGB)), reformat hdf5 data set
+        => promising: "sample size must be bigger than patch shape"
+        reformatting hdf5 from zyxc to czyx: this sounds promising: https://github.com/Jack-Etheredge/Brain-Tumor-Segmentation-3D-UNet-CNN/blob/master/BraTS_3DUNetCNN.py
+
+### Wrangling with the Input Data Format (formatting HDF5 data sets) for data with multiple channels (3 autofluorescence laser lines)
+
+This was most relevant in the weeks around 19.06.2023 and 07.07.2023 (at least).
+
+**something specific (idk, TBD fill in, if relevant. otherwise ignore)**
+
+```bash
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
     ...
     # loading works
@@ -191,7 +308,11 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
         assert m.ndim == 3
     AssertionError
 # This error arises with my 3channel czyx data sets (raw and label internal h5 paths), regardless of input & output channel number in train_config.yml (3,3; 3,1; 1,1).
+```
 
+**some other attempts**
+
+```bash
 # previous try
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-compositeData.yml
     .../hdf5.py, line 75
@@ -245,34 +366,6 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 <ctrl + Z>
 <ctrl + A + D>
 ```
-
-## Things to keep an eye on (e.g., potential or exposed bugs)
-
-1. When putting a computer on standby while a screen session is still attached, that screen session will be frozen when reconnecting from anywhere.
-
-## Debugging
-
-Verbose original approach to debugging input data formatting (can skip, just for documnetation purposes):
-
-230630 (friday): hier stehengeblieben
-    to do with multichannel input data:
-        train3dunet TypeError: when (skipping...) loading datasets (pytorch-3dunet/pytorch3dunet/datasets/hdf5.py - line 75), Accessing groups is expected to be done with bytes or str, not slices (see line 75 for seeing what is being sliced) - to do with the formatting of the hdf5 files, and how the train_config.yml is written (channel no. = 3 or 1, or whatever)
-    solution, attempt 1:
-        install torchvision, torchaudio (Thomas installed it, too, originally)
-        => FAILED (same errors - hdf5 input format was wrong)
-    solution, attempt 2:
-        reformat dataset to not have 3 sub internal paths /raw/channel1, /channel2... but instead to have one path /raw, where all the 3 channels are located in (C,Z,Y,X) as an **Image Sequence**. Maybe it wants an RGB image, though... idk
-        => FAILED (but better than before - expected 3 input channels but got 1)
-
-230703:
-    solution, attempt 3:
-        process images into RGB format (8 bit per channel - RGB24 (normal RGB)), reformat hdf5 data set
-        => promising: "sample size must be bigger than patch shape"
-        reformatting hdf5 from zyxc to czyx: this sounds promising: https://github.com/Jack-Etheredge/Brain-Tumor-Segmentation-3D-UNet-CNN/blob/master/BraTS_3DUNetCNN.py
-
-### Wrangling with the Input Data Format (formatting HDF5 data sets) for data with multiple channels (3 autofluorescence laser lines)
-
-This was most relevant in the weeks around 19.06.2023 and 07.07.2023 (at least).
 
 **trying with new data format: uint16 grey values of the label images (only 1 channel) ... 230707-0** (-1 was an attempt where in_channels was set to 1, which caused another error, because input data has 3 channels):
 

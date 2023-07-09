@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # set the mode for creating new or appending to HDF5 file(s)
     label_path = "label"
     raw_path = "raw"
-    internal_path = raw_path
+    internal_path = label_path
     mode_append = True
     """
     if True: 2 dialogs will appear:
