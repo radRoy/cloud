@@ -281,16 +281,56 @@ Trying to format the single channel input data with fiji (just the h5 file creat
 ```bash
 screen -S 3dunet230710-0-405fiji
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
+    # waiting time too long
+srun --pty -n 1 -c 8 --gres=gpu --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth
-    #
+            STEPID     NAME PARTITION     USER      TIME NODELIST
+        4001367.0     bash  standard   dwalth      0:30 u20-computeibmgpu-vesta6
+    4001367.extern   extern  standard   dwalth      0:30 u20-computeibmgpu-vesta6
 cd ~/data/cloud
 bash pull-script.sh
 bash createDirs.sh
-    #
+    Created directory chpts/chpt-230710-0
 module load anaconda3 tensorboard
 source activate 3dunet
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230710-0/nvidia-smi.log &
 tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230710-0/
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+    2023-07-10 10:29:13,146 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
+    2023-07-10 10:29:14,494 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
+    Traceback (most recent call last):
+    File "/home/dwalth/.local/bin/train3dunet", line 33, in <module>
+        sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'train3dunet')())
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/train.py", line 29, in main
+        trainer.fit()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 147, in fit
+        should_terminate = self.train()
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 174, in train
+        output, loss = self._forward_pass(input, target, weight)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 297, in _forward_pass
+        output = self.model(input)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/model.py", line 91, in forward
+        x = decoder(encoder_features, x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 338, in forward
+        x = self.upsampling(encoder_features=encoder_features, x=x)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 418, in forward
+        return self.upsample(x, output_size)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+        return forward_call(*args, **kwargs)
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 1104, in forward
+        output_padding = self._output_padding(
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
+        raise ValueError((
+    ValueError: requested an output size of torch.Size([5, 12, 31]), but valid sizes range from [3, 11, 29] to [4, 12, 30] (for an input of torch.Size([2, 6, 15]))
+
+# change stride shape to size where there is no overlap between adjacent strides /paddings~.
+bash pull-script.sh
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
 ```
 
