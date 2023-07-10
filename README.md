@@ -262,7 +262,11 @@ squeue -s -u dwalth
 cd ~/data/cloud
 bash createDirs.sh
     Created directory chpts/chpt-230710-1
-
+module load anaconda3 tensorboard
+source activate 3dunet
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230710-1/nvidia-smi.log &
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230710-1/
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-RGB24raw,uint16label-230710-1-3in1out-shapeChange.yml
 
 ---------------------------------------------------------
 did not try yet
