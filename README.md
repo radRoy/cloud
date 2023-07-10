@@ -228,7 +228,8 @@ screen -S 3dunet230709-1-405
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth
     #
-cd ~/data/cloud bash createDirs.sh
+cd ~/data/cloud
+bash createDirs.sh
     Created directory chpts/chpt-230709-1
 module load anaconda3 tensorboard
 source activate 3dunet
@@ -245,7 +246,8 @@ screen -S 3dunet230709-2-488
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth
     #
-cd ~/data/cloud bash createDirs.sh
+cd ~/data/cloud
+bash createDirs.sh
     Created directory chpts/chpt-230709-2
 module load anaconda3 tensorboard
 source activate 3dunet
@@ -262,7 +264,8 @@ screen -S 3dunet230709-3-561
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth
     #
-cd ~/data/cloud bash createDirs.sh
+cd ~/data/cloud
+bash createDirs.sh
     Created directory chpts/chpt-230709-3
 module load anaconda3 tensorboard
 source activate 3dunet
@@ -272,6 +275,23 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 <ctrl z>  # put train3dunet in background
 <ctrl a d>  # detach screen session
 screen -ls  # verify the screen session still exists
+```
+
+Trying to format the single channel input data with fiji (just the h5 file creation):  
+```bash
+screen -S 3dunet230710-0-405fiji
+srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
+squeue -s -u dwalth
+    #
+cd ~/data/cloud
+bash pull-script.sh
+bash createDirs.sh
+    #
+module load anaconda3 tensorboard
+source activate 3dunet
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230710-0/nvidia-smi.log &
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230710-0/
+train3dunet --config train_config-singleChannels-405-fiji.yml
 ```
 
 ## Things to keep an eye on (e.g., potential or exposed bugs)
