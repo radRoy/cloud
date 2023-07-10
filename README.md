@@ -102,11 +102,15 @@ loaders:
       patch_shape: [z1, y1, x1]
       stride_shape: [z2, y2, x2]
 ```  
+
 These rules are:  
+- `patch_shape` must be bigger than `stride_shape`
+
+These rules might include:  
 - z, y, x of `patch_shape` have to be >64 each (verify)
 - y and x of `patch_shape` have to be the same (verify)
-- `patch_shape` must be bigger than `stride_shape`
-- in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders
+- in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders. They have to be the same (verify)
+- patch shape's z, y, x each has to be the same multiple of the stride shape's z, y, x, respectively
 
 Study of patch and stride shapes:  
 ```bash
