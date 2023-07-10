@@ -332,6 +332,11 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 # change stride shape to size where there is no overlap between adjacent strides /paddings~.
 bash pull-script.sh
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
+        raise ValueError((
+    ValueError: requested an output size of torch.Size([6, 12, 31]), but valid sizes range from [5, 11, 29] to [6, 12, 30] (for an input of torch.Size([3, 6, 15]))
+
+# change patch shape to be bigger than 64 in all dimensions (should only affect xy dimensions)
 ```
 
 ## Things to keep an eye on (e.g., potential or exposed bugs)
