@@ -253,7 +253,20 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 <ctrl a d>  # detach screen session
 screen -ls  # verify the screen session still exists
 
+# try again with multi channel data but now with shapes that work with single channel data. (80, 160, 160 patches, 20, 40, 40 strides, both train and val shapes)
+srun --pty -n 1 -c 8 --gres=gpu --mem=32G --time=24:00:00 bash -l
+squeue -s -u dwalth
+            STEPID     NAME PARTITION     USER      TIME NODELIST
+        4002408.0     bash  standard   dwalth      1:07 u20-computeibmgpu-vesta7
+    4002408.extern   extern  standard   dwalth      1:07 u20-computeibmgpu-vesta7
+cd ~/data/cloud
+bash createDirs.sh
+    Created directory chpts/chpt-230710-1
 
+
+---------------------------------------------------------
+did not try yet
+---------------------------------------------------------
 # session with only the 405 nm single channel data sets
 screen -S 3dunet-230709-1-405
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
@@ -264,8 +277,8 @@ bash createDirs.sh
     Created directory chpts/chpt-230710-1
 module load anaconda3 tensorboard
 source activate 3dunet
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-1/nvidia-smi.log &
-tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230709-1/
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230710-1/nvidia-smi.log &
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230710-1/
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm.yml
 <ctrl z>  # put train3dunet in background
 <ctrl a d>  # detach screen session
