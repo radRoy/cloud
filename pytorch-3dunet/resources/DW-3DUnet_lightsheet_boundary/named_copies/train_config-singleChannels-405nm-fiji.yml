@@ -81,7 +81,7 @@ loaders:
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better) (originally: [80, 170, 170], but depends on the input data)
-      patch_shape: [80, 160, 160]  # 12.5 MP (scaled0.25 data's resolution is 109 x 1102 x 371 (from one specimen))
+      patch_shape: [80, 250, 100]  # 12.5 MP (scaled0.25 data's resolution is 109 x 1102 x 371 (from one specimen))
       # train stride between patches (originally: [20, 40, 40]) (in [z, y, x])
       stride_shape: [20, 40, 40]  # 2.5 MP (heart size in this dataset: about 40 x 250/4 x 250/4 (Fiji gives original pixel scales in x&y, but not in z, instead of already downscaled pixel sizes that the image actually has))
       # minimum volume of the labels in the patch (QU: unit of measurement? pixels? um?)
@@ -135,7 +135,7 @@ loaders:
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [80, 160, 160]
+      patch_shape: [80, 240, 120]
       # train stride between patches
       stride_shape: [20, 40, 40]
       # minimum volume of the labels in the patch

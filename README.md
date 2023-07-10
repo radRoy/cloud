@@ -87,7 +87,25 @@ The last output shows that the pytorch-3dunet was installed successfully.
 train3dunet --config data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/train_config.yml
 # <copy the command here used to train a model (adapted paths)>
 ```
-In these `train_config.yml` files the patch size & stride shape are given in [z, y, x]. This is implied from pytorch-3dunet's github repo README.md, under [Input Data Format](https://github.com/wolny/pytorch-3dunet#input-data-format)
+In these `train_config.yml` files the patch size & stride shape are given in [z, y, x]. This is implied from pytorch-3dunet's github repo README.md, under [Input Data Format](https://github.com/wolny/pytorch-3dunet#input-data-format).
+
+The `patch_shape` and `stride_shape` parameters in the `train_config.yml` (below is the relevant structure of such a .yml file) have to follow certain rules (which are hard to find in the mentioned github repo):  
+```yml
+loaders:
+  num_workers: ...
+  raw_internal_path: ...
+  label_internal_path: ...
+  train: ...
+    file_paths: ...
+    slice_builder: ...
+      name: ...
+      patch_shape: [z1, y1, x1]
+      stride_shape: [z2, y2, x2]
+```  
+These rules are:  
+- z, y, x of `patch_shape` have to be >64 each (verify)
+- y and x of `patch_shape` have to be the same (verify)
+- `patch_shape` must be bigger than `stride_shape`
 
 U-Net can only handle absolute paths. Therefore, when specifying paths, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**.  
 The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
@@ -337,6 +355,26 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     ValueError: requested an output size of torch.Size([6, 12, 31]), but valid sizes range from [5, 11, 29] to [6, 12, 30] (for an input of torch.Size([3, 6, 15]))
 
 # change patch shape to be bigger than 64 in all dimensions (should only affect xy dimensions)
+bash pull-script.sh
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+    ...
+    2023-07-10 10:40:50,381 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
+    2023-07-10 10:41:07,293 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
+    2023-07-10 10:41:09,392 [MainThread] INFO UNetTrainer - Training iteration [2/150000]. Epoch [0/999]
+    2023-07-10 10:41:09,893 [MainThread] INFO UNetTrainer - Training iteration [3/150000]. Epoch [0/999]
+    ...
+    2023-07-10 10:41:25,748 [MainThread] INFO UNetTrainer - Training iteration [29/150000]. Epoch [0/999]
+    2023-07-10 10:41:27,583 [MainThread] INFO UNetTrainer - Training iteration [30/150000]. Epoch [1/999]
+    2023-07-10 10:41:37,566 [MainThread] INFO UNetTrainer - Training iteration [31/150000]. Epoch [1/999]
+    ...
+    2023-07-10 10:42:41,060 [MainThread] INFO UNetTrainer - Training iteration [100/150000]. Epoch [3/999]
+    2023-07-10 10:42:41,968 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-10 10:42:41,969 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-10 10:42:41,969 [MainThread] INFO UNetTrainer - Training stats. Loss: 1.0202267536750207. Evaluation score: 0.0
+    /data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/utils.py:187: RuntimeWarning: invalid value encountered in divide
+    return np.nan_to_num((img - np.min(img)) / np.ptp(img))
+    2023-07-10 10:42:42,079 [MainThread] INFO UNetTrainer - Training iteration [101/150000]. Epoch [3/999]
+    ...
 ```
 
 ## Things to keep an eye on (e.g., potential or exposed bugs)
