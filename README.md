@@ -83,6 +83,12 @@ The last output shows that the pytorch-3dunet was installed successfully.
 
 ## Usage of pytorch-3dunet
 
+### `train_config.yml` files
+
+U-Net can only handle absolute paths. Therefore, when specifying paths, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**.  
+The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
+The path `/home/dwalth/scratch/datasets/imaging03/scaled0.5/train` is valid.
+
 ```bash
 train3dunet --config data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/train_config.yml
 # <copy the command here used to train a model (adapted paths)>
@@ -118,37 +124,44 @@ Study of patch and stride shapes:
 # all stride shape dimensions are less than half of the patch shapes'
 # train patch shape yx are different than the val patch shape yx
 # train patch shape y different than x
-# val patch shape y different than x
+# val patch shape y different than x (80, 250, 100 train patch, 80, 240, 120 val patch, 20, 40, 40 stride (never different between train and val))
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
     ...
     File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
         raise ValueError((
     ValueError: requested an output size of torch.Size([10, 12, 31]), but valid sizes range from [9, 11, 29] to [10, 12, 30] (for an input of torch.Size([5, 6, 15]))
 
-# additional change: make val patch shape the same as train patch shape
+# additional change: make val patch shape the same as train patch shape (80, 250, 100 both patches, 20, 40, 40 stride)
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+    ...
     File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
         raise ValueError((
     ValueError: requested an output size of torch.Size([10, 12, 31]), but valid sizes range from [9, 11, 29] to [10, 12, 30] (for an input of torch.Size([5, 6, 15]))
     # (identical error message)
 
-# additional change: make val patch shape the same as train patch shape
+# additional change: make x, y the same in patch shape (80, 100, 100 patch and 20, 40, 40 stride)
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+    ...
     File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
         raise ValueError((
     ValueError: requested an output size of torch.Size([20, 25, 25]), but valid sizes range from [19, 23, 23] to [20, 24, 24] (for an input of torch.Size([10, 12, 12]))
+
+# additional change: make patch shape's z, y, x each be 4 times as big as stride shapes (80, 160, 160 patch and 20, 40, 40 stride)
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+    ...
+    2023-07-10 11:27:08,807 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
+    2023-07-10 11:27:20,625 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
+    2023-07-10 11:27:22,633 [MainThread] INFO UNetTrainer - Training iteration [2/150000]. Epoch [0/999]
+    2023-07-10 11:27:23,124 [MainThread] INFO UNetTrainer - Training iteration [3/150000]. Epoch [0/999]
 ```
 
-
-U-Net can only handle absolute paths. Therefore, when specifying paths, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**.  
-The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
-The path `/home/dwalth/scratch/datasets/imaging03/scaled0.5/train` is valid.
+### ... on the ScienceCluster UZH
 
 The input data should be located on the cluster's scratch partition / drive.
 
-### ... on the ScienceCluster
-
 Here is a page about the [resources of the ScienceCluster](https://docs.s3it.uzh.ch/cluster/resources/). Here is a sub page about the [resources of the A100 cards (& other hardware)](https://docs.s3it.uzh.ch/cluster/resources/#hardware) on the ScienceCluster - one A100 GPU has 80.0 GB VRAM, the V100 GPUs are available in flavours of 16.0 GB and 32.0 GB VRAM.
+
+### actual CLI usage when `ssh`-ing into the ScienceCluster UZH
 
 ```bash
 ssh dwalth@login1.cluster.s3it.uzh.ch
@@ -218,70 +231,37 @@ bash pull-script.sh  # assume that train configs are written
 screen -ls
 # branch out into separate screen sessions
 
-
 # session with accumulated single channel data sets
-screen -S 3dunet230709-0-accum
-srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
+screen -S 3dunet-230710-0-accum
+srun --pty -n 1 -c 8 --gres=gpu --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth
             STEPID     NAME PARTITION     USER      TIME NODELIST
-        3999613.0     bash  standard   dwalth      0:09 u20-computegpu-3
-    3999613.extern   extern  standard   dwalth      0:09 u20-computegpu-3
+        4002322.0     bash  standard   dwalth      0:05 u20-computeibmgpu-vesta6
+    4002322.extern   extern  standard   dwalth      0:05 u20-computeibmgpu-vesta6
+nvidia-smi --list-gpus
+    GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-bad7e169-429d-f470-b499-9272ccc3d7ad)
 cd ~/data/cloud/
 bash createDirs.sh
-    Created directory chpts/chpt-230709-0
+    Created directory chpts/chpt-230710-0
 module load anaconda3 tensorboard
 source activate 3dunet
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-0/nvidia-smi.log &
-tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230709-0/
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230710-0/nvidia-smi.log &
+tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230710-0/
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-accumulated.yml
-    ...
-    2023-07-09 23:27:42,489 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
-    2023-07-09 23:27:43,239 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
-    Traceback (most recent call last):
-    File "/home/dwalth/.local/bin/train3dunet", line 33, in <module>
-        sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'train3dunet')())
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/train.py", line 29, in main
-        trainer.fit()
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 147, in fit
-        should_terminate = self.train()
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 174, in train
-        output, loss = self._forward_pass(input, target, weight)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 297, in _forward_pass
-        output = self.model(input)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/model.py", line 91, in forward
-        x = decoder(encoder_features, x)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 338, in forward
-        x = self.upsampling(encoder_features=encoder_features, x=x)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 418, in forward
-        return self.upsample(x, output_size)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 1104, in forward
-        output_padding = self._output_padding(
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
-        raise ValueError((
-    ValueError: requested an output size of torch.Size([5, 12, 31]), but valid sizes range from [3, 11, 29] to [4, 12, 30] (for an input of torch.Size([2, 6, 15]))
 
-#<ctrl z>  # put train3dunet in background
+<ctrl z>  # put train3dunet in background
 <ctrl a d>  # detach screen session
 screen -ls  # verify the screen session still exists
-scancel -u dwalth 3999613.0
 
 
 # session with only the 405 nm single channel data sets
-screen -S 3dunet230709-1-405
+screen -S 3dunet-230709-1-405
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth
     #
 cd ~/data/cloud
 bash createDirs.sh
-    Created directory chpts/chpt-230709-1
+    Created directory chpts/chpt-230710-1
 module load anaconda3 tensorboard
 source activate 3dunet
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-1/nvidia-smi.log &
@@ -293,13 +273,13 @@ screen -ls  # verify the screen session still exists
 
 
 # session with only the 488 nm single channel data sets
-screen -S 3dunet230709-2-488
+screen -S 3dunet-230709-2-488
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth
     #
 cd ~/data/cloud
 bash createDirs.sh
-    Created directory chpts/chpt-230709-2
+    Created directory chpts/chpt-230710-2
 module load anaconda3 tensorboard
 source activate 3dunet
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-2/nvidia-smi.log &
@@ -311,13 +291,13 @@ screen -ls  # verify the screen session still exists
 
 
 # session with only the 561 nm single channel data sets
-screen -S 3dunet230709-3-561
+screen -S 3dunet-230709-3-561
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
 squeue -s -u dwalth
     #
 cd ~/data/cloud
 bash createDirs.sh
-    Created directory chpts/chpt-230709-3
+    Created directory chpts/chpt-230710-3
 module load anaconda3 tensorboard
 source activate 3dunet
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-3/nvidia-smi.log &
@@ -326,90 +306,6 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 <ctrl z>  # put train3dunet in background
 <ctrl a d>  # detach screen session
 screen -ls  # verify the screen session still exists
-```
-
-Trying to format the single channel input data with fiji (just the h5 file creation):  
-```bash
-screen -S 3dunet230710-0-405fiji
-srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
-    # waiting time too long
-srun --pty -n 1 -c 8 --gres=gpu --mem=32G --time=24:00:00 bash -l
-squeue -s -u dwalth
-            STEPID     NAME PARTITION     USER      TIME NODELIST
-        4001367.0     bash  standard   dwalth      0:30 u20-computeibmgpu-vesta6
-    4001367.extern   extern  standard   dwalth      0:30 u20-computeibmgpu-vesta6
-cd ~/data/cloud
-bash pull-script.sh
-bash createDirs.sh
-    Created directory chpts/chpt-230710-0
-module load anaconda3 tensorboard
-source activate 3dunet
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230710-0/nvidia-smi.log &
-tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230710-0/
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
-    2023-07-10 10:29:13,146 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
-    2023-07-10 10:29:14,494 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
-    Traceback (most recent call last):
-    File "/home/dwalth/.local/bin/train3dunet", line 33, in <module>
-        sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'train3dunet')())
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/train.py", line 29, in main
-        trainer.fit()
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 147, in fit
-        should_terminate = self.train()
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 174, in train
-        output, loss = self._forward_pass(input, target, weight)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 297, in _forward_pass
-        output = self.model(input)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/model.py", line 91, in forward
-        x = decoder(encoder_features, x)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 338, in forward
-        x = self.upsampling(encoder_features=encoder_features, x=x)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 418, in forward
-        return self.upsample(x, output_size)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 1104, in forward
-        output_padding = self._output_padding(
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
-        raise ValueError((
-    ValueError: requested an output size of torch.Size([5, 12, 31]), but valid sizes range from [3, 11, 29] to [4, 12, 30] (for an input of torch.Size([2, 6, 15]))
-
-# change stride shape to size where there is no overlap between adjacent strides /paddings~.
-bash pull-script.sh
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
-        raise ValueError((
-    ValueError: requested an output size of torch.Size([6, 12, 31]), but valid sizes range from [5, 11, 29] to [6, 12, 30] (for an input of torch.Size([3, 6, 15]))
-
-# change patch shape to be bigger than 64 in all dimensions (should only affect xy dimensions according to some in-line commentary in some .py file found while debugging previously)
-# also patch shape of train and val are the same, also respective stride shapes
-# also x and y are the same each in patch shape and in stride shape
-bash pull-script.sh
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
-    ...
-    2023-07-10 10:40:50,381 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
-    2023-07-10 10:41:07,293 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
-    2023-07-10 10:41:09,392 [MainThread] INFO UNetTrainer - Training iteration [2/150000]. Epoch [0/999]
-    2023-07-10 10:41:09,893 [MainThread] INFO UNetTrainer - Training iteration [3/150000]. Epoch [0/999]
-    ...
-    2023-07-10 10:41:25,748 [MainThread] INFO UNetTrainer - Training iteration [29/150000]. Epoch [0/999]
-    2023-07-10 10:41:27,583 [MainThread] INFO UNetTrainer - Training iteration [30/150000]. Epoch [1/999]
-    2023-07-10 10:41:37,566 [MainThread] INFO UNetTrainer - Training iteration [31/150000]. Epoch [1/999]
-    ...
-    2023-07-10 10:42:41,060 [MainThread] INFO UNetTrainer - Training iteration [100/150000]. Epoch [3/999]
-    2023-07-10 10:42:41,968 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
-    2023-07-10 10:42:41,969 [MainThread] INFO EvalMetric - ARand: 0.0
-    2023-07-10 10:42:41,969 [MainThread] INFO UNetTrainer - Training stats. Loss: 1.0202267536750207. Evaluation score: 0.0
-    /data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/utils.py:187: RuntimeWarning: invalid value encountered in divide
-    return np.nan_to_num((img - np.min(img)) / np.ptp(img))
-    2023-07-10 10:42:42,079 [MainThread] INFO UNetTrainer - Training iteration [101/150000]. Epoch [3/999]
-    ...
 ```
 
 ## Things to keep an eye on (e.g., potential or exposed bugs)
