@@ -121,7 +121,14 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
         raise ValueError((
     ValueError: requested an output size of torch.Size([10, 12, 31]), but valid sizes range from [9, 11, 29] to [10, 12, 30] (for an input of torch.Size([5, 6, 15]))
 
-# only change: make val patch shape the same as train patch shape
+# additional change: make val patch shape the same as train patch shape
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
+        raise ValueError((
+    ValueError: requested an output size of torch.Size([10, 12, 31]), but valid sizes range from [9, 11, 29] to [10, 12, 30] (for an input of torch.Size([5, 6, 15]))
+    # (identical error message)
+
+# additional change: make val patch shape the same as train patch shape
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
 ```
 
