@@ -106,6 +106,25 @@ These rules are:
 - z, y, x of `patch_shape` have to be >64 each (verify)
 - y and x of `patch_shape` have to be the same (verify)
 - `patch_shape` must be bigger than `stride_shape`
+- in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders
+
+Study of patch and stride shapes:  
+```bash
+# all patch shape dimensions >64
+# all stride shape dimensions are less than half of the patch shapes'
+# train patch shape yx are different than the val patch shape yx
+# train patch shape y different than x
+# val patch shape y different than x
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+    ...
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
+        raise ValueError((
+    ValueError: requested an output size of torch.Size([10, 12, 31]), but valid sizes range from [9, 11, 29] to [10, 12, 30] (for an input of torch.Size([5, 6, 15]))
+
+# only change: make val patch shape the same as train patch shape
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
+```
+
 
 U-Net can only handle absolute paths. Therefore, when specifying paths, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**.  
 The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
@@ -354,7 +373,9 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
         raise ValueError((
     ValueError: requested an output size of torch.Size([6, 12, 31]), but valid sizes range from [5, 11, 29] to [6, 12, 30] (for an input of torch.Size([3, 6, 15]))
 
-# change patch shape to be bigger than 64 in all dimensions (should only affect xy dimensions)
+# change patch shape to be bigger than 64 in all dimensions (should only affect xy dimensions according to some in-line commentary in some .py file found while debugging previously)
+# also patch shape of train and val are the same, also respective stride shapes
+# also x and y are the same each in patch shape and in stride shape
 bash pull-script.sh
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
     ...

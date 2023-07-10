@@ -135,7 +135,7 @@ loaders:
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [80, 240, 120]
+      patch_shape: [80, 250, 100]
       # train stride between patches
       stride_shape: [20, 40, 40]
       # minimum volume of the labels in the patch
