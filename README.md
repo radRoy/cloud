@@ -168,7 +168,7 @@ Here is a page about the [resources of the ScienceCluster](https://docs.s3it.uzh
 - transfer data with globus
 - adapt model parameters (paths, shapes, checkpoint folder, config yaml)
 - adapt train_config.yml; make a copy & rename according to settings
-    
+
 ```bash
 train_config-230711-0-lower_patience.yml
 /home/dwalth/data/cloud/chpts/chpt-230711-0/
@@ -183,6 +183,8 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 
 ### Example calculation of the patch and stride shapes (with differing image sizes between specimens)
 
+*Refer to a separate textfile for the resolutions of tha babb03-ct3 images (cropped, and scaled by 0.25, that is).*
+
 specimen ID, z-resolutions, y-resolutions, x-resolutions
 1, z, y, x
 2, z, y, x
@@ -193,6 +195,8 @@ specimen ID, z-resolutions, y-resolutions, x-resolutions
 7, z, y, x
 
 ### actual CLI usage when `ssh`-ing into the ScienceCluster UZH
+
+*For a short workflow for clumsily running several `train3dunet` commands simultaneously, on the same node (with `&`, putting something to background `bg` until it's complete), refer to the ~adjacent file "train_in_parallel.md".*
 
 ```bash
 ssh dwalth@login1.cluster.s3it.uzh.ch
