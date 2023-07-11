@@ -181,6 +181,17 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 - git sync the files between PC and cluster
 - run the shell commands
 
+### Example calculation of the patch and stride shapes (with differing image sizes between specimens)
+
+specimen ID, z-resolutions, y-resolutions, x-resolutions
+1, z, y, x
+2, z, y, x
+3, z, y, x
+4, z, y, x
+5, z, y, x
+6, z, y, x
+7, z, y, x
+
 ### actual CLI usage when `ssh`-ing into the ScienceCluster UZH
 
 ```bash
