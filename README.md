@@ -166,12 +166,16 @@ Here is a page about the [resources of the ScienceCluster](https://docs.s3it.uzh
 - get data from microscope
 - input data formatting (to HDF5: autofluorescence: CZYX (uint8 works), label: ZYX (uint16 works))
 - transfer data with globus
-- **adapt model parameters (paths, shapes, checkpoint folder)**
-    - train_config.yml; make a copy & rename according to settings
-
-    train_config-230711-0-lower_patience.yml
-    /home/dwalth/data/cloud/chpts/chpt-230711-0/
-    jobid 4007175, step 0
+- adapt model parameters (paths, shapes, checkpoint folder, config yaml)
+- adapt train_config.yml; make a copy & rename according to settings
+    
+```bash
+train_config-230711-0-lower_patience.yml
+/home/dwalth/data/cloud/chpts/chpt-230711-0/
+jobid 4007175, step 0
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230711-0/nvidia-smi.log &
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230711-0-lower_patience.yml
+```
 
 - adapt shell commands (paths)
 - git sync the files between PC and cluster
