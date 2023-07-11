@@ -349,12 +349,17 @@ Verbose original approach to debugging input data formatting (can skip, just for
         => promising: "sample size must be bigger than patch shape"
         reformatting hdf5 from zyxc to czyx: this sounds promising: https://github.com/Jack-Etheredge/Brain-Tumor-Segmentation-3D-UNet-CNN/blob/master/BraTS_3DUNetCNN.py
 
-### Wrangling with the Input Data Format (formatting HDF5 data sets) for data with multiple channels (3 autofluorescence laser lines)
+### Wrangling with the Input Data Format (formatting HDF5 data sets) for data with multiple channels (3 autofluorescence laser lines), and the input parameters
 
-This was most relevant in the weeks around 19.06.2023 and 07.07.2023 (at least).
+This was most relevant in the weeks around 19.06.2023 and 07.07.2023 (at least). It was solved on 10.07.2023:
+- Fuse the single channel images into some RGB like form - RGB24 is sure to work (from experience during this time)
+- Verify that the tif images are formatted in [C, z, y, x] and not [z, y, x, C] as would be the default in Fiji, for example
+- 
+Use my scripts to convert the autofluorescence images 
 
-**something specific (idk, TBD fill in, if relevant. otherwise ignore)**
+Now, a list of combinations of invalid input data formats and/or parameters with their according error messages:
 
+- Error message when, presumably (currently uncertain what the input data & parameters where), 
 ```bash
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
     ...
@@ -398,23 +403,27 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 # This error arises with my 3channel czyx data sets (raw and label internal h5 paths), regardless of input & output channel number in train_config.yml (3,3; 3,1; 1,1).
 ```
 
-**some other attempts**
-
+- Error message when the input data format is not valid, e.g., when the raw channels in the h5 file are given as separate internal paths, for instance /raw/405, /raw/488, etc. instead of within one internal path /raw, like 3D U-Net requires the input data to be formatted (i.e., [C, Z, Y, X] in one image data saved in the h5's /raw internal path):
 ```bash
-# previous try
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-compositeData.yml
     .../hdf5.py, line 75
     ...
     File "/apps/opt/spack/linux-ubuntu20.04-x86_64/gcc-9.3.0/anaconda3-2023.03-1-emayrkyj4zgh57gt37ztn55cwzrrhstk/lib/python3.10/site-packages/h5py/_hl/group.py", line 330, in __getitem__
         raise TypeError("Accessing a group is done with bytes or str, "
     TypeError: Accessing a group is done with bytes or str,  not <class 'slice'>
+```
 
+- Error message when the patch and/or (&/) stride shape are not valid, e.g., when the order [z, y, x] was forgotten or the image resolution was mistaken to be bigger than it is:
+```bash
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-sequenceData.yml
     ...
     File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
         assert i >= k, 'Sample size has to be bigger than the patch size'
     AssertionError: Sample size has to be bigger than the patch size
     # Solution: adapt patch & stride shape to the downscaled resolution (downscaled images in fiji still have original xy res displayed, too (also the actual scaled res, of course))
+```
+
+```bash
 <another try with adapted train_config file>
     ...
     <loading works>
@@ -451,8 +460,6 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 608, in _conv_forward
         return F.conv3d(
     RuntimeError: Given groups=1, weight of size [32, 3, 1, 1, 1], expected input[1, 1, 50, 125, 125] to have 3 channels, but got 1 channels instead
-<ctrl + Z>
-<ctrl + A + D>
 ```
 
 **trying with new data format: uint16 grey values of the label images (only 1 channel) ... 230707-0** (-1 was an attempt where in_channels was set to 1, which caused another error, because input data has 3 channels):
@@ -499,6 +506,7 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
         raise ValueError((
     ValueError: requested an output size of torch.Size([5, 12, 31]), but valid sizes range from [3, 11, 29] to [4, 12, 30] (for an input of torch.Size([2, 6, 15]))
 ```
+The problem turned out to be the patch and stride shape, not the input data format. The input data format, here, is valid and works for 3D U-Net
 
 **now with 1 input channel and 1 output channel instead of 3 and 1 or 3 and 3 respectively:**
 
@@ -513,28 +521,7 @@ train3dunet ...
         sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'train3dunet')())
     File "/data/dwalth/pytorch-3dunet/pytorch3dunet/train.py", line 29, in main
         trainer.fit()
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 147, in fit
-        should_terminate = self.train()
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 174, in train
-        output, loss = self._forward_pass(input, target, weight)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/trainer.py", line 297, in _forward_pass
-        output = self.model(input)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/model.py", line 79, in forward
-        x = encoder(x)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 280, in forward
-        x = self.basic_module(x)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 196, in forward
-        residual = self.conv1(x)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
-        return forward_call(*args, **kwargs)
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 613, in forward
-        return self._conv_forward(input, self.weight, self.bias)
+    ...
     File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 608, in _conv_forward
         return F.conv3d(
     RuntimeError: Given groups=1, weight of size [32, 1, 1, 1, 1], expected input[1, 3, 40, 100, 250] to have 1 channels, but got 3 channels instead
