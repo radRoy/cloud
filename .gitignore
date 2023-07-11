@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ignore any tensorboard log events.out. ... files - the models are saved in 47 MB sized .pytorch files
 .idea
 .pytest_cache
@@ -10,7 +9,9 @@ __pycache__/
 *$py.class
 
 # Tensorboard logs
-logs/
+#chpts/*/logs/  # should work imo
+logs
+!.git/logs
 
 # PyTorch models
 *.pytorch
@@ -22,5 +23,3 @@ pytorch3dunet.egg-info/
 pytorch-3dunet/.git
 pytorch-3dunet/.gitignore
 pytorch-3dunet/.github
-
->>>>>>> 3bf6da1cbfd622348d1f673f0e9bcaa63fa30f19
