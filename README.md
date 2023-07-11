@@ -83,7 +83,7 @@ The last output shows that the pytorch-3dunet was installed successfully.
 
 ## Usage of pytorch-3dunet
 
-### `train_config.yml` files
+### Instructions on the `train_config.yml` files
 
 U-Net can only handle absolute paths. Therefore, when specifying paths, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**.  
 The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
@@ -155,11 +155,27 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     2023-07-10 11:27:23,124 [MainThread] INFO UNetTrainer - Training iteration [3/150000]. Epoch [0/999]
 ```
 
-### ... on the ScienceCluster UZH
+### Instructions on the ScienceCluster UZH
 
 The input data should be located on the cluster's scratch partition / drive.
 
 Here is a page about the [resources of the ScienceCluster](https://docs.s3it.uzh.ch/cluster/resources/). Here is a sub page about the [resources of the A100 cards (& other hardware)](https://docs.s3it.uzh.ch/cluster/resources/#hardware) on the ScienceCluster - one A100 GPU has 80.0 GB VRAM, the V100 GPUs are available in flavours of 16.0 GB and 32.0 GB VRAM.
+
+### schematic workflow
+
+- get data from microscope
+- input data formatting (to HDF5: autofluorescence: CZYX (uint8 works), label: ZYX (uint16 works))
+- transfer data with globus
+- **adapt model parameters (paths, shapes, checkpoint folder)**
+    - train_config.yml; make a copy & rename according to settings
+
+    train_config-230711-0-lower_patience.yml
+    /home/dwalth/data/cloud/chpts/chpt-230711-0/
+    jobid 4007175, step 0
+
+- adapt shell commands (paths)
+- git sync the files between PC and cluster
+- run the shell commands
 
 ### actual CLI usage when `ssh`-ing into the ScienceCluster UZH
 
@@ -175,9 +191,17 @@ screen -S 3dunet
 module load a100
     # also possible to specify the gpu this way
 srun --pty -n 1 -c 8 --gres=gpu:A100 --mem=128G --time=24:00:00 bash -l
+srun --pty -n 1 -c 8 --gres=gpu:V100 --mem=32G --time=24:00:00 bash -l
 srun --pty -n 1 -c 16 --gres=gpu:T4 --mem=60G --time=24:00:00 bash -l
     # one T4 node has 16 cpus and 60G memory and 1 T4 GPU with 16.0 G VRAM
 srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
+
+# requesting a specific V100 version
+srun --pty -n 1 -c 8 --mem=32G --time=24:00:00 --gres=gpu:V100:1 --constraint=GPUMEM32GB bash -l
+# equivalently
+module load v100-32g
+srun --pty -n 1 -c 8 --mem=32G --time=24:00:00 --gres=gpu bash -l
+
 squeue -s -u dwalth -i 5
     # displays updated output every -i 5 seconds
 squeue -s -u dwalth
@@ -262,63 +286,13 @@ squeue -s -u dwalth
 cd ~/data/cloud
 bash createDirs.sh
     Created directory chpts/chpt-230710-1
-
-
----------------------------------------------------------
-did not try yet
----------------------------------------------------------
-# session with only the 405 nm single channel data sets
-screen -S 3dunet-230709-1-405
-srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
-squeue -s -u dwalth
-    #
-cd ~/data/cloud
-bash createDirs.sh
-    Created directory chpts/chpt-230710-1
-module load anaconda3 tensorboard
-source activate 3dunet
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230710-1/nvidia-smi.log &
 tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230710-1/
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm.yml
-<ctrl z>  # put train3dunet in background
-<ctrl a d>  # detach screen session
-screen -ls  # verify the screen session still exists
-
-
-# session with only the 488 nm single channel data sets
-screen -S 3dunet-230709-2-488
-srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
-squeue -s -u dwalth
-    #
-cd ~/data/cloud
-bash createDirs.sh
-    Created directory chpts/chpt-230710-2
-module load anaconda3 tensorboard
-source activate 3dunet
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-2/nvidia-smi.log &
-tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230709-2/
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-488nm.yml
-<ctrl z>  # put train3dunet in background
-<ctrl a d>  # detach screen session
-screen -ls  # verify the screen session still exists
-
-
-# session with only the 561 nm single channel data sets
-screen -S 3dunet-230709-3-561
-srun --pty -n 1 -c 8 --gres=gpu:T4 --mem=32G --time=24:00:00 bash -l
-squeue -s -u dwalth
-    #
-cd ~/data/cloud
-bash createDirs.sh
-    Created directory chpts/chpt-230710-3
-module load anaconda3 tensorboard
-source activate 3dunet
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230709-3/nvidia-smi.log &
-tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230709-3/
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-561nm.yml
-<ctrl z>  # put train3dunet in background
-<ctrl a d>  # detach screen session
-screen -ls  # verify the screen session still exists
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-RGB24raw,uint16label-230710-1-3in1out-shapeChange.yml
+    # successfully trains on the multichannel input data
+# do not press CTRL + Z - this will pause the train3dunet command.
+<CTRL + A + D>  # detach the screen session
+screen -ls  # verify the screen still exists
 ```
 
 ## Things to keep an eye on (e.g., potential or exposed bugs)

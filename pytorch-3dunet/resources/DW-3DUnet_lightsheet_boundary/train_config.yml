@@ -6,7 +6,7 @@
 model:
   name: ResidualUNet3D
   # number of input channels to the model
-  in_channels: 1
+  in_channels: 3
   # number of output channels
   out_channels: 1
   # determines the order of operators in a single layer (crg - Conv3d+ReLU+GroupNorm)
@@ -44,12 +44,12 @@ lr_scheduler:
   # make sure to use the 'min' mode cause lower AdaptedRandError is better
   mode: min
   factor: 0.2
-  patience: 20
+  patience: 10
 trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
   # path to the checkpoint directory
-  checkpoint_dir: /home/dwalth/data/cloud/chpts/chpt-230710-0/
+  checkpoint_dir: /home/dwalth/data/cloud/chpts/chpt-230711-0/
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -75,15 +75,15 @@ loaders:
   train:
     # path to the training datasets
     file_paths:
-    - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/singleChannels-405nm-fiji/train/
+    - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better) (originally: [80, 170, 170], but depends on the input data)
-      patch_shape: [40, 250, 100]  # 12.5 MP (scaled0.25 data's resolution is 109 x 1102 x 371 (from one specimen))
+      patch_shape: [80, 160, 160]  # 12.5 MP (scaled0.25 data's resolution is 109 x 1102 x 371 (from one specimen))
       # train stride between patches (originally: [20, 40, 40]) (in [z, y, x])
-      stride_shape: [20, 65, 65]  # 2.5 MP (heart size in this dataset: about 40 x 250/4 x 250/4 (Fiji gives original pixel scales in x&y, but not in z, instead of already downscaled pixel sizes that the image actually has))
+      stride_shape: [20, 40, 40]  # 2.5 MP (heart size in this dataset: about 40 x 250/4 x 250/4 (Fiji gives original pixel scales in x&y, but not in z, instead of already downscaled pixel sizes that the image actually has))
       # minimum volume of the labels in the patch (QU: unit of measurement? pixels? um?)
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
@@ -129,15 +129,15 @@ loaders:
   val:
     # path to the val datasets
     file_paths:
-    - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/singleChannels-405nm-fiji/val/
+      - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch  # QU: Why is this section duplicated? does not make much sense to me to give two different patch_shapes &/ stride_shapes...
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [40, 250, 100]
+      patch_shape: [80, 160, 160]
       # train stride between patches
-      stride_shape: [20, 65, 65]
+      stride_shape: [20, 40, 40]
       # minimum volume of the labels in the patch
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
