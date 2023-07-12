@@ -15,4 +15,6 @@ ssh dwalth@login1.cluster.s3it.uzh.ch
 # between these commands, terminate the process where the learning rate does not seem to decrease
 screen -S
 srun --pty -n 1 -c 8 --mem=32G --time=24:00:00 --gres=gpu:V100:1 --constraint=GPUMEM32GB bash -l
+nvidia-smi ...
+module load anaconda3 tensorboard
 ```
