@@ -81,9 +81,9 @@ train3dunet
 ```
 The last output shows that the pytorch-3dunet was installed successfully.
 
-## Usage of pytorch-3dunet
+## <u>Usage of pytorch-3dunet</u>
 
-### Instructions on the `train_config.yml` files
+### <u>Instructions on the `train_config.yml` files</u>
 
 U-Net can only handle absolute paths. Therefore, when specifying paths, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**.  
 The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
@@ -116,7 +116,7 @@ These rules might include:
 - z, y, x of `patch_shape` have to be >64 each (verify)
 - y and x of `patch_shape` have to be the same (verify)
 - in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders. They have to be the same (verify)
-- patch shape's z, y, x each has to be the same multiple of the stride shape's z, y, x, respectively
+have - patch shape's dimensions z, y, x each has to be the same multiple of the stride shape's z, y, x, respectively
 
 Study of patch and stride shapes:  
 ```bash
@@ -155,13 +155,15 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     2023-07-10 11:27:23,124 [MainThread] INFO UNetTrainer - Training iteration [3/150000]. Epoch [0/999]
 ```
 
-### Instructions on the ScienceCluster UZH
+### <u>Instructions on the ScienceCluster UZH</u>
 
 The input data should be located on the cluster's scratch partition / drive.
 
 Here is a page about the [resources of the ScienceCluster](https://docs.s3it.uzh.ch/cluster/resources/). Here is a sub page about the [resources of the A100 cards (& other hardware)](https://docs.s3it.uzh.ch/cluster/resources/#hardware) on the ScienceCluster - one A100 GPU has 80.0 GB VRAM, the V100 GPUs are available in flavours of 16.0 GB and 32.0 GB VRAM.
 
-### schematic workflow
+Running the command **`tensorboard --logdir <checkpoint/logs-0/>` is not necessary** for getting tensorboard statistics, because: The `train3dunet` command uses `train_config.yml` files which contain an argument called `checkpoint_dir`, or so. This directory is the one tensorboard takes as priority for exporting its training statistics to.
+
+### <u>schematic workflow</u>
 
 - get data from microscope
 - input data formatting (to HDF5: autofluorescence: CZYX (uint8 works), label: ZYX (uint16 works))
@@ -181,7 +183,7 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 - git sync the files between PC and cluster
 - run the shell commands
 
-### Example calculation of the patch and stride shapes (with differing image sizes between specimens)
+### <u>Example calculation of the patch and stride shapes (with differing image sizes between specimens)</u>
 
 *Refer to a separate textfile for the resolutions of tha babb03-ct3 images (cropped, and scaled by 0.25, that is).*
 
@@ -194,7 +196,7 @@ specimen ID, z-resolutions, y-resolutions, x-resolutions
 6, z, y, x
 7, z, y, x
 
-### actual CLI usage when `ssh`-ing into the ScienceCluster UZH
+### <u>actual CLI usage when `ssh`-ing into the ScienceCluster UZH</u>
 
 *For a short workflow for clumsily running several `train3dunet` commands simultaneously, on the same node (with `&`, putting something to background `bg` until it's complete), refer to the ~adjacent file "train_in_parallel.md".*
 
@@ -333,11 +335,11 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 screen -ls  # verify the screen still exists
 ```
 
-## Things to keep an eye on (e.g., potential or exposed bugs)
+## <u>Things to keep an eye on (e.g., potential or exposed bugs)</u>
 
 1. When putting a computer on standby while a screen session is still attached, that screen session will be frozen when reconnecting from anywhere.
 
-## Debugging
+## <u>Debugging</u>
 
 Verbose original approach to debugging input data formatting (can skip, just for documnetation purposes):
 
@@ -357,7 +359,7 @@ Verbose original approach to debugging input data formatting (can skip, just for
         => promising: "sample size must be bigger than patch shape"
         reformatting hdf5 from zyxc to czyx: this sounds promising: https://github.com/Jack-Etheredge/Brain-Tumor-Segmentation-3D-UNet-CNN/blob/master/BraTS_3DUNetCNN.py
 
-### Wrangling with the Input Data Format (formatting HDF5 data sets) for data with multiple channels (3 autofluorescence laser lines), and the input parameters
+### <u>Wrangling with the Input Data Format (formatting HDF5 data sets) for data with multiple channels (3 autofluorescence laser lines), and the input parameters</u>
 
 This was most relevant in the weeks around 19.06.2023 and 07.07.2023 (at least). It was solved on 10.07.2023:
 - Fuse the single channel images into some RGB like form - RGB24 is sure to work (from experience during this time)
