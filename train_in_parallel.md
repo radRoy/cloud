@@ -129,3 +129,22 @@ Wed Jul 12 11:29:58 2023
 +-----------------------------------------------------------------------------+
 ```
 train_config-230712-5-patience10,factor0.5,val100,log25.yml
+
+## final outputs
+
+### <u>3dunet-230712-1</u>
+
+```bash
+train3dunet ...
+    ...
+    2023-07-12 13:57:33,598 [MainThread] INFO UNetTrainer - Training iteration [3154/150000]. Epoch [108/999]
+    2023-07-12 13:57:35,414 [MainThread] INFO UNetTrainer - Training iteration [3155/150000]. Epoch [108/999]
+    2023-07-12 13:57:37,228 [MainThread] INFO UNetTrainer - Training iteration [3156/150000]. Epoch [108/999]
+    2023-07-12 13:57:39,413 [MainThread] INFO UNetTrainer - Training iteration [3157/150000]. Epoch [108/999]
+    2023-07-12 13:57:41,848 [MainThread] INFO UNetTrainer - Training iteration [3158/150000]. Epoch [108/999]
+    2023-07-12 13:57:44,286 [MainThread] INFO UNetTrainer - Training iteration [3159/150000]. Epoch [108/999]
+    2023-07-12 13:57:46,709 [MainThread] INFO UNetTrainer - Training iteration [3160/150000]. Epoch [108/999]
+    2023-07-12 13:57:49,529 [MainThread] INFO UNetTrainer - Training iteration [3161/150000]. Epoch [108/999]
+    2023-07-12 13:57:56,047 [MainThread] INFO UNetTrainer - Training iteration [3162/150000]. Epoch [109/999]
+    Killed
+```
