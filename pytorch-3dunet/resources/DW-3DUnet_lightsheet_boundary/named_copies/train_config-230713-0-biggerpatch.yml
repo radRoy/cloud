@@ -90,9 +90,10 @@ loaders:
         # File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
         # assert i >= k, 'Sample size has to be bigger than the patch size'
       # ERROR: patch shape = min resoluion - stride shape
-      # TRY: patch shape = min resolution - (2 * stride shape)
-      patch_shape: [60, 650, 150]
-      stride_shape: [24, 193, 51]
+      # ERROR: patch shape = min resolution - (2 * stride shape)
+      # TRY: patch shape = min resolution - 2, patch shape = 1,1,1
+      patch_shape: [107, 1034, 251]
+      stride_shape: [1, 1, 1]
       # minimum volume of the labels in the patch (QU: unit of measurement? pixels? um?)
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
@@ -144,9 +145,9 @@ loaders:
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [60, 650, 150]
+      patch_shape: [107, 1034, 251]
       # train stride between patches
-      stride_shape: [24, 193, 51]
+      stride_shape: [1, 1, 1]
       # minimum volume of the labels in the patch
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
