@@ -89,6 +89,7 @@ loaders:
       #stride_shape: [49, 386, 103]  # 2.5 MP (heart size in this dataset: about 40 x 250/4 x 250/4 (Fiji gives original pixel scales in x&y, but not in z, instead of already downscaled pixel sizes that the image actually has))
         # File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
         # assert i >= k, 'Sample size has to be bigger than the patch size'
+        # with half the stride shape: all data sets loaded, most with just 1 patch
       # ERROR: patch shape = min resoluion - stride shape
       # ERROR: patch shape = min resolution - (2 * stride shape)
       # ERROR: patch shape = min resolution - 2, patch shape = 1,1,1 (why error? confusing)
