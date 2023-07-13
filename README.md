@@ -252,7 +252,6 @@ module load tensorboard
     # necessary for (at least live) tensorboard log output.
     # not necessary for train3dunet to run
 tensorboard --logdir ~/data/cloud/chpts/chpt-230707-2/
-tensorboard --logdir ~/data/cloud/chpts/chpt-230713-0/
 # starting the GPU memory logging process (scientific-workflows)
 
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230707-2/nvidia-smi.log &
@@ -345,6 +344,10 @@ screen -ls  # verify the screen still exists
 ## <u>Documenting progress</u>
 
 ### <u>runs on 23.07.13 (meeting day) - improving train loss & eval score on multichannel data by increasing patch size</u>
+
+The aim of this training is to find hyperparameters (specifically patch & stride shape) that cause the train loss and val eval score curves to look like the successful single channel training run from 23.05.09,10,11 (just before the meeting two months ago).
+
+Whether running tensorboard before train3dunet or not does not affect the validity of the patch and stride shape. I shortly thought it does, but that is false. `train3dunet` *always* needs the sample size to be bigger than patch size (it would have been weird, otherwise, especially if an external command can change how train3dunet works internally).
 
 ```bash
 ssh dwalth@login1.cluster.s3it.uzh.ch
