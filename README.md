@@ -1,10 +1,10 @@
-# cloud
+# <u>cloud</u>
 
 A repo for more efficient work an a cloud computation infrastructure, circumventing the need for tedious manual transfers (e.g., through globus connect, or using scp, etc.) by using the more efficient git.
 
 This repo revolves around using 3D U-Net, written by Adrian Wolny and X Y, which they provide on the respective [GitHub page](https://github.com/wolny/pytorch-3dunet)
 
-## How to `git clone` this repository (repo)
+## <u>How to `git clone` this repository (repo)</u>
 Because this repo is private, https cloning is not supported via CLI (e.g., linux bash interfaces on remote computing clusters) (this includes providing github username and password). Cloning via ssh keys is required (as other methods, e.g., github's so-called personal access tokens, were tried previously and did not succeed). For github's guide on [Cloning with SSH URLs](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories#cloning-with-ssh-urls), click that link.
 
 Here is a link to one's [github account associated ssh keys](https://github.com/settings/keys), where one can see whether there are ssh keys already in one's github account, amongst others.
@@ -13,9 +13,9 @@ Although this is redundant regarding above guides, I recommend to [generate a ne
 
 Another redundant but useful information is how to actually clone (this repo) via ssh from the CLI (e.g., via Git Bash), assuming correct set up of ssh key pairs (above guides): `git clone git@github.com:radRoy/cloud.git`.
 
-## Installing pytorch-3dunet into your conda environment
+## <u>Installing pytorch-3dunet into your conda environment</u>
 
-### List of commands without comments
+### <u>List of commands without comments</u>
 
 ```bash
 ssh dwalth@login1.cluster.s3it.uzh.ch
@@ -36,7 +36,7 @@ train3dunet  # test whether command is found and gives expected error message ('
 # DW: Success.
 ```
 
-### List of commands with comments
+### <u>List of commands with comments</u>
 
 ```bash
 ssh <shortname>@login1.cluster.s3it.uzh.ch  # 'login1' requests connection to the cluster's login node 1. enables reconnecting from remote computers with `screen`
@@ -249,7 +249,10 @@ source activate 3dunet
 module load tensorboard
 #tensorboard --logdir ~/cloud/logs/tblogs-yymmdd/
     # unclear whether necessary
+    # necessary for (at least live) tensorboard log output.
+    # not necessary for train3dunet to run
 tensorboard --logdir ~/data/cloud/chpts/chpt-230707-2/
+tensorboard --logdir ~/data/cloud/chpts/chpt-230713-0/
 # starting the GPU memory logging process (scientific-workflows)
 
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230707-2/nvidia-smi.log &
@@ -338,6 +341,30 @@ screen -ls  # verify the screen still exists
 ## <u>Things to keep an eye on (e.g., potential or exposed bugs)</u>
 
 1. When putting a computer on standby while a screen session is still attached, that screen session will be frozen when reconnecting from anywhere.
+
+## <u>Documenting progress</u>
+
+### <u>runs on 23.07.13 (meeting day) - improving train loss & eval score on multichannel data by increasing patch size</u>
+
+```bash
+ssh dwalth@login1.cluster.s3it.uzh.ch
+tmux  # created tmux window 2
+# tmux attach -t 2  # to reattach to this session after returning to workplace
+srun --pty -n 1 -c 8 --mem=32G --time=24:00:00 --gres=gpu:V100:1 --constraint=GPUMEM16GB bash -l  # jobid.stepno = 4011170.0 (date: 230713)
+
+screen -S 3dunet-230713-0-biggerpatch
+module load tensorboard anaconda3
+tensorboard --logdir ~/data/cloud/chpts/chpt-230713-0/
+
+source activate 3dunet
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230713-0/nvidia-smi.log &
+ps  # verify the nvidia-smi command actually works and is running (= is listed in this command's output)
+
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230713-0-biggerpatch.yml
+<CTRL + A + D>  # detach from this screen session
+screen -ls  # verify the session was not accidentally terminated (CTRL + D is the command for session termination)
+# running successfully
+```
 
 ## <u>Debugging</u>
 
