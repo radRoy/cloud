@@ -69,3 +69,91 @@ Wed Jul 12 11:29:58 2023
 +-----------------------------------------------------------------------------+
 ```
 train_config-230712-5-patience10,factor0.5,val100,log25.yml
+
+## Final model output
+
+```bash
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230712-5-patience10,factor0.5,val100,log25.yml
+    ...
+    2023-07-12 18:18:32,387 [MainThread] INFO UNetTrainer - Training iteration [8875/150000]. Epoch [306/4999]
+    2023-07-12 18:18:33,808 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:18:33,809 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:18:33,809 [MainThread] INFO UNetTrainer - Training stats. Loss: 1.0000003576278687. Evaluation score: 0.0
+    2023-07-12 18:18:33,864 [MainThread] INFO UNetTrainer - Training iteration [8876/150000]. Epoch [306/4999]
+    2023-07-12 18:18:42,418 [MainThread] INFO UNetTrainer - Training iteration [8877/150000]. Epoch [306/4999]
+    2023-07-12 18:18:42,885 [MainThread] INFO UNetTrainer - Training iteration [8878/150000]. Epoch [306/4999]
+    2023-07-12 18:18:44,279 [MainThread] INFO UNetTrainer - Training iteration [8879/150000]. Epoch [306/4999]
+    2023-07-12 18:18:45,673 [MainThread] INFO UNetTrainer - Training iteration [8880/150000]. Epoch [306/4999]
+    2023-07-12 18:18:47,068 [MainThread] INFO UNetTrainer - Training iteration [8881/150000]. Epoch [306/4999]
+    2023-07-12 18:18:48,463 [MainThread] INFO UNetTrainer - Training iteration [8882/150000]. Epoch [306/4999]
+    2023-07-12 18:18:49,861 [MainThread] INFO UNetTrainer - Training iteration [8883/150000]. Epoch [306/4999]
+    2023-07-12 18:18:51,256 [MainThread] INFO UNetTrainer - Training iteration [8884/150000]. Epoch [306/4999]
+    2023-07-12 18:18:52,657 [MainThread] INFO UNetTrainer - Training iteration [8885/150000]. Epoch [306/4999]
+    2023-07-12 18:18:54,058 [MainThread] INFO UNetTrainer - Training iteration [8886/150000]. Epoch [306/4999]
+    2023-07-12 18:18:55,458 [MainThread] INFO UNetTrainer - Training iteration [8887/150000]. Epoch [306/4999]
+    2023-07-12 18:18:56,857 [MainThread] INFO UNetTrainer - Training iteration [8888/150000]. Epoch [306/4999]
+    2023-07-12 18:18:58,270 [MainThread] INFO UNetTrainer - Training iteration [8889/150000]. Epoch [306/4999]
+    2023-07-12 18:18:59,666 [MainThread] INFO UNetTrainer - Training iteration [8890/150000]. Epoch [306/4999]
+    2023-07-12 18:19:01,071 [MainThread] INFO UNetTrainer - Training iteration [8891/150000]. Epoch [306/4999]
+    2023-07-12 18:19:02,487 [MainThread] INFO UNetTrainer - Training iteration [8892/150000]. Epoch [306/4999]
+    2023-07-12 18:19:03,902 [MainThread] INFO UNetTrainer - Training iteration [8893/150000]. Epoch [306/4999]
+    2023-07-12 18:19:05,300 [MainThread] INFO UNetTrainer - Training iteration [8894/150000]. Epoch [306/4999]
+    2023-07-12 18:19:06,713 [MainThread] INFO UNetTrainer - Training iteration [8895/150000]. Epoch [306/4999]
+    2023-07-12 18:19:08,115 [MainThread] INFO UNetTrainer - Training iteration [8896/150000]. Epoch [306/4999]
+    2023-07-12 18:19:09,530 [MainThread] INFO UNetTrainer - Training iteration [8897/150000]. Epoch [306/4999]
+    2023-07-12 18:19:10,948 [MainThread] INFO UNetTrainer - Training iteration [8898/150000]. Epoch [306/4999]
+    2023-07-12 18:19:12,365 [MainThread] INFO UNetTrainer - Training iteration [8899/150000]. Epoch [306/4999]
+    2023-07-12 18:19:13,783 [MainThread] INFO UNetTrainer - Training iteration [8900/150000]. Epoch [306/4999]
+    2023-07-12 18:19:15,203 [MainThread] INFO UNetTrainer - Validating...
+    2023-07-12 18:19:15,999 [MainThread] INFO UNetTrainer - Validation iteration 0
+    2023-07-12 18:19:16,654 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:16,654 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:16,655 [MainThread] INFO UNetTrainer - Validation iteration 1
+    2023-07-12 18:19:17,041 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:17,042 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:17,042 [MainThread] INFO UNetTrainer - Validation iteration 2
+    2023-07-12 18:19:17,441 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:17,441 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:17,442 [MainThread] INFO UNetTrainer - Validation iteration 3
+    2023-07-12 18:19:17,850 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:17,850 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:17,851 [MainThread] INFO UNetTrainer - Validation iteration 4
+    2023-07-12 18:19:18,248 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:18,248 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:18,248 [MainThread] INFO UNetTrainer - Validation iteration 5
+    2023-07-12 18:19:18,649 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:18,649 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:18,649 [MainThread] INFO UNetTrainer - Validation iteration 6
+    2023-07-12 18:19:19,046 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:19,046 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:19,046 [MainThread] INFO UNetTrainer - Validation iteration 7
+    2023-07-12 18:19:19,443 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:19,443 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:19,443 [MainThread] INFO UNetTrainer - Validation iteration 8
+    2023-07-12 18:19:19,841 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:19,841 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:19,841 [MainThread] INFO UNetTrainer - Validation iteration 9
+    2023-07-12 18:19:20,244 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:20,244 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:20,245 [MainThread] INFO UNetTrainer - Validation iteration 10
+    2023-07-12 18:19:20,643 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:20,644 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:20,644 [MainThread] INFO UNetTrainer - Validation iteration 11
+    2023-07-12 18:19:21,048 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:21,048 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:21,048 [MainThread] INFO UNetTrainer - Validation iteration 12
+    2023-07-12 18:19:21,454 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:21,454 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:21,454 [MainThread] INFO UNetTrainer - Validation iteration 13
+    2023-07-12 18:19:22,569 [MainThread] INFO EvalMetric - ARand: 0.05864064884303932
+    2023-07-12 18:19:22,570 [MainThread] INFO UNetTrainer - Validation iteration 14
+    2023-07-12 18:19:22,961 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:22,961 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:23,142 [MainThread] INFO UNetTrainer - Validation finished. Loss: 1.6892108599344888. Evaluation score: 0.003909376589535955
+    2023-07-12 18:19:23,144 [MainThread] INFO UNetTrainer - Saving checkpoint to '/home/dwalth/data/cloud/chpts/chpt-230712-5/last_checkpoint.pytorch'
+    2023-07-12 18:19:23,594 [MainThread] INFO EvalMetric - Skipping ARandError computation: only 1 label present in the ground truth
+    2023-07-12 18:19:23,595 [MainThread] INFO EvalMetric - ARand: 0.0
+    2023-07-12 18:19:23,595 [MainThread] INFO UNetTrainer - Training stats. Loss: 0.8090771384796915. Evaluation score: 0.0
+    2023-07-12 18:19:23,650 [MainThread] INFO UNetTrainer - Learning rate below the minimum 1e-06.
+    2023-07-12 18:19:23,820 [MainThread] INFO UNetTrainer - Stopping criterion is satisfied. Finishing training
+```
