@@ -93,7 +93,7 @@ loaders:
       # ERROR: patch shape = min resolution - (2 * stride shape)
       # ERROR: patch shape = min resolution - 2, patch shape = 1,1,1 (why error? confusing)
       # TRY: use stride from 230509_pat10 (single channel success): some arbitrary stride shape, patch shape is slightly less than half of resolution (here, min resolution)
-      patch_shape: [50, 500, 120]
+      patch_shape: [50, 400, 200]
       stride_shape: [10, 25, 40]
       # minimum volume of the labels in the patch (QU: unit of measurement? pixels? um?)
       threshold: 0.6
@@ -146,7 +146,7 @@ loaders:
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [50, 500, 120]
+      patch_shape: [50, 400, 200]
       # train stride between patches
       stride_shape: [10, 25, 40]
       # minimum volume of the labels in the patch
