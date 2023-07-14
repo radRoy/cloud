@@ -13,6 +13,12 @@ Although this is redundant regarding above guides, I recommend to [generate a ne
 
 Another redundant but useful information is how to actually clone (this repo) via ssh from the CLI (e.g., via Git Bash), assuming correct set up of ssh key pairs (above guides): `git clone git@github.com:radRoy/cloud.git`.
 
+## <u>Overview over my data sets used for training 3dunet</u>
+
+The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in a data set
+> - dataset01(babb03-ct3-488)
+> - dataset02(babb03-ct3-405,488,561)
+
 ## <u>Installing pytorch-3dunet into your conda environment</u>
 
 ### <u>List of commands without comments</u>
@@ -153,6 +159,44 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     2023-07-10 11:27:20,625 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
     2023-07-10 11:27:22,633 [MainThread] INFO UNetTrainer - Training iteration [2/150000]. Epoch [0/999]
     2023-07-10 11:27:23,124 [MainThread] INFO UNetTrainer - Training iteration [3/150000]. Epoch [0/999]
+
+# --------------------------
+# attempts from 230713-0:
+
+# - factor of 5 between patch shape and stride shape did not work (same torch.Size([]) error message. Idea: maybe the ratio of z,y,x lengths within patch shape &/ within stride shape matter, too (keep in mind, not act on it yet).
+# - when input data is of varying size, formulas: patch_shape = resolution - 2, stride_shape = 1,1,1 might work, but take very long to load. This is not an option
+
+# patch=[60,600,120], stride=[20,200,40]
+train3dunet ... (same multichannel data (scaled0.25,labeluint16,autofluorgb24, etc.) used )
+
+# --------------------------
+# attempts from 230714-0:
+
+# duplicate the stdout to a file (but still print it to stdout, thus duplicating it):
+# runs 'command' normally, prints output to stdout (...or stderr - also console output) normally, duplicates stdout and stderr output to 'output.file', -a for 'append or create if empty/new file'
+<command> 2>&1 | tee -a output.file
+
+# take working values patch=[80,160,160], stride=[20,40,40], keep their ratio (which is 4) and increase the size of each shape proportionally
+# preliminary stuff
+ssh
+tmux
+srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
+screen -S 3dunet-230714-0-patch_ratio4
+cd ~/data/cloud
+bash pull-script.sh
+bash createDirs.sh
+tensorboard --logdir ~/data/cloud/chpts/chpt-230714-0/
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230714-0/nvidia-smi.log &
+
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230714-0-ratio4.yml 2>&1 | tee -a ~/data/cloud/chpts/chpt-230714-0/console.output
+    ...
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
+        raise ValueError((
+    ValueError: requested an output size of torch.Size([12, 25, 25]), but valid sizes range from [11, 23, 23] to [12, 24, 24] (for an input of
+    torch.Size([6, 12, 12]))
+
+# change the ratio patch/stride from 4 to 3, making bigger patches possible, because the z resolution is smaller than x and much smaller y resolution.
+
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
@@ -252,19 +296,14 @@ module load tensorboard
     # necessary for (at least live) tensorboard log output.
     # not necessary for train3dunet to run
 tensorboard --logdir ~/data/cloud/chpts/chpt-230707-2/
-# starting the GPU memory logging process (scientific-workflows)
-
+# starting the GPU memory logging process (scientific-workflows) in the background (finishes when terminal session ends (endless loop))
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230707-2/nvidia-smi.log &
-    [1] 642730
-ps
-    PID TTY          TIME CMD
- 641211 pts/0    00:00:00 bash
- 642730 pts/0    00:00:00 nvidia-smi
- 642731 pts/0    00:00:00 ps
 
 tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230707-2/
 # typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
+# printing the output to stdout (nothing new), and duplicating it (incl. errors) to a file
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml 2>&1 | tee -a ~/data/cloud/chpts/chpt-230714-0/console.output
 ```
 
 **Training 3dunet on single channel data (because multi channel data is too hard to get to work, without help):**  
