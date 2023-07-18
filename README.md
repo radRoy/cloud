@@ -15,7 +15,8 @@ Another redundant but useful information is how to actually clone (this repo) vi
 
 ## <u>Overview over my data sets used for training 3dunet</u>
 
-The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in a data set
+The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in a h5 data set of the format ()
+
 > - dataset01(babb03-ct3-488)
 > - dataset02(babb03-ct3-405,488,561)
 
