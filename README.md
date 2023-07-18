@@ -201,6 +201,46 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 
 # change the ratio patch/stride from 4 to 3, making bigger patches possible, because the z resolution is smaller than x and much smaller y resolution.
 
+# ------------------------------
+# attempts from 230718-0:
+# follow previous troubleshooting notes from Thomas (patch and stride shape are the same, and they are powers of 2 (2^3), because 3dunet does 3 pooling steps (reduction in resolution))
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-0-2tothe3patches.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-0/console.output
+    ...
+    2023-07-18 11:25:07,750 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [80, 288, 288], 'stride_shape': [80, 288, 288], 'threshold': 0.6, 'slack_acceptance': 0.01}
+    2023-07-18 11:25:09,387 [MainThread] ERROR HDF5Dataset - Skipping train set: /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/train/id03-img_Ch638nm-crop-scaled0.25-label-blur3D1-Otsu570-largest-uint16-h5.h5
+    Traceback (most recent call last):
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 142, in create_datasets
+        dataset = cls(file_path=file_path,
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 179, in __init__
+        super().__init__(file_path=file_path, phase=phase, slice_builder_config=slice_builder_config,
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 65, in __init__
+        slice_builder = get_slice_builder(self.raw, self.label, self.weight_map, slice_builder_config)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 176, in get_slice_builder
+        return slice_builder_cls(raws, labels, weight_maps, **config)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 158, in __init__
+        raw_slices, label_slices = zip(*filtered_slices)
+    ValueError: not enough values to unpack (expected 2, got 0)
+    2023-07-18 11:25:09,413 [MainThread] INFO HDF5Dataset - Loading train set from: /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/train/id07-img_Ch638nm-crop-scaled0.25-label-blur3D1-Otsu570-largest-uint16-h5.h5...
+    2023-07-18 11:25:10,025 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [80, 288, 288], 'stride_shape': [80, 288, 288], 'threshold': 0.6, 'slack_acceptance': 0.01}
+    2023-07-18 11:25:10,025 [MainThread] ERROR HDF5Dataset - Skipping train set: /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/train/id07-img_Ch638nm-crop-scaled0.25-label-blur3D1-Otsu570-largest-uint16-h5.h5
+    Traceback (most recent call last):
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 142, in create_datasets
+        dataset = cls(file_path=file_path,
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 179, in __init__
+        super().__init__(file_path=file_path, phase=phase, slice_builder_config=slice_builder_config,
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 65, in __init__
+        slice_builder = get_slice_builder(self.raw, self.label, self.weight_map, slice_builder_config)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 176, in get_slice_builder
+        return slice_builder_cls(raws, labels, weight_maps, **config)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 139, in __init__
+        super().__init__(raw_dataset, label_dataset, weight_dataset, patch_shape, stride_shape, **kwargs)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 59, in __init__
+        self._raw_slices = self._build_slices(raw_dataset, patch_shape, stride_shape)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 107, in _build_slices
+        for x in x_steps:
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
+        assert i >= k, 'Sample size has to be bigger than the patch size'
+    AssertionError: Sample size has to be bigger than the patch size
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
@@ -303,13 +343,13 @@ module load tensorboard
 tensorboard --logdir ~/data/cloud/chpts/chpt-230707-2/
 tensorboard --logdir ~/data/outputs/chpt-230718-0/
 # starting the GPU memory logging process (scientific-workflows) in the background (finishes when terminal session ends (endless loop))
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230707-2/nvidia-smi.log &
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-0/nvidia-smi.log &
 
 tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230707-2/
 # typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
 # printing the output to stdout (nothing new), and duplicating it (incl. errors) to a file
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml 2>&1 | tee -a ~/data/cloud/chpts/chpt-230714-0/console.output
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-0/console.output
 ```
 
 **Training 3dunet on single channel data (because multi channel data is too hard to get to work, without help):**  
