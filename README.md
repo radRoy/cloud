@@ -258,11 +258,18 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
         # This is the error when patch shape = stride shape (& with shape as big as it is, now)
 
 # 230718-1-0 (train3dunet output in chpt folder)
-# patch != stride.
-# patch + 1*stride < min-resolution
+# patch != stride
+# patch + 1*stride <= min-resolution
 # patch = [96,240,240], stride = [8,8,8]
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-1-0/nvidia-smi.log &
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-1-0-patch[96,240,240],stride[8,8,8].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-1-0/console.output
 
 # 230718-2
+# patch = stride = [48,112,112]
+# patch + 1*stride <= min-resolution
+tensorboard --logdir ~/data/outputs/chpt-230718-2/
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-2/nvidia-smi.log &
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-2-patch[48,112,112],stride[48,112,112].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-2/console.output
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
