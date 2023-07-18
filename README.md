@@ -202,7 +202,9 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 # change the ratio patch/stride from 4 to 3, making bigger patches possible, because the z resolution is smaller than x and much smaller y resolution.
 
 # ------------------------------
-# attempts from 230718-0:
+# attempts from 230718:
+
+# chpt-230718-0 (train3dunet output in chpt folder)
 # follow previous troubleshooting notes from Thomas (patch and stride shape are the same, and they are powers of 2 (2^3), because 3dunet does 3 pooling steps (reduction in resolution))
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-0-2tothe3patches.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-0/console.output
     ...
@@ -241,9 +243,26 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
         assert i >= k, 'Sample size has to be bigger than the patch size'
     AssertionError: Sample size has to be bigger than the patch size
+# some datasets are too small for the given patch shape (288 in y is too big)
 
+# 230718-1 (train3dunet output in chpt folder)
 # patch = stride = [96,240,240]
+# CHECK: patch shape is smaller than all samples' size
+# ERROR: with patch shape = stride shape (& this specific shape (unknown, at this point, if that makes a difference)):
+    # "ValueError: not enough values to unpack (expected 2, got 0)"
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-1-<description>.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-1/console.output
+    ...
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 158, in __init__
+        raw_slices, label_slices = zip(*filtered_slices)
+    ValueError: not enough values to unpack (expected 2, got 0)
+        # This is the error when patch shape = stride shape (& with shape as big as it is, now)
 
+# 230718-1-0 (train3dunet output in chpt folder)
+# patch != stride.
+# patch + 1*stride < min-resolution
+# patch = [96,240,240], stride = [8,8,8]
+
+# 230718-2
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
@@ -347,12 +366,14 @@ tensorboard --logdir ~/data/cloud/chpts/chpt-230707-2/
 tensorboard --logdir ~/data/outputs/chpt-230718-0/
 # starting the GPU memory logging process (scientific-workflows) in the background (finishes when terminal session ends (endless loop))
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-0/nvidia-smi.log &
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-1/nvidia-smi.log &
 
 tensorboard --logdir /home/dwalth/data/cloud/chpts/chpt-230707-2/
 # typical train3dunet execution command (inside an appropriate gpu compute session), and some alternatives
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml
 # printing the output to stdout (nothing new), and duplicating it (incl. errors) to a file
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-0/console.output
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-1/console.output
 ```
 
 **Training 3dunet on single channel data (because multi channel data is too hard to get to work, without help):**  
