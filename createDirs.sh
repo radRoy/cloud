@@ -3,16 +3,16 @@
 #dir=$(date)  # works
 #dir=$(date '+chpt-%y%m%d-0')  # works
 
-dirDate=$(date '+chpt-%y%m%d')  # works
-#dirDate="chpts/${dirDate}"
-dirDate="../outputs/${dirDate}"
+date=$(date '+chpt-%y%m%d')  # works
+
+prefix="../outputs/"
 i=0  # works
-dir="${dirDate}-$i"  # works
-#file $dir
+dateString="${date}-$i"  # works
 
 while [ 1 ]
 do
-  dir="${dirDate}-$i"  # works
+  dateString="${date}-$i"  # works
+  dir="${prefix}${dateString}"
   # if [ directory <argument> exists]
   if [ -d "$dir" ]; then  # works (checks if directory "$dir" exists)
     #echo $i  # exists
@@ -22,7 +22,7 @@ do
   else  # if dir does not exist
     mkdir "$dir"
     #echo "Created directory ${dir}"
-    echo $dir
+    echo "~/data/outputs/${dateString}"
     break
   fi
 
