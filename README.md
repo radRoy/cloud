@@ -241,6 +241,9 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
         assert i >= k, 'Sample size has to be bigger than the patch size'
     AssertionError: Sample size has to be bigger than the patch size
+
+# patch = stride = [96,240,240]
+
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
