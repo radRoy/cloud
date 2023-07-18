@@ -321,6 +321,11 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 # exit screen session
 srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
 # recreate screen, etc.
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-3-patch[64,896,160],stride[32,128,80].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-3/console.output
+    ...
+    <trains successfully>
+    # VRAM usage is now 20GB (1 patch per data set (confusing as to why only 1 patch, but I'll accept it.))
+    # let it run over night
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
