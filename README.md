@@ -18,7 +18,8 @@ Another redundant but useful information is how to actually clone (this repo) vi
 The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in a h5 data set of the format ()
 
 > - dataset01(babb03-ct3-488)
-> - dataset02(babb03-ct3-405,488,561)
+> - **dataset02**(babb03-ct3-405,488,561)
+>   - (the current dataset, i.e., from <= 2023.07.06 until >= 2023.07.18)
 
 ## <u>Installing pytorch-3dunet into your conda environment</u>
 
@@ -125,6 +126,8 @@ These rules might include:
 - in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders. They have to be the same (verify)
 have - patch shape's dimensions z, y, x each has to be the same multiple of the stride shape's z, y, x, respectively
 
+This dataset's min and max resolutions:
+
 Study of patch and stride shapes:  
 ```bash
 # all patch shape dimensions >64
@@ -203,8 +206,11 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 
 # ------------------------------
 # attempts from 230718:
+# from now (date in folder names...) on:  train3dunet stdout & stderr output saved to a file in the output chpt folder (~/data/outputs/)
 
-# chpt-230718-0 (train3dunet output in chpt folder)
+# tmux session 0
+
+# chpt-230718-0
 # follow previous troubleshooting notes from Thomas (patch and stride shape are the same, and they are powers of 2 (2^3), because 3dunet does 3 pooling steps (reduction in resolution))
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-0-2tothe3patches.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-0/console.output
     ...
@@ -245,7 +251,7 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     AssertionError: Sample size has to be bigger than the patch size
 # some datasets are too small for the given patch shape (288 in y is too big)
 
-# 230718-1 (train3dunet output in chpt folder)
+# 230718-1
 # patch = stride = [96,240,240]
 # CHECK: patch shape is smaller than all samples' size
 # ERROR: with patch shape = stride shape (& this specific shape (unknown, at this point, if that makes a difference)):
@@ -257,19 +263,53 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     ValueError: not enough values to unpack (expected 2, got 0)
         # This is the error when patch shape = stride shape (& with shape as big as it is, now)
 
-# 230718-1-0 (train3dunet output in chpt folder)
+# 230718-1-0
 # patch != stride
 # patch + 1*stride <= min-resolution
 # patch = [96,240,240], stride = [8,8,8]
+# => VALID PARAMETERS
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-1-0/nvidia-smi.log &
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-1-0-patch[96,240,240],stride[8,8,8].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-1-0/console.output
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-1-0-patch[96,240,240],stride[8,8,8].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-1-0/console.output
+    ...
+    <training is working>
+    <train loss is decreasing>
+    # letting it run until srun times out
+squeue -s -u dwalth
+            STEPID     NAME PARTITION     USER      TIME NODELIST
+        4100212.0     bash  standard   dwalth   3:40:47 u20-computeibmgpu-vesta8
+    4100212.extern   extern  standard   dwalth   3:40:47 u20-computeibmgpu-vesta8
+    4103392.batch    batch  standard   dwalth     22:16 u20-compute-m1
+    4103392.extern   extern  standard   dwalth     22:16 u20-compute-m1
 
 # 230718-2
 # patch = stride = [48,112,112]
-# patch + 1*stride <= min-resolution
+# patch + 1*stride <= min-resolution (aka res_min)
+# patch number is mostly 2, 1 in case of id02 data set (unclear, why)
+# => VALID PARAMETERS
+# => no train loss - cancelled the train3dunet process
 tensorboard --logdir ~/data/outputs/chpt-230718-2/
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-2/nvidia-smi.log &
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-2-patch[48,112,112],stride[48,112,112].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-2/console.output
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-2-patch[48,112,112],stride[48,112,112].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-2/console.output
+    ...
+    <training is working>
+    <train loss is constant (patches must have missed the region of the heart (the only label in the label images))>
+
+# tmux attach -t 3
+
+# 230718-3
+# patch != stride
+# patch + 1*stride <= res_min
+# optimization: res_max >= patch + x_small * stride
+    # where x_small is optimized for begin small, i.e., biggest input images do not have many more patches than the smallest input images
+    # optimized dimension-wise
+# optimization: patch >= stride
+# optimization: patch big (close to res_min)
+srun --pty -n 1 -c 8 --mem=32G --gres=gpu --time=24:00:00 bash -l
+nvidia-smi --list-gpus
+    GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-3e262d5d-0626-9183-de73-27b629371d47)
+tensorboard --logdir ~/data/outputs/chpt-230718-3/
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-3/nvidia-smi.log &
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-3-patch[64,896,160],stride[32,128,80].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-3/console.output
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
