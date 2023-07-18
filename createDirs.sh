@@ -15,13 +15,14 @@ do
   dir="${dirDate}-$i"  # works
   # if [ directory <argument> exists]
   if [ -d "$dir" ]; then  # works (checks if directory "$dir" exists)
-    echo $i  # exists
+    #echo $i  # exists
     ((i++))
     continue
   
   else  # if dir does not exist
     mkdir "$dir"
-    echo "Created directory ${dir}"
+    #echo "Created directory ${dir}"
+    echo $dir
     break
   fi
 

@@ -169,6 +169,9 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 
 # patch=[60,600,120], stride=[20,200,40]
 train3dunet ... (same multichannel data (scaled0.25,labeluint16,autofluorgb24, etc.) used )
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
+        raise ValueError((
+    ValueError: requested an output size of torch.Size([7, 15, 75]), but valid sizes range from [5, 13, 73] to [6, 14, 74] (for an input of torch.Size([3, 7, 37]))
 
 # --------------------------
 # attempts from 230714-0:
@@ -256,6 +259,7 @@ screen -S 3dunet
 # typical interactive session with large VRAM requirements
 module load a100
     # also possible to specify the gpu this way
+cd ~  # have to be in home directory to run `srun` commands
 srun --pty -n 1 -c 8 --gres=gpu:A100 --mem=128G --time=24:00:00 bash -l
 srun --pty -n 1 -c 8 --gres=gpu:V100 --mem=32G --time=24:00:00 bash -l
 srun --pty -n 1 -c 16 --gres=gpu:T4 --mem=60G --time=24:00:00 bash -l
@@ -297,6 +301,7 @@ module load tensorboard
     # necessary for (at least live) tensorboard log output.
     # not necessary for train3dunet to run
 tensorboard --logdir ~/data/cloud/chpts/chpt-230707-2/
+tensorboard --logdir ~/data/outputs/chpt-230718-0/
 # starting the GPU memory logging process (scientific-workflows) in the background (finishes when terminal session ends (endless loop))
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230707-2/nvidia-smi.log &
 
