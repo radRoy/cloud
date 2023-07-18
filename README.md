@@ -307,9 +307,20 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 srun --pty -n 1 -c 8 --mem=32G --gres=gpu --time=24:00:00 bash -l
 nvidia-smi --list-gpus
     GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-3e262d5d-0626-9183-de73-27b629371d47)
+screen -S <3dunet-date-$i>
 tensorboard --logdir ~/data/outputs/chpt-230718-3/
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-3/nvidia-smi.log &
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-3-patch[64,896,160],stride[32,128,80].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-3/console.output
+    ...
+    <loaded successfully>
+    <trains successfully>... wait
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 608, in _conv_forward
+    return F.conv3d(
+    torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.09 GiB (GPU 0; 15.77 GiB total capacity; 14.28 GiB already allocated; 217.12 MiB free; 14.30 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+    # out of memory
+# exit screen session
+srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
+# recreate screen, etc.
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
