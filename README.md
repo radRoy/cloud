@@ -326,6 +326,10 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     <trains successfully>
     # VRAM usage is now 20GB (1 patch per data set (confusing as to why only 1 patch, but I'll accept it.))
     # let it run over night
+    <tensorboard analytics>
+        # train loss & eval score look good. train predictions, too.
+        # val loss, eval score & predictions look bad (label not in loaded patch?)
+        # => redo the cropping to ensure the label organ is in the patches of the different data sets.
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
