@@ -1,0 +1,27 @@
+#!/bin/bash
+# creates an empty directory at a pre-determined location on the Science Cluster's drives (on the data drive, in this case)
+
+date=$(date '+test-%y%m%d')  # works
+
+prefix="../outputs/"
+i=0  # works
+dateString="${date}-$i"  # works
+
+while [ 1 ]
+do
+  dateString="${date}-$i"  # works
+  dir="${prefix}${dateString}"
+  # if [ directory <argument> exists]
+  if [ -d "$dir" ]; then  # works (checks if directory "$dir" exists)
+    #echo $i  # exists
+    ((i++))
+    continue
+  
+  else  # if dir does not exist
+    mkdir "$dir"
+    #echo "Created directory ${dir}"
+    echo "~/data/outputs/${dateString}"
+    break
+  fi
+
+done

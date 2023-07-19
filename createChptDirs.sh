@@ -1,7 +1,5 @@
-#dir=$1  # works
-#dir='protocols'  # works
-#dir=$(date)  # works
-#dir=$(date '+chpt-%y%m%d-0')  # works
+#!/bin/bash
+# creates an empty directory at a pre-determined location somewhere on the Science Cluster
 
 date=$(date '+chpt-%y%m%d')  # works
 
