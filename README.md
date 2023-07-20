@@ -19,7 +19,9 @@ The image processing done on multichannel data sets since the meeting on 2023.06
 
 > - dataset01(babb03-ct3-488)
 > - **dataset02**(babb03-ct3-405,488,561)
->   - (the current dataset, i.e., from <= 2023.07.06 until >= 2023.07.18)
+>   - the current dataset, i.e., from <= 2023.07.06 until >= 2023.07.18
+> - dataset03(babb03-ct3-405,488,561-body_crop)
+>   - the next to-be dataset, where the cropping region only includes the tadpoles' bodies and not the tail - for getting more cube-like images for easier patch shape handling
 
 ## <u>Installing pytorch-3dunet into your conda environment</u>
 
@@ -337,14 +339,16 @@ train3dunet --config <config_file_path> 2>&1 | tee -a ~/data/outputs/chpt-230718
 
 attempt at deploying a well-trained model (I suppose well-trained, idk, let's see the segmentation results):
 ```bash
+# 230719-0
+# 230720-0 (try again, now the requested node is available)
 ssh
 tmux attach -t 0
 srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=02:00:00 bash -l
-    # requested node not available (down, drained, reserved; xor)
-screen -S 3dunet-230719-0-test
+    srun: job 4154413 queued and waiting for resources  # noting the job ID
+screen -S 3dunet-230720-0-test
 module load anaconda3  # no tensorboard required when deploying a model, I think
 source activate 3dunet
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230719-0/nvidia-smi.log &
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/test-230720-0/nvidia-smi.log &
 predict3dunet --config <CONFIG> 2>&1 | tee -a ~/data/outputs/test-230719-0/predict3dunet.output
 ```
 
