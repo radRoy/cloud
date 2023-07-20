@@ -345,6 +345,7 @@ ssh
 tmux attach -t 0
 srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=02:00:00 bash -l
     srun: job 4154413 queued and waiting for resources  # noting the job ID
+    new try: 4157963
 screen -S 3dunet-230720-0-test
 module load anaconda3  # no tensorboard required when deploying a model, I think
 source activate 3dunet
