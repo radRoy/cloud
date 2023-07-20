@@ -33,11 +33,11 @@ loaders:
     slice_builder:
       name: SliceBuilder
       
-      # DW: same shapes as in training config
+      # ERROR: attempting same shapes as in training config: error about torch.Size([32,3,zyx]), but have torch.Size([32,1,zyx]) etc.
       # original: patch_shape: [80, 170, 170]
       patch_shape: [64,896,160]
       # original: stride_shape: [40, 90, 90]
-      stride_shape: [32,128,80]
+      stride_shape: [32,480,80]
         # wolny: make sure that they overlap each other for averaging patches in the end.
 
       # DW: what worked previously (i.e., did not result in an error) (dataset01, singlechannel488, kidney):

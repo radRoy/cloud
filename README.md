@@ -363,6 +363,18 @@ predict3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightshee
         raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
     RuntimeError: Error(s) in loading state_dict for ResidualUNet3D:
             size mismatch for encoders.0.basic_module.conv1.weight: copying a param with shape torch.Size([32, 3, 1, 1, 1]) from checkpoint, the shape in current model is torch.Size([32, 1, 1, 1, 1])
+
+    Traceback (most recent call last):
+    File "/home/dwalth/.local/bin/predict3dunet", line 33, in <module>
+        sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'predict3dunet')())
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/predict.py", line 35, in main
+        utils.load_checkpoint(model_path, model)
+    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/utils.py", line 52, in load_checkpoint
+        model.load_state_dict(state[model_key])
+    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/module.py", line 2041, in load_state_dict
+        raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+    RuntimeError: Error(s) in loading state_dict for ResidualUNet3D:
+            size mismatch for encoders.0.basic_module.conv1.weight: copying a param with shape torch.Size([32, 3, 1, 1, 1]) from checkpoint, the shape in current model is torch.Size([32, 1, 1, 1, 1]).
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
