@@ -1,7 +1,7 @@
 # Download test data from: https://osf.io/tn4xj/
 
 # PATH_TO_BEST_CHECKPOINT
-model_path: /home/dwalth/data/outputs/chpt-230718-3/
+model_path: /home/dwalth/data/outputs/chpt-230718-3/best_checkpoint.pytorch
 model:
   name: ResidualUNet3D
   # number of input channels to the model

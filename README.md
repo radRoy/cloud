@@ -350,7 +350,7 @@ module load anaconda3  # no tensorboard required when deploying a model, I think
 source activate 3dunet
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/test-230720-0/nvidia-smi.log &
 predict3dunet --config <CONFIG> 2>&1 | tee -a ~/data/outputs/test-230719-0/predict3dunet.output
-predict3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/
+predict3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/test_config-230720-0.yml
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
