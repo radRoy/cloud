@@ -17,10 +17,13 @@ Another redundant but useful information is how to actually clone (this repo) vi
 
 The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in a h5 data set of the format ()
 
-> - dataset01(babb03-ct3-488)
-> - **dataset02**(babb03-ct3-405,488,561)
->   - the current dataset, i.e., from <= 2023.07.06 until >= 2023.07.18
-> - dataset03(babb03-ct3-405,488,561-body_crop)
+> - dataset01 (babb03-ct3-488)
+> - dataset02 (babb03-ct3-405,488,561)
+>   - the dataset used from <= 2023.07.06 until >= 2023.07.18 (just before my holidays (21.07.2023 - 06.08.2023))
+> - **dataset03** (babb03-ct3-405,488,561-body_crop)
+>   - (temp: the **current** dataset)
+>   - the dataset in creation starting 2023.08.07 (Monday just after holidays) until ...TBDetermined.
+>   - the dataset used from ...TBDetermined until ...TBDetermined.
 >   - the next to-be dataset, where the cropping region only includes the tadpoles' bodies and not the tail - for getting more cube-like images for easier patch shape handling
 
 ## <u>Installing pytorch-3dunet into your conda environment</u>
@@ -86,8 +89,8 @@ pip install -e data/pytorch-3dunet/
     #no module named 'tensorboard'
 pip install tensorboard
 train3dunet
-    # usage: train3dunet [-h] --config CONFIG
-    # train3dunet: error: the following arguments are required: --config
+    #usage: train3dunet [-h] --config CONFIG
+    #train3dunet: error: the following arguments are required: --config
 ```
 The last output shows that the pytorch-3dunet was installed successfully.
 
@@ -122,13 +125,16 @@ loaders:
 These rules are:  
 - `patch_shape` must be bigger than `stride_shape`
 
-These rules might include:  
-- z, y, x of `patch_shape` have to be >64 each (verify)
-- y and x of `patch_shape` have to be the same (verify)
+*These rules might include **(TBD: unfinished docmentation of the reconstructed ruleset)***:  
+- z, y, x of `patch_shape` have to be >64 each (verify) (written somewhere on wolny's github or in his comments)
+- y and x of `patch_shape` have to be the same (verify) (I think this is false, TBD verify)
 - in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders. They have to be the same (verify)
 have - patch shape's dimensions z, y, x each has to be the same multiple of the stride shape's z, y, x, respectively
 
-This dataset's min and max resolutions:
+This dataset's (dataset02) min and max resolutions:
+
+- min zyx: 109, 1036, 253
+- max zyx: 147, 1169, 414
 
 Study of patch and stride shapes:  
 ```bash
@@ -385,6 +391,8 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 - adapt shell commands (paths)
 - git sync the files between PC and cluster
 - run the shell commands
+
+For more information on how to conduct scientific workflows regarding/with cloud / computing cluster computation, refer to the S3IT's dedicated gitlab repository [(Computational) "Scientific Workflows"](https://gitlab.uzh.ch/devin.routh/scientific-workflows) for this. Also refer to [my notes from taking their dedicated course](https://github.com/radRoy/MSc/tree/master/scientific-workflows%20notes) for this.
 
 ### <u>Example calculation of the patch and stride shapes (with differing image sizes between specimens)</u>
 
