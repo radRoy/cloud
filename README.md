@@ -15,16 +15,9 @@ Another redundant but useful information is how to actually clone (this repo) vi
 
 ## <u>Overview over my data sets used for training 3dunet</u>
 
-The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in a h5 data set of the format ()
+The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in a h5 data set of the format (TBD reconstruct by opening h5 image in Fiji).
 
-> - dataset01 (babb03-ct3-488)
-> - dataset02 (babb03-ct3-405,488,561)
->   - the dataset used from <= 2023.07.06 until >= 2023.07.18 (just before my holidays (21.07.2023 - 06.08.2023))
-> - **dataset03** (babb03-ct3-405,488,561-body_crop)
->   - (temp: the **current** dataset)
->   - the dataset in creation starting 2023.08.07 (Monday just after holidays) until ...TBDetermined.
->   - the dataset used from ...TBDetermined until ...TBDetermined.
->   - the next to-be dataset, where the cropping region only includes the tadpoles' bodies and not the tail - for getting more cube-like images for easier patch shape handling
+For further information on the datasets' creation, etc., refer to a separate dedicated git repository [imageProcessTif](https://github.com/radRoy/imageProcessTif/).
 
 ## <u>Installing pytorch-3dunet into your conda environment</u>
 
