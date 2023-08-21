@@ -49,7 +49,7 @@ trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
   # path to the checkpoint directory
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-230718-3/
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-230821-0/
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -75,7 +75,7 @@ loaders:
   train:
     # path to the training datasets
     file_paths:
-    - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/train/
+    - /home/dwalth/scratch/datasets/dataset03/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -131,7 +131,7 @@ loaders:
   val:
     # path to the val datasets
     file_paths:
-      - /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/val/
+      - /home/dwalth/scratch/datasets/dataset03/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch  # QU: Why is this section duplicated? does not make much sense to me to give two different patch_shapes &/ stride_shapes...
     slice_builder:
