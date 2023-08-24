@@ -25,15 +25,16 @@ For further information on the datasets' creation, etc., refer to a separate ded
 
 ```bash
 ssh dwalth@login1.cluster.s3it.uzh.ch
-screen -S 3dunet_conda_create
+#screen -S 3dunet_conda_create
 module load anaconda3
 conda create -n 3dunet
 source activate 3dunet
 
-pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
+#pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
+    # included with below pip install command
 # https://pytorch.org/get-started/previous-versions/#v1121 , install either conda or pip command version below
 pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
-    # testing the installation, and how it should look.
+    # testing the installation (in a GPU interactive session), and how it should look.
         # python
         # >>>import torch
         # >>>torch.__version__
@@ -47,7 +48,8 @@ pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --e
 git clone https://github.com/wolny/pytorch-3dunet ~/data/pytorch-3dunet
 pip install -e ~/data/pytorch-3dunet/
 pip install tensorboard
-pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
+#pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
+    # was not required in the past, makes no difference to me
 train3dunet  # test whether command is found and gives expected error message ('--config ...' required or so)
     # usage: train3dunet [-h] --config CONFIG
     # train3dunet: error: the following arguments are required: --config
