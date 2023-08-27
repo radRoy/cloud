@@ -1,8 +1,9 @@
 # <u>cloud</u>
 
-A repo for more efficient work an a cloud computation infrastructure, circumventing the need for tedious manual transfers (e.g., through globus connect, or using scp, etc.) by using the more efficient git.
+A git repo for cloud computation operations/processes. This repo is cloned on the Science Cluster (cluster) and can be used for (automated) transfer of input configurations, output/log files, etc. Ultimately, this repo aims at using [3D U-Net (3dunet)](https://github.com/wolny/pytorch-3dunet).
 
-This repo revolves around using 3D U-Net, written by Adrian Wolny and X Y, which they provide on the respective [GitHub page](https://github.com/wolny/pytorch-3dunet)
+Info List:
+- Notation 'TEMP': In this file, at least, subtitles, etc., containing 'TEMP' are not relevant for long-term usage / documentation. E.g., temporary debugging notes.
 
 ## <u>How to `git clone` this repository (repo)</u>
 Because this repo is private, https cloning is not supported via CLI (e.g., linux bash interfaces on remote computing clusters) (this includes providing github username and password). Cloning via ssh keys is required (as other methods, e.g., github's so-called personal access tokens, were tried previously and did not succeed). For github's guide on [Cloning with SSH URLs](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories#cloning-with-ssh-urls), click that link.
@@ -15,17 +16,16 @@ Another redundant but useful information is how to actually clone (this repo) vi
 
 ## <u>Overview over my data sets used for training 3dunet</u>
 
-The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in a h5 data set of the format (TBD reconstruct by opening h5 image in Fiji).
+The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in an h5 data set of the format (TBD reconstruct by opening h5 image in Fiji).
 
 For further information on the datasets' creation, etc., refer to a separate dedicated git repository [imageProcessTif](https://github.com/radRoy/imageProcessTif/).
 
 ## <u>Installing pytorch-3dunet into your conda environment</u>
 
-### <u>List of commands without comments</u>
+### <u>List of installation commands without comments</u>
 
 ```bash
-ssh dwalth@login1.cluster.s3it.uzh.ch
-#screen -S 3dunet_conda_create
+ssh <shortname>@login1.cluster.s3it.uzh.ch
 module load anaconda3
 conda create -n 3dunet
 source activate 3dunet
@@ -33,6 +33,38 @@ source activate 3dunet
 #pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
     # included with below pip install command
 # https://pytorch.org/get-started/previous-versions/#v1121 , install either conda or pip command version below
+pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
+    # (*1) alternative command
+    # (*2) below comment section for testing output
+git clone https://github.com/wolny/pytorch-3dunet ~/data/pytorch-3dunet
+pip install -e ~/data/pytorch-3dunet/
+pip install tensorboard
+#pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
+    # was not required in the past, makes no difference to me
+train3dunet  # test whether command is found and gives expected error message ('--config ...' required or so)
+    # usage: train3dunet [-h] --config CONFIG
+    # train3dunet: error: the following arguments are required: --config
+# DW: Success.
+```
+
+**<u>TEMP Fix ideas surrounding</u>**
+```bash
+pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
+    # (*1) alternative command to the above one, in case something should not behave as expected down the line.
+```
+
+### <u>List of installation commands with comments</u>
+
+```bash
+ssh <shortname>@login1.cluster.s3it.uzh.ch
+    # 'login1' prefix not required, here, but good practice for my project, given the long cluster interactive gpu sessions involved in training 3dunet models. It is also practical to have one long continuous bash history from one cluster login node in case entered commands need to be double-checked.
+conda create -n <envName>
+    # envName is '3dunet' in my case
+#conda install pip
+    # pip is installed already on the cluster
+pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
+    # installing PyTorch ('torch')
+    # all requirements already satisfied (cluster built-in, in its gcc>anaconda3>lib>python3.10)
 pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
     # testing the installation (in a GPU interactive session), and how it should look.
         # python
@@ -45,31 +77,9 @@ pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --e
         #    0
         # >>>print(torch.cuda.is_available())
         #    True
-git clone https://github.com/wolny/pytorch-3dunet ~/data/pytorch-3dunet
-pip install -e ~/data/pytorch-3dunet/
-pip install tensorboard
-#pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
-    # was not required in the past, makes no difference to me
-train3dunet  # test whether command is found and gives expected error message ('--config ...' required or so)
-    # usage: train3dunet [-h] --config CONFIG
-    # train3dunet: error: the following arguments are required: --config
-# DW: Success.
-```
-
-### <u>List of commands with comments</u>
-
-```bash
-ssh <shortname>@login1.cluster.s3it.uzh.ch  # 'login1' requests connection to the cluster's login node 1. enables reconnecting from remote computers with `screen`
-screen -S 3dunet_conda_create
-    # creating a session on login node 1, so that I can detach from the session, shut down the computer, attach to the session from another computer.
-conda create -n <envName>  # 3dunet
-#conda install pip
-    # pip is installed already on the cluster
-pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
-    # installing PyTorch ('torch')
-    # all requirements already satisfied (cluster built-in, in its gcc>anaconda3>lib>python3.10)
 #pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
     # alternative to above (this worked previously for Thomas and for me). Unclear, what Thomas installed 'torchvision' and 'torchaudio' for.
+    # (*1) reference to above for more information.
 
 # Checking the versions with a python program, passed in as a string (-c 'print("Hello World")')
 python -c 'import torch;print(torch.backends.cudnn.version())'
@@ -785,3 +795,7 @@ train3dunet ...
 ```
 
 Therefore, specifying 3 input channels for the /raw hdf5 internal path with formatting (C,Z,Y,X) is correct (where C is 3 in this case).
+
+## Know-How section (TBD)
+
+The content in this section is, for example, know-how about bash handling.

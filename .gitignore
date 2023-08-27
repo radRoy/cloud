@@ -23,3 +23,6 @@ pytorch3dunet.egg-info/
 pytorch-3dunet/.git
 pytorch-3dunet/.gitignore
 pytorch-3dunet/.github
+
+# pycharm stuff
+venv
