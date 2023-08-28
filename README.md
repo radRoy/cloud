@@ -25,30 +25,81 @@ For further information on the datasets' creation, etc., refer to a separate ded
 ### <u>List of installation commands without comments</u>
 
 ```bash
+## start interactive session with GPU
+srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=11G bash -l
+##
 ssh <shortname>@login1.cluster.s3it.uzh.ch
 module load anaconda3
 conda create -n 3dunet
 source activate 3dunet
-pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
+#pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
     # (*1) alternative command
     # (*2) below comment section for testing output
+# trying (*5) TEMP
+conda install pip
+# trying (*1) TEMP
+    ### using the latest torch install instructions from here:   https://pytorch.org/get-started/locally/
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+## Darren did it like this, at this point
+    mkdir ~/scratch/tmp36
+    cd ~/scratch/tmp36
+    git clone https://github.com/wolny/pytorch-3dunet ./
+##
+
+# But I will try the existing clone, since I will need to work with this one long-term, anyways
 git clone https://github.com/wolny/pytorch-3dunet ~/data/pytorch-3dunet
+    # skip now 28.08.2023
 pip install -e ~/data/pytorch-3dunet/
+#train3dunet  -- ModuleNotFoundError: No module named 'yaml'
+mamba install pyyaml  ## probably better to  do "pip install pyyaml" instead
+#train3dunet  -- ModuleNotFoundError: No module named 'h5py'
+pip install h5py
+#train3dunet  --   ModuleNotFoundError: No module named 'tensorboard'
 pip install tensorboard
+#train3dunet  --   ModuleNotFoundError: No module named 'skimage'
+pip install scikit-image
+
 train3dunet  # test whether command is found and gives expected error message ('--config ...' required or so)
     # usage: train3dunet [-h] --config CONFIG
     # train3dunet: error: the following arguments are required: --config
 # DW: Success.
+
+## verify that cuda works  (should return 1; 0; True; some version (for record keeping in case sth. breaks in the future))
+python << EOF 
+import torch
+print(torch.cuda.device_count())
+print(torch.cuda.current_device())
+print(torch.cuda.is_available())
+print(torch.__version__)
+EOF
+    # output: 1, 0, True
+    # torch version as of 28.08.2023: 2.0.1+cu118
+# DW: Success.
+
+## The environment can be exported to be recreated more easily later with e.g.:
+conda env export > 3dunet.yml
+```
+Test the new, apparently fixed, installation with actual datasets (dataset03):
+```bash
+# config files, etc. were configured previously (230821)
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230821-0-dataset03-testing-patch\[64\,896\,160\]-stride\[32\,128\,80\].yml
+    # ran out of VRAM during the first training iteration - so the right resources are used and the installation works.
 ```
 
 **<u>TEMP Fix ideas surrounding 230821,-28, cluster CUDA version problem</u>**
 ```bash
-# IDEA 1
+# IDEA 1 (refer to https://pytorch.org/get-started/locally/ for the latest links and versions, etc.)
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    # the email exchange around 21-28.08.2023 (Darren) arrived at the same conclusion, more precisely, the non-specific installation command worked on his end.
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
     # (*1) alternative command to the above one, in case something should not behave as expected down the line.
 
 # IDEA 2
-# refer to the email exchange with the cluster staff (~28.8.2023)
+# referring to the email exchange with the cluster staff (~28.08.2023):
+## One way to make sure that pip installs packages into the conda virtual environment is to run "conda install pip" or  "mamba install pip"  (depending whether you are using the mamba or conda module)  after you activate the virtual environment.
+    # (*5)
+conda install pip
 ```
 
 ### <u>List of installation commands with comments</u>
@@ -66,7 +117,7 @@ pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --e
     # installing PyTorch ('torch')
     # all requirements already satisfied (cluster built-in, in its gcc>anaconda3>lib>python3.10)
     # DW: included with above pip install command (maybe different versions get installed when not specifying the desired version)
-# testing the installation (in a GPU interactive session), and how it should look.
+# (*2) testing the installation (in a GPU interactive session), and how it should look.
 # (*3) alternative, equivalent commands below (+ previous output records)
 python
 import torch
@@ -119,15 +170,18 @@ The last output shows that the pytorch-3dunet was installed successfully.
 
 ### <u>Instructions on the `train_config.yml` files</u>
 
-U-Net can only handle absolute paths. Therefore, when specifying paths, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**.  
+U-Net can only handle absolute paths. Therefore, when specifying paths on the cluster, e.g., when writing the new .yml file, **substitute `/~/` with `/home/dwalth/`**. For example:  
 The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
 The path `/home/dwalth/scratch/datasets/imaging03/scaled0.5/train` is valid.
 
+However, when giving the config location to the `train3dunet` command, symbolic links with `~` work (bash):
 ```bash
-train3dunet --config data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/train_config.yml
-# <copy the command here used to train a model (adapted paths)>
+train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/train_config.yml
 ```
+
 In these `train_config.yml` files the patch size & stride shape are given in [z, y, x]. This is implied from pytorch-3dunet's github repo README.md, under [Input Data Format](https://github.com/wolny/pytorch-3dunet#input-data-format).
+
+**TEMP** - from here until (*4): TBD (rules are not clear)
 
 The `patch_shape` and `stride_shape` parameters in the `train_config.yml` (below is the relevant structure of such a .yml file) have to follow certain rules (which are hard to find in the mentioned github repo):  
 ```yml
@@ -156,6 +210,8 @@ This dataset's (dataset02) min and max resolutions:
 
 - min zyx: 109, 1036, 253
 - max zyx: 147, 1169, 414
+
+**TEMP** - from (*4) until here: TBD (rules are not clear)
 
 Study of patch and stride shapes:  
 ```bash
