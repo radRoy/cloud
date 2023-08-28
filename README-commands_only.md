@@ -1,66 +1,20 @@
 # <u>cloud</u>
 
-A git repo for cloud computation operations/processes. This repo is cloned on the Science Cluster (cluster) and can be used for (automated) transfer of input configurations, output/log files, etc. Ultimately, this repo aims at using [3D U-Net (3dunet)](https://github.com/wolny/pytorch-3dunet).
-
-Info List:
-- Notation 'TEMP': In this file, at least, subtitles, etc., containing 'TEMP' are not relevant for long-term usage / documentation. E.g., temporary debugging notes.
-
-## <u>How to `git clone` this repository (repo)</u>
-Because this repo is private, https cloning is not supported via CLI (e.g., linux bash interfaces on remote computing clusters) (this includes providing github username and password). Cloning via ssh keys is required (as other methods, e.g., github's so-called personal access tokens, were tried previously and did not succeed). For github's guide on [Cloning with SSH URLs](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories#cloning-with-ssh-urls), click that link.
-
-Here is a link to one's [github account associated ssh keys](https://github.com/settings/keys), where one can see whether there are ssh keys already in one's github account, amongst others.
-
-Although this is redundant regarding above guides, I recommend to [generate a new ssh keypair & adding them to your github account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) for every new remote.
-
-Another redundant but useful information is how to actually clone (this repo) via ssh from the CLI (e.g., via Git Bash), assuming correct set up of ssh key pairs (above guides): `git clone git@github.com:radRoy/cloud.git`.
-
-## <u>Overview over my data sets used for training 3dunet</u>
-
-The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in an h5 data set of the format (TBD reconstruct by opening h5 image in Fiji).
-
-For further information on the datasets' creation, etc., refer to a separate dedicated git repository [imageProcessTif](https://github.com/radRoy/imageProcessTif/).
-
-## <u>Installing pytorch-3dunet into your conda environment</u>
-
-### <u>List of installation commands without comments</u>
-
 ```bash
-## start interactive session with GPU
-srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=11G bash -l
-##
-ssh <shortname>@login1.cluster.s3it.uzh.ch
+srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=11G bash -l  # good idea to build environments on nodes it is intended for
+ssh dwalth@login1.cluster.s3it.uzh.ch
 module load anaconda3
 conda create -n 3dunet
 source activate 3dunet
-#pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
-    # (*1) alternative command
-    # (*2) below comment section for testing output
-# trying (*5) TEMP
 conda install pip
-# trying (*1) TEMP
-    ### using the latest torch install instructions from here:   https://pytorch.org/get-started/locally/
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-
-## Darren did it like this, at this point
-    mkdir ~/scratch/tmp36
-    cd ~/scratch/tmp36
-    git clone https://github.com/wolny/pytorch-3dunet ./
-##
-
-# But I will try the existing clone, since I will need to work with this one long-term, anyways
 git clone https://github.com/wolny/pytorch-3dunet ~/data/pytorch-3dunet
-    # skip now 28.08.2023
 pip install -e ~/data/pytorch-3dunet/
-#train3dunet  -- ModuleNotFoundError: No module named 'yaml'
-mamba install pyyaml  ## probably better to  do "pip install pyyaml" instead
-#train3dunet  -- ModuleNotFoundError: No module named 'h5py'
+pip install pyyaml
 pip install h5py
-#train3dunet  --   ModuleNotFoundError: No module named 'tensorboard'
 pip install tensorboard
-#train3dunet  --   ModuleNotFoundError: No module named 'skimage'
 pip install scikit-image
-
-train3dunet  # test whether command is found and gives expected error message ('--config ...' required or so)
+train3dunet
     # usage: train3dunet [-h] --config CONFIG
     # train3dunet: error: the following arguments are required: --config
 # DW: Success.
@@ -74,97 +28,14 @@ print(torch.cuda.is_available())
 print(torch.__version__)
 EOF
     # output: 1, 0, True
-    # torch version as of 28.08.2023: 2.0.1+cu118
+    # torch version as of 28.08.2023: 2.0.1+cu118  (v2.0 seems to work compared to v1.12...)
 # DW: Success.
-
-## The environment can be exported to be recreated more easily later with e.g.:
 conda env export > 3dunet.yml
-```
-Test the new, apparently fixed, installation with actual datasets (dataset03):
-```bash
+
 # config files, etc. were configured previously (230821)
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230821-0-dataset03-testing-patch\[64\,896\,160\]-stride\[32\,128\,80\].yml
     # ran out of VRAM during the first training iteration - so the right resources are used and the installation works.
 ```
-
-**<u>TEMP Fix ideas surrounding 230821,-28, cluster CUDA version problem</u>**
-```bash
-# IDEA 1 (refer to https://pytorch.org/get-started/locally/ for the latest links and versions, etc.)
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-    # the email exchange around 21-28.08.2023 (Darren) arrived at the same conclusion, more precisely, the non-specific installation command worked on his end.
-pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
-    # (*1) alternative command to the above one, in case something should not behave as expected down the line.
-
-# IDEA 2
-# referring to the email exchange with the cluster staff (~28.08.2023):
-## One way to make sure that pip installs packages into the conda virtual environment is to run "conda install pip" or  "mamba install pip"  (depending whether you are using the mamba or conda module)  after you activate the virtual environment.
-    # (*5)
-conda install pip
-```
-
-### <u>List of installation commands with comments</u>
-
-```bash
-ssh <shortname>@login1.cluster.s3it.uzh.ch
-    # 'login1' prefix not required, here, but good practice for my project, given the long cluster interactive gpu sessions involved in training 3dunet models. It is also practical to have one long continuous bash history from one cluster login node in case entered commands need to be double-checked.
-conda create -n <envName>
-    # envName is '3dunet' in my case
-#conda install pip
-    # pip is installed already on the cluster
-# https://pytorch.org/get-started/previous-versions/#v1121 , install either conda or pip command version below
-pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
-#pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
-    # installing PyTorch ('torch')
-    # all requirements already satisfied (cluster built-in, in its gcc>anaconda3>lib>python3.10)
-    # DW: included with above pip install command (maybe different versions get installed when not specifying the desired version)
-# (*2) testing the installation (in a GPU interactive session), and how it should look.
-# (*3) alternative, equivalent commands below (+ previous output records)
-python
-import torch
-torch.__version__
-    # '1.12.1+cu116'
-print(torch.cuda.device_count())
-    # 1
-print(torch.cuda.current_device())
-    # 0
-print(torch.cuda.is_available())
-    # True
-#pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
-    # alternative to above (this worked previously for Thomas and for me). Unclear, what Thomas installed 'torchvision' and 'torchaudio' for.
-    # (*1) reference to above fix IDEA (this is an alternative command that I could try for fixing a problem)
-
-# (*3) alternative commands to above. Equivalent installation checking, more compact commands + console output records of the first or second cluster installation (which worked)
-# Checking the versions with a python program, passed in as a string (-c 'print("Hello World")')
-python -c 'import torch;print(torch.backends.cudnn.version())'
-    #8500
-    # DW: the cudnn version used by the pytorch installation
-python -c 'import torch;print(torch.__version__)'
-    #2.0.0+cu117
-    # DW: the torch version
-
-# verify torch - Verification is done below by testing the 'train3dunet' command. The pytorch and cuda and cudnn, etc. versions on the ScienceCluster are indeed compatible
-
-cd ~/data
-git clone https://github.com/wolny/pytorch-3dunet
-pip install -e data/pytorch-3dunet/
-    # DW: installs a project into the activated environment (conda in this case). Here, adds the pytorch_egg~ commands 'train3dunet' and 'predict3dunet' to the conda environment, these commands link to the now installed (unpacked~) repo (folder) containing installable files (the cloned pytorch-3dunet repo).
-
-    #Defaulting to user installation because normal site-packages is not writeable
-    #Obtaining file:///home/shortname/data/pytorch-3dunet
-    #  Preparing metadata (setup.py) ... done
-    #Installing collected packages: pytorch3dunet
-    #  Running setup.py develop for pytorch3dunet
-    #Successfully installed pytorch3dunet-1.6.0
-#train3dunet
-    #no module named 'tensorboard'
-pip install tensorboard
-#pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
-    # was not required in the past, makes no difference to me
-train3dunet
-    #usage: train3dunet [-h] --config CONFIG
-    #train3dunet: error: the following arguments are required: --config
-```
-The last output shows that the pytorch-3dunet was installed successfully.
 
 ## <u>Usage of pytorch-3dunet</u>
 
@@ -179,88 +50,7 @@ However, when giving the config location to the `train3dunet` command, symbolic 
 train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/train_config.yml
 ```
 
-In these `train_config.yml` files the patch size & stride shape are given in [z, y, x]. This is implied from pytorch-3dunet's github repo README.md, under [Input Data Format](https://github.com/wolny/pytorch-3dunet#input-data-format).
-
-**TEMP** - from here until (*4): TBD (rules are not clear)
-
-The `patch_shape` and `stride_shape` parameters in the `train_config.yml` (below is the relevant structure of such a .yml file) have to follow certain rules (which are hard to find in the mentioned github repo):  
-```yml
-loaders:
-  num_workers: ...
-  raw_internal_path: ...
-  label_internal_path: ...
-  train: ...
-    file_paths: ...
-    slice_builder: ...
-      name: ...
-      patch_shape: [z1, y1, x1]
-      stride_shape: [z2, y2, x2]
-```  
-
-These rules are:  
-- `patch_shape` must be bigger than `stride_shape`
-
-*These rules might include **(TBD: unfinished docmentation of the reconstructed ruleset)***:  
-- z, y, x of `patch_shape` have to be >64 each (verify) (written somewhere on wolny's github or in his comments)
-- y and x of `patch_shape` have to be the same (verify) (I think this is false, TBD verify)
-- in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders. They have to be the same (verify)
-have - patch shape's dimensions z, y, x each has to be the same multiple of the stride shape's z, y, x, respectively
-
-This dataset's (dataset02) min and max resolutions:
-
-- min zyx: 109, 1036, 253
-- max zyx: 147, 1169, 414
-
-**TEMP** - from (*4) until here: TBD (rules are not clear)
-
-Study of patch and stride shapes:  
 ```bash
-# all patch shape dimensions >64
-# all stride shape dimensions are less than half of the patch shapes'
-# train patch shape yx are different than the val patch shape yx
-# train patch shape y different than x
-# val patch shape y different than x (80, 250, 100 train patch, 80, 240, 120 val patch, 20, 40, 40 stride (never different between train and val))
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
-    ...
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
-        raise ValueError((
-    ValueError: requested an output size of torch.Size([10, 12, 31]), but valid sizes range from [9, 11, 29] to [10, 12, 30] (for an input of torch.Size([5, 6, 15]))
-
-# additional change: make val patch shape the same as train patch shape (80, 250, 100 both patches, 20, 40, 40 stride)
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
-    ...
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
-        raise ValueError((
-    ValueError: requested an output size of torch.Size([10, 12, 31]), but valid sizes range from [9, 11, 29] to [10, 12, 30] (for an input of torch.Size([5, 6, 15]))
-    # (identical error message)
-
-# additional change: make x, y the same in patch shape (80, 100, 100 patch and 20, 40, 40 stride)
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
-    ...
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
-        raise ValueError((
-    ValueError: requested an output size of torch.Size([20, 25, 25]), but valid sizes range from [19, 23, 23] to [20, 24, 24] (for an input of torch.Size([10, 12, 12]))
-
-# additional change: make patch shape's z, y, x each be 4 times as big as stride shapes (80, 160, 160 patch and 20, 40, 40 stride)
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-singleChannels-405nm-fiji.yml
-    ...
-    2023-07-10 11:27:08,807 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
-    2023-07-10 11:27:20,625 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/999]
-    2023-07-10 11:27:22,633 [MainThread] INFO UNetTrainer - Training iteration [2/150000]. Epoch [0/999]
-    2023-07-10 11:27:23,124 [MainThread] INFO UNetTrainer - Training iteration [3/150000]. Epoch [0/999]
-
-# --------------------------
-# attempts from 230713-0:
-
-# - factor of 5 between patch shape and stride shape did not work (same torch.Size([]) error message. Idea: maybe the ratio of z,y,x lengths within patch shape &/ within stride shape matter, too (keep in mind, not act on it yet).
-# - when input data is of varying size, formulas: patch_shape = resolution - 2, stride_shape = 1,1,1 might work, but take very long to load. This is not an option
-
-# patch=[60,600,120], stride=[20,200,40]
-train3dunet ... (same multichannel data (scaled0.25,labeluint16,autofluorgb24, etc.) used )
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
-        raise ValueError((
-    ValueError: requested an output size of torch.Size([7, 15, 75]), but valid sizes range from [5, 13, 73] to [6, 14, 74] (for an input of torch.Size([3, 7, 37]))
-
 # --------------------------
 # attempts from 230714-0:
 
@@ -273,7 +63,7 @@ train3dunet ... (same multichannel data (scaled0.25,labeluint16,autofluorgb24, e
 ssh
 tmux
 srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
-screen -S 3dunet-230714-0-patch_ratio4
+screen -S 3dunet-230828-0
 cd ~/data/cloud
 bash pull-script.sh
 bash createDirs.sh

@@ -31,39 +31,14 @@ python -c 'import torch;print(torch.__version__)'
   # prints torch version (just installed)
 	# hm, why 117 and not 116 (url above)?
 
-## check versions
-$verify torch
-	# ?
-
-# clone the main repo (wolny/pytorch...)
-git clone https://github.com/wolny/pytorch-3dunet
-	# already done previously
-# move into clone
-cd pytorch-3dunet
-## install as a local project (no -r for requirements file needed, apparently)
-pip install -e .
-	Defaulting to user installation because normal site-packages is not writeable
-	Obtaining file:///scratch/dwalth/pytorch-3dunet
-	  Preparing metadata (setup.py) ... done
-	Installing collected packages: pytorch3dunet
-	  Running setup.py develop for pytorch3dunet
-	Successfully installed pytorch3dunet-1.3.9
-
-# "Successfully installed .. sounds good. :) moving on to testing
-
-
-#--------------------- move on to Train section of the github.com/wolny... -----------------
-
-## ASSUME TO BE STILL IN AN INTERACTIVE SESSION (else, moving so much data will clog up the login-node... oops.
-srun --pty -n 1 -c 2 --time=01:30:00 --gres=gpu:T4:1 --mem=7G bash -l
-
-.../pytorch-3dunet:$ cat resources/3DUnet_confocal_boundary/train_config.yml
-
 # prep -------------------------------------------------------------------------------------
+(((
 ## Sample configuration file for training a 3D U-Net on a task of predicting the boundaries in 3D stack of the Arabidopsis
 ## ovules acquired with the confocal microscope. Training done with a combination of Binary Cross-Entropy and DiceLoss.
 ## download from https://osf.io/w38uf/
 # <download data sets, then copy it via CLI (`scp` does the job for now)>
+)))
+
 mkdir sample_train
 mkdir sample_val
 mkdir sample_test
