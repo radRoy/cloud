@@ -1,5 +1,33 @@
 # <u>cloud</u>
 
+`tmux` essentials:
+```bash
+# new
+tmux
+# list
+tmux list-sessions
+# attach
+tmux attach -t 0  # attaches to tmux session (='window') 0
+# detach (press keys)
+<CTRL + B> <D>
+# kill
+tmux kill-session -t 0  # when outside session 0
+```
+
+`screen` essentials:
+```bash
+# new
+screen -S 3dunet
+# list
+screen -ls
+# attach
+screen -r 3dunet
+# detach (press keys)
+<CTRL+A> <D>
+# kill
+<CTRL + D>  # inside the screen session to be killed
+```
+
 ```bash
 srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=11G bash -l  # good idea to build environments on nodes it is intended for
 ssh dwalth@login1.cluster.s3it.uzh.ch
@@ -51,185 +79,59 @@ train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/
 ```
 
 ```bash
-# --------------------------
-# attempts from 230714-0:
-
 # duplicate the stdout to a file (but still print it to stdout, thus duplicating it):
 # runs 'command' normally, prints output to stdout (...or stderr - also console output) normally, duplicates stdout and stderr output to 'output.file', -a for 'append or create if empty/new file'
 <command> 2>&1 | tee -a output.file
 
-# take working values patch=[80,160,160], stride=[20,40,40], keep their ratio (which is 4) and increase the size of each shape proportionally
-# preliminary stuff
 ssh
+
 tmux
 srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
+
 screen -S 3dunet-230828-0
 cd ~/data/cloud
 bash pull-script.sh
 bash createDirs.sh
-tensorboard --logdir ~/data/cloud/chpts/chpt-230714-0/
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/cloud/chpts/chpt-230714-0/nvidia-smi.log &
+tensorboard --logdir ~/data/outputs/chpt-230828-0
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230828-0/nvidia-smi.log &
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230828-0-dataset03-testing-patch\[64\,896\,160\]-stride\[32\,128\,80\].yml 2>&1 | tee -a ~/data/outputs/chpt-230828-0/console.output
+# screen detach: <ctrl + a> <d>
+# verify 'train3dunet' is running
+top -u dwalth
 
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230714-0-ratio4.yml 2>&1 | tee -a ~/data/cloud/chpts/chpt-230714-0/console.output
-    ...
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
-        raise ValueError((
-    ValueError: requested an output size of torch.Size([12, 25, 25]), but valid sizes range from [11, 23, 23] to [12, 24, 24] (for an input of
-    torch.Size([6, 12, 12]))
+# tmux detach: <ctrl + b> <d>
+# verify slurm session is running
+squeue -u dwalth
 
-# change the ratio patch/stride from 4 to 3, making bigger patches possible, because the z resolution is smaller than x and much smaller y resolution.
-
-# ------------------------------
-# attempts from 230718:
-# from now (date in folder names...) on:  train3dunet stdout & stderr output saved to a file in the output chpt folder (~/data/outputs/)
-
-# tmux session 0
-
-# chpt-230718-0
-# follow previous troubleshooting notes from Thomas (patch and stride shape are the same, and they are powers of 2 (2^3), because 3dunet does 3 pooling steps (reduction in resolution))
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-0-2tothe3patches.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-0/console.output
-    ...
-    2023-07-18 11:25:07,750 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [80, 288, 288], 'stride_shape': [80, 288, 288], 'threshold': 0.6, 'slack_acceptance': 0.01}
-    2023-07-18 11:25:09,387 [MainThread] ERROR HDF5Dataset - Skipping train set: /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/train/id03-img_Ch638nm-crop-scaled0.25-label-blur3D1-Otsu570-largest-uint16-h5.h5
-    Traceback (most recent call last):
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 142, in create_datasets
-        dataset = cls(file_path=file_path,
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 179, in __init__
-        super().__init__(file_path=file_path, phase=phase, slice_builder_config=slice_builder_config,
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 65, in __init__
-        slice_builder = get_slice_builder(self.raw, self.label, self.weight_map, slice_builder_config)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 176, in get_slice_builder
-        return slice_builder_cls(raws, labels, weight_maps, **config)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 158, in __init__
-        raw_slices, label_slices = zip(*filtered_slices)
-    ValueError: not enough values to unpack (expected 2, got 0)
-    2023-07-18 11:25:09,413 [MainThread] INFO HDF5Dataset - Loading train set from: /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/train/id07-img_Ch638nm-crop-scaled0.25-label-blur3D1-Otsu570-largest-uint16-h5.h5...
-    2023-07-18 11:25:10,025 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [80, 288, 288], 'stride_shape': [80, 288, 288], 'threshold': 0.6, 'slack_acceptance': 0.01}
-    2023-07-18 11:25:10,025 [MainThread] ERROR HDF5Dataset - Skipping train set: /home/dwalth/scratch/datasets/babb03/ct3/-crop-bicubic-scaled0.25/raw_RGB24-czyx-label_uint16/train/id07-img_Ch638nm-crop-scaled0.25-label-blur3D1-Otsu570-largest-uint16-h5.h5
-    Traceback (most recent call last):
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 142, in create_datasets
-        dataset = cls(file_path=file_path,
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 179, in __init__
-        super().__init__(file_path=file_path, phase=phase, slice_builder_config=slice_builder_config,
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/hdf5.py", line 65, in __init__
-        slice_builder = get_slice_builder(self.raw, self.label, self.weight_map, slice_builder_config)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 176, in get_slice_builder
-        return slice_builder_cls(raws, labels, weight_maps, **config)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 139, in __init__
-        super().__init__(raw_dataset, label_dataset, weight_dataset, patch_shape, stride_shape, **kwargs)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 59, in __init__
-        self._raw_slices = self._build_slices(raw_dataset, patch_shape, stride_shape)
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 107, in _build_slices
-        for x in x_steps:
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 120, in _gen_indices
-        assert i >= k, 'Sample size has to be bigger than the patch size'
-    AssertionError: Sample size has to be bigger than the patch size
-# some datasets are too small for the given patch shape (288 in y is too big)
-
-# 230718-1
-# patch = stride = [96,240,240]
-# CHECK: patch shape is smaller than all samples' size
-# ERROR: with patch shape = stride shape (& this specific shape (unknown, at this point, if that makes a difference)):
-    # "ValueError: not enough values to unpack (expected 2, got 0)"
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config-230718-1-<description>.yml 2>&1 | tee -a ~/data/outputs/chpt-230718-1/console.output
-    ...
-    File "/data/dwalth/pytorch-3dunet/pytorch3dunet/datasets/utils.py", line 158, in __init__
-        raw_slices, label_slices = zip(*filtered_slices)
-    ValueError: not enough values to unpack (expected 2, got 0)
-        # This is the error when patch shape = stride shape (& with shape as big as it is, now)
-
-# 230718-1-0
-# patch != stride
-# patch + 1*stride <= min-resolution
-# patch = [96,240,240], stride = [8,8,8]
-# => VALID PARAMETERS
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-1-0/nvidia-smi.log &
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-1-0-patch[96,240,240],stride[8,8,8].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-1-0/console.output
-    ...
-    <training is working>
-    <train loss is decreasing>
-    # letting it run until srun times out
-squeue -s -u dwalth
-            STEPID     NAME PARTITION     USER      TIME NODELIST
-        4100212.0     bash  standard   dwalth   3:40:47 u20-computeibmgpu-vesta8
-    4100212.extern   extern  standard   dwalth   3:40:47 u20-computeibmgpu-vesta8
-    4103392.batch    batch  standard   dwalth     22:16 u20-compute-m1
-    4103392.extern   extern  standard   dwalth     22:16 u20-compute-m1
-
-# 230718-2
-# patch = stride = [48,112,112]
-# patch + 1*stride <= min-resolution (aka res_min)
-# patch number is mostly 2, 1 in case of id02 data set (unclear, why)
-# => VALID PARAMETERS
-# => no train loss - cancelled the train3dunet process
-tensorboard --logdir ~/data/outputs/chpt-230718-2/
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-2/nvidia-smi.log &
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-2-patch[48,112,112],stride[48,112,112].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-2/console.output
-    ...
-    <training is working>
-    <train loss is constant (patches must have missed the region of the heart (the only label in the label images))>
-
-# tmux attach -t 3
-
-# 230718-3
-# patch != stride
-# patch + 1*stride <= res_min
-# optimization: res_max >= patch + x_small * stride
-    # where x_small is optimized for begin small, i.e., biggest input images do not have many more patches than the smallest input images
-    # optimized dimension-wise
-# optimization: patch >= stride
-# optimization: patch big (close to res_min)
-srun --pty -n 1 -c 8 --mem=32G --gres=gpu --time=24:00:00 bash -l
-nvidia-smi --list-gpus
-    GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-3e262d5d-0626-9183-de73-27b629371d47)
-screen -S <3dunet-date-$i>
-tensorboard --logdir ~/data/outputs/chpt-230718-3/
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230718-3/nvidia-smi.log &
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-3-patch[64,896,160],stride[32,128,80].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-3/console.output
-    ...
-    <loaded successfully>
-    <trains successfully>... wait
-    File "/home/dwalth/.local/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 608, in _conv_forward
-    return F.conv3d(
-    torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.09 GiB (GPU 0; 15.77 GiB total capacity; 14.28 GiB already allocated; 217.12 MiB free; 14.30 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
-    # out of memory
-# exit screen session
-srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
-# recreate screen, etc.
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230718-3-patch[64,896,160],stride[32,128,80].yml 2>&1 | tee -a ~/data/outputs/chpt-230718-3/console.output
-    ...
-    <trains successfully>
-    # VRAM usage is now 20GB (1 patch per data set (confusing as to why only 1 patch, but I'll accept it.))
-    # let it run over night
-    <tensorboard analytics>
-        # train loss & eval score look good. train predictions, too.
-        # val loss, eval score & predictions look bad (label not in loaded patch?)
-        # => redo the cropping to ensure the label organ is in the patches of the different data sets.
-
-# use this in future:
-train3dunet --config <config_file_path> 2>&1 | tee -a ~/data/outputs/chpt-230718-3/train3dunet.output
+# cluster logout: <ctrl + d>
 ```
 
-attempt at deploying a well-trained model (I suppose well-trained, idk, let's see the segmentation results):
+useful commands
 ```bash
-# 230719-0
-# 230720-0 (try again, now the requested node is available)
-ssh
-tmux attach -t 0
-srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=02:00:00 bash -l
-    srun: job 4154413 queued and waiting for resources  # noting the job ID
-    new try: 4157963
-screen -S 3dunet-230720-0-test
-module load anaconda3  # no tensorboard required when deploying a model, I think
-source activate 3dunet
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/test-230720-0/nvidia-smi.log &
-predict3dunet --config <CONFIG> 2>&1 | tee -a ~/data/outputs/test-230719-0/predict3dunet.output
-predict3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/test_config-230720-0.yml
-    # with the same patch and stride shape as when training this particular model:
-    ...
-    Error with the torch.Size([]) requested, but valid ranges ...
-# => TBD: crop all images to the same size and retry the train3dunet and predict3dunet from scratch.
+# name of the gpu
+nvidia-smi --list-gpus
+    # GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-3e262d5d-0626-9183-de73-27b629371d47)
+
+# copy stdout to a file with 'tee'. file named after running command (instead of 'console.output')
+train3dunet --config <config_file_path> 2>&1 | tee -a <checkpoint_dir>/train3dunet.output
+
+# slurm session stuff
+squeue -s -u dwalth -i 5
+    # displays updated output every -i 5 seconds
+squeue -s -u dwalth
+    # $JOBID.stepno  # need both ID & stepno to attach to this node from another node
+# attach to an existing slurm session
+sattach $JOBID.$stepno
+    # insert values from squeue output
 ```
+
+
+
+
+***<u>ALL ABOVE IS ORDERED. ALL BELOW IS NOT.</u>***
+
+
+
 
 ### <u>Instructions on the ScienceCluster UZH</u>
 
