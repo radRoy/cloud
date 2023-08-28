@@ -29,28 +29,26 @@ ssh <shortname>@login1.cluster.s3it.uzh.ch
 module load anaconda3
 conda create -n 3dunet
 source activate 3dunet
-
-#pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
-    # included with below pip install command
-# https://pytorch.org/get-started/previous-versions/#v1121 , install either conda or pip command version below
 pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
     # (*1) alternative command
     # (*2) below comment section for testing output
 git clone https://github.com/wolny/pytorch-3dunet ~/data/pytorch-3dunet
 pip install -e ~/data/pytorch-3dunet/
 pip install tensorboard
-#pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
-    # was not required in the past, makes no difference to me
 train3dunet  # test whether command is found and gives expected error message ('--config ...' required or so)
     # usage: train3dunet [-h] --config CONFIG
     # train3dunet: error: the following arguments are required: --config
 # DW: Success.
 ```
 
-**<u>TEMP Fix ideas surrounding</u>**
+**<u>TEMP Fix ideas surrounding 230821,-28, cluster CUDA version problem</u>**
 ```bash
+# IDEA 1
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
     # (*1) alternative command to the above one, in case something should not behave as expected down the line.
+
+# IDEA 2
+# refer to the email exchange with the cluster staff (~28.8.2023)
 ```
 
 ### <u>List of installation commands with comments</u>
@@ -62,25 +60,29 @@ conda create -n <envName>
     # envName is '3dunet' in my case
 #conda install pip
     # pip is installed already on the cluster
-pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
+# https://pytorch.org/get-started/previous-versions/#v1121 , install either conda or pip command version below
+pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
+#pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
     # installing PyTorch ('torch')
     # all requirements already satisfied (cluster built-in, in its gcc>anaconda3>lib>python3.10)
-pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
-    # testing the installation (in a GPU interactive session), and how it should look.
-        # python
-        # >>>import torch
-        # >>>torch.__version__
-        #    '1.12.1+cu116'
-        # >>>print(torch.cuda.device_count())
-        #    1
-        # >>>print(torch.cuda.current_device())
-        #    0
-        # >>>print(torch.cuda.is_available())
-        #    True
+    # DW: included with above pip install command (maybe different versions get installed when not specifying the desired version)
+# testing the installation (in a GPU interactive session), and how it should look.
+# (*3) alternative, equivalent commands below (+ previous output records)
+python
+import torch
+torch.__version__
+    # '1.12.1+cu116'
+print(torch.cuda.device_count())
+    # 1
+print(torch.cuda.current_device())
+    # 0
+print(torch.cuda.is_available())
+    # True
 #pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
     # alternative to above (this worked previously for Thomas and for me). Unclear, what Thomas installed 'torchvision' and 'torchaudio' for.
-    # (*1) reference to above for more information.
+    # (*1) reference to above fix IDEA (this is an alternative command that I could try for fixing a problem)
 
+# (*3) alternative commands to above. Equivalent installation checking, more compact commands + console output records of the first or second cluster installation (which worked)
 # Checking the versions with a python program, passed in as a string (-c 'print("Hello World")')
 python -c 'import torch;print(torch.backends.cudnn.version())'
     #8500
@@ -94,7 +96,7 @@ python -c 'import torch;print(torch.__version__)'
 cd ~/data
 git clone https://github.com/wolny/pytorch-3dunet
 pip install -e data/pytorch-3dunet/
-    # DW: installs a project into the activated environment (conda in this case)
+    # DW: installs a project into the activated environment (conda in this case). Here, adds the pytorch_egg~ commands 'train3dunet' and 'predict3dunet' to the conda environment, these commands link to the now installed (unpacked~) repo (folder) containing installable files (the cloned pytorch-3dunet repo).
 
     #Defaulting to user installation because normal site-packages is not writeable
     #Obtaining file:///home/shortname/data/pytorch-3dunet
@@ -105,6 +107,8 @@ pip install -e data/pytorch-3dunet/
 #train3dunet
     #no module named 'tensorboard'
 pip install tensorboard
+#pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
+    # was not required in the past, makes no difference to me
 train3dunet
     #usage: train3dunet [-h] --config CONFIG
     #train3dunet: error: the following arguments are required: --config
