@@ -31,14 +31,24 @@ screen -r 3dunet
 ~`slurm` essentials:
 ```bash
 # interactive cluster gpu session
-srun --pty -n 1 -c 4 --mem=8G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
+srun --pty -n 1 -c 4 --mem=8G --gres=gpu --constraint=GPUMEM32GB --time=24:00:00 bash -l
 # cancelling a running slurm job
 scancel -u dwalth  # cancels all running jobs of that user
 scancel 4651350  # where 4651350 is job_id
 # viewing a user's jobs
 squeue -u dwalth  # can use the returned job_id for scancel
 squeue -s -u dwalth  # also shows step number of each job id (e.g., when a job has multiple tasks/sub jobs or so)
+squeue -u dwalth -i 5  # squeue request sent every 5 seconds
 ```
+
+bash essentials:
+```bash
+# assigning a variable in-line in a bash shell
+today=230829-0
+checkdir=~/data/outputs/chpt-230829-0
+```
+
+## <u>Installation commands</u>
 
 ```bash
 srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=11G bash -l  # good idea to build environments on nodes it is intended for
@@ -100,13 +110,20 @@ ssh
 tmux
 srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
 
-screen -S 3dunet-230828-0
+today=230829-0
+screen -S 3dunet-$today
+    #screen -S 3dunet-230829-0
 cd ~/data/cloud
 bash pull-script.sh
+
 bash createDirs.sh
-tensorboard --logdir ~/data/outputs/chpt-230828-0
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230828-0/nvidia-smi.log &
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230828-0-dataset03-testing-patch\[64\,896\,160\]-stride\[32\,128\,80\].yml 2>&1 | tee -a ~/data/outputs/chpt-230828-0/console.output
+checkdir=~/data/outputs/chpt-230829-0
+tensorboard --logdir $checkdir
+    #tensorboard --logdir ~/data/outputs/chpt-230829-0
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f $checkdir/nvidia-smi.log &
+    #nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230829-0/nvidia-smi.log &
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$today.yml 2>&1 | tee -a $checkdir/train3dunet.output
+    #train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230829-0.yml 2>&1 | tee -a ~/data/outputs/chpt-230829-0/train3dunet.output
 # screen detach: <ctrl + a> <d>
 # verify 'train3dunet' is running
 top -u dwalth
