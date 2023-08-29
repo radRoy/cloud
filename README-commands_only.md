@@ -28,6 +28,18 @@ screen -r 3dunet
 <CTRL + D>  # inside the screen session to be killed
 ```
 
+~`slurm` essentials:
+```bash
+# interactive cluster gpu session
+srun --pty -n 1 -c 4 --mem=8G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
+# cancelling a running slurm job
+scancel -u dwalth  # cancels all running jobs of that user
+scancel 4651350  # where 4651350 is job_id
+# viewing a user's jobs
+squeue -u dwalth  # can use the returned job_id for scancel
+squeue -s -u dwalth  # also shows step number of each job id (e.g., when a job has multiple tasks/sub jobs or so)
+```
+
 ```bash
 srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=11G bash -l  # good idea to build environments on nodes it is intended for
 ssh dwalth@login1.cluster.s3it.uzh.ch
