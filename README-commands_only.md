@@ -57,7 +57,7 @@ module load anaconda3
 conda create -n 3dunet
 source activate 3dunet
 conda install pip
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118  #
 git clone https://github.com/wolny/pytorch-3dunet ~/data/pytorch-3dunet
 pip install -e ~/data/pytorch-3dunet/
 pip install pyyaml
@@ -101,21 +101,14 @@ train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/
 ```
 
 ```bash
-# duplicate the stdout to a file (but still print it to stdout, thus duplicating it):
-# runs 'command' normally, prints output to stdout (...or stderr - also console output) normally, duplicates stdout and stderr output to 'output.file', -a for 'append or create if empty/new file'
-<command> 2>&1 | tee -a output.file
-
-ssh
-
+ssh ...
 tmux
 srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
-
 today=230829-0
 screen -S 3dunet-$today
     #screen -S 3dunet-230829-0
 cd ~/data/cloud
 bash pull-script.sh
-
 bash createDirs.sh
 checkdir=~/data/outputs/chpt-230829-0
 tensorboard --logdir $checkdir
@@ -127,11 +120,9 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 # screen detach: <ctrl + a> <d>
 # verify 'train3dunet' is running
 top -u dwalth
-
 # tmux detach: <ctrl + b> <d>
 # verify slurm session is running
 squeue -u dwalth
-
 # cluster logout: <ctrl + d>
 ```
 
@@ -152,6 +143,10 @@ squeue -s -u dwalth
 # attach to an existing slurm session
 sattach $JOBID.$stepno
     # insert values from squeue output
+
+# duplicate the stdout to a file (but still print it to stdout, thus duplicating it):
+# runs 'command' normally, prints output to stdout (...or stderr - also console output) normally, duplicates stdout and stderr output to 'output.file', -a for 'append or create if empty/new file'
+<command> 2>&1 | tee -a output.file
 ```
 
 
