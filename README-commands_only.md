@@ -103,14 +103,17 @@ train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/
 ```bash
 ssh ...
 tmux
-srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=24:00:00 bash -l
-today=230829-0
-screen -S 3dunet-$today
-    #screen -S 3dunet-230829-0
+module load a100
+srun --pty -n 1 --gres=gpu:1 --time=12:00:00 --mail-type=BEGIN,END,FAIL --mail-user=daniel.walther@uzh.ch bash -l
 cd ~/data/cloud
 bash pull-script.sh
 bash createDirs.sh
-checkdir=~/data/outputs/chpt-230829-0
+checkdir=~/data/outputs/chpt-230830-0
+today=230830-0
+screen -S 3dunet-$today
+    #screen -S 3dunet-230829-0
+module load anaconda3
+source activate 3dunet
 tensorboard --logdir $checkdir
     #tensorboard --logdir ~/data/outputs/chpt-230829-0
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f $checkdir/nvidia-smi.log &
