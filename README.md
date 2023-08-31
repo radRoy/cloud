@@ -24,48 +24,29 @@ For further information on the datasets' creation, etc., refer to a separate ded
 
 ### <u>List of installation commands without comments</u>
 
+Just follow the instructions step by step, even if a certain step does not make sense at face value (at first glance).
+
 ```bash
-## start interactive session with GPU
-srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=11G bash -l
-##
-ssh <shortname>@login1.cluster.s3it.uzh.ch
+srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=10G bash -l
+ssh dwalth@login1.cluster.s3it.uzh.ch
 module load anaconda3
 conda create -n 3dunet
 source activate 3dunet
-#pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
-    # (*1) alternative command
-    # (*2) below comment section for testing output
-# trying (*5) TEMP
-conda install pip
-# trying (*1) TEMP
-    ### using the latest torch install instructions from here:   https://pytorch.org/get-started/locally/
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-
-## Darren did it like this, at this point
-    mkdir ~/scratch/tmp36
-    cd ~/scratch/tmp36
-    git clone https://github.com/wolny/pytorch-3dunet ./
-##
-
-# But I will try the existing clone, since I will need to work with this one long-term, anyways
+conda install pip  # necessary, even if pip already installed (for ensuring everything, libs etc., is installed in the virtual environment and not somewhere else)
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118  # using the latest torch install instructions from here:   https://pytorch.org/get-started/locally/
 git clone https://github.com/wolny/pytorch-3dunet ~/data/pytorch-3dunet
-    # skip now 28.08.2023
-pip install -e ~/data/pytorch-3dunet/
-#train3dunet  -- ModuleNotFoundError: No module named 'yaml'
-mamba install pyyaml  ## probably better to  do "pip install pyyaml" instead
-#train3dunet  -- ModuleNotFoundError: No module named 'h5py'
+pip install -e ~/data/pytorch-3dunet/  # contains a file 'setup.py'
+# when trying to run 'train3dunet', the following modules had to be installed manually
+mamba install pyyaml
 pip install h5py
-#train3dunet  --   ModuleNotFoundError: No module named 'tensorboard'
 pip install tensorboard
-#train3dunet  --   ModuleNotFoundError: No module named 'skimage'
 pip install scikit-image
-
-train3dunet  # test whether command is found and gives expected error message ('--config ...' required or so)
+train3dunet
     # usage: train3dunet [-h] --config CONFIG
     # train3dunet: error: the following arguments are required: --config
 # DW: Success.
 
-## verify that cuda works  (should return 1; 0; True; some version (for record keeping in case sth. breaks in the future))
+## verify that cuda works (should return 1; 0; True; 2.0..+cu116 or greater, see pytorch-3dunet git repo)
 python << EOF 
 import torch
 print(torch.cuda.device_count())
@@ -77,94 +58,17 @@ EOF
     # torch version as of 28.08.2023: 2.0.1+cu118
 # DW: Success.
 
-## The environment can be exported to be recreated more easily later with e.g.:
+# The environment can be exported to be recreated more easily later with e.g.:
 conda env export > 3dunet.yml
+    # previous '3dunet.yml' set up with Darren Reed from S3IT can be found in my 'cloud' repo
 ```
 Test the new, apparently fixed, installation with actual datasets (dataset03):
 ```bash
 # config files, etc. were configured previously (230821)
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230821-0-dataset03-testing-patch\[64\,896\,160\]-stride\[32\,128\,80\].yml
-    # ran out of VRAM during the first training iteration - so the right resources are used and the installation works.
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230821-0.yml
+    # the first line of the console output of 'train3dunet' should not contain "CUDA not available, using CPU instead"
+    # if 'train3dunet' finishes multiple training iterations, it works.
 ```
-
-**<u>TEMP Fix ideas surrounding 230821,-28, cluster CUDA version problem</u>**
-```bash
-# IDEA 1 (refer to https://pytorch.org/get-started/locally/ for the latest links and versions, etc.)
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-    # the email exchange around 21-28.08.2023 (Darren) arrived at the same conclusion, more precisely, the non-specific installation command worked on his end.
-pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
-    # (*1) alternative command to the above one, in case something should not behave as expected down the line.
-
-# IDEA 2
-# referring to the email exchange with the cluster staff (~28.08.2023):
-## One way to make sure that pip installs packages into the conda virtual environment is to run "conda install pip" or  "mamba install pip"  (depending whether you are using the mamba or conda module)  after you activate the virtual environment.
-    # (*5)
-conda install pip
-```
-
-### <u>List of installation commands with comments</u>
-
-```bash
-ssh <shortname>@login1.cluster.s3it.uzh.ch
-    # 'login1' prefix not required, here, but good practice for my project, given the long cluster interactive gpu sessions involved in training 3dunet models. It is also practical to have one long continuous bash history from one cluster login node in case entered commands need to be double-checked.
-conda create -n <envName>
-    # envName is '3dunet' in my case
-#conda install pip
-    # pip is installed already on the cluster
-# https://pytorch.org/get-started/previous-versions/#v1121 , install either conda or pip command version below
-pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
-#pip install torch --pre --extra-index-url https://download.pytorch.org/whl/nightly/cu116
-    # installing PyTorch ('torch')
-    # all requirements already satisfied (cluster built-in, in its gcc>anaconda3>lib>python3.10)
-    # DW: included with above pip install command (maybe different versions get installed when not specifying the desired version)
-# (*2) testing the installation (in a GPU interactive session), and how it should look.
-# (*3) alternative, equivalent commands below (+ previous output records)
-python
-import torch
-torch.__version__
-    # '1.12.1+cu116'
-print(torch.cuda.device_count())
-    # 1
-print(torch.cuda.current_device())
-    # 0
-print(torch.cuda.is_available())
-    # True
-#pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116python
-    # alternative to above (this worked previously for Thomas and for me). Unclear, what Thomas installed 'torchvision' and 'torchaudio' for.
-    # (*1) reference to above fix IDEA (this is an alternative command that I could try for fixing a problem)
-
-# (*3) alternative commands to above. Equivalent installation checking, more compact commands + console output records of the first or second cluster installation (which worked)
-# Checking the versions with a python program, passed in as a string (-c 'print("Hello World")')
-python -c 'import torch;print(torch.backends.cudnn.version())'
-    #8500
-    # DW: the cudnn version used by the pytorch installation
-python -c 'import torch;print(torch.__version__)'
-    #2.0.0+cu117
-    # DW: the torch version
-
-# verify torch - Verification is done below by testing the 'train3dunet' command. The pytorch and cuda and cudnn, etc. versions on the ScienceCluster are indeed compatible
-
-cd ~/data
-git clone https://github.com/wolny/pytorch-3dunet
-pip install -e data/pytorch-3dunet/
-    # DW: installs a project into the activated environment (conda in this case). Here, adds the pytorch_egg~ commands 'train3dunet' and 'predict3dunet' to the conda environment, these commands link to the now installed (unpacked~) repo (folder) containing installable files (the cloned pytorch-3dunet repo).
-
-    #Defaulting to user installation because normal site-packages is not writeable
-    #Obtaining file:///home/shortname/data/pytorch-3dunet
-    #  Preparing metadata (setup.py) ... done
-    #Installing collected packages: pytorch3dunet
-    #  Running setup.py develop for pytorch3dunet
-    #Successfully installed pytorch3dunet-1.6.0
-#train3dunet
-    #no module named 'tensorboard'
-pip install tensorboard
-#pip install tensorflow  # cluster can not find this installation - "running on reduced feature set" after `tensorboard --logdir <logdir>`
-    # was not required in the past, makes no difference to me
-train3dunet
-    #usage: train3dunet [-h] --config CONFIG
-    #train3dunet: error: the following arguments are required: --config
-```
-The last output shows that the pytorch-3dunet was installed successfully.
 
 ## <u>Usage of pytorch-3dunet</u>
 
