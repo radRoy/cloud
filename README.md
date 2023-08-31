@@ -78,46 +78,27 @@ U-Net can only handle absolute paths. Therefore, when specifying paths on the cl
 The path `/~/scratch/datasets/imaging03/scaled0.5/train` is invalid.  
 The path `/home/dwalth/scratch/datasets/imaging03/scaled0.5/train` is valid.
 
-However, when giving the config location to the `train3dunet` command, symbolic links with `~` work (bash):
+However, when giving the config location to the `train3dunet` command, symbolic links with `~` (or `../`) work (bash):
 ```bash
 train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/train_config.yml
 ```
 
 In these `train_config.yml` files the patch size & stride shape are given in [z, y, x]. This is implied from pytorch-3dunet's github repo README.md, under [Input Data Format](https://github.com/wolny/pytorch-3dunet#input-data-format).
 
-**TEMP** - from here until (*4): TBD (rules are not clear)
-
-The `patch_shape` and `stride_shape` parameters in the `train_config.yml` (below is the relevant structure of such a .yml file) have to follow certain rules (which are hard to find in the mentioned github repo):  
-```yml
-loaders:
-  num_workers: ...
-  raw_internal_path: ...
-  label_internal_path: ...
-  train: ...
-    file_paths: ...
-    slice_builder: ...
-      name: ...
-      patch_shape: [z1, y1, x1]
-      stride_shape: [z2, y2, x2]
-```  
-
-These rules are:  
+The `patch_shape` and `stride_shape` parameters in the `train_config.yml` (below is the relevant structure of such a .yml file) have to follow certain rules which are not apparent. The following **is required**:
 - `patch_shape` must be bigger than `stride_shape`
+- `stride_shape` can not be [0,0,0]
+- z, y, x of `patch_shape` have to be >64 each, as written on pytorch-3dunet's github page
+- Input images have to be the same size. Prediction will not work otherwise. The error message from `predict3dunet` when it's given images of varying size is about an error with the `torch.Size([])` requested. Therefore, it is simplest when the input images are all of the same size during training and testing the model, and additionally when the training images are of the same size as the images the model is applied to during research.
+  - The records of the corresponding `predict3dunet` attempt can be found in the `230720-0` folders/files, the dataset used was dataset02, the yml file used was `cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/test_config-230720-0.yml`.
 
-*These rules might include **(TBD: unfinished docmentation of the reconstructed ruleset)***:  
-- z, y, x of `patch_shape` have to be >64 each (verify) (written somewhere on wolny's github or in his comments)
-- y and x of `patch_shape` have to be the same (verify) (I think this is false, TBD verify)
-- in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders. They have to be the same (verify)
-have - patch shape's dimensions z, y, x each has to be the same multiple of the stride shape's z, y, x, respectively
+The following **is *not* required**:
+- y and x of `patch_shape` do not have to be the same, as previously thought
+- The patch shape's dimensions z, y, x do not each have to have the same ratio to their corresponding stride shape's dimension has to be the same multiple of the stride shape's z, y, x, respectively
+- **TEMP**: in the `train_config.yml` at `pytorch-3dunet/resources/3DUnet_lightsheet_boundary/`, there are patch and stride shapes for train val loaders. They most likely do not have to be the same, as there would not be different variables if the had to be the same.
 
-This dataset's (dataset02) min and max resolutions:
+#### <u>Study of patch and stride shapes</u>:  
 
-- min zyx: 109, 1036, 253
-- max zyx: 147, 1169, 414
-
-**TEMP** - from (*4) until here: TBD (rules are not clear)
-
-Study of patch and stride shapes:  
 ```bash
 # all patch shape dimensions >64
 # all stride shape dimensions are less than half of the patch shapes'
@@ -322,27 +303,6 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
 
 # use this in future:
 train3dunet --config <config_file_path> 2>&1 | tee -a ~/data/outputs/chpt-230718-3/train3dunet.output
-```
-
-attempt at deploying a well-trained model (I suppose well-trained, idk, let's see the segmentation results):
-```bash
-# 230719-0
-# 230720-0 (try again, now the requested node is available)
-ssh
-tmux attach -t 0
-srun --pty -n 1 -c 8 --mem=32G --gres=gpu:V100 --constraint=GPUMEM32GB --time=02:00:00 bash -l
-    srun: job 4154413 queued and waiting for resources  # noting the job ID
-    new try: 4157963
-screen -S 3dunet-230720-0-test
-module load anaconda3  # no tensorboard required when deploying a model, I think
-source activate 3dunet
-nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/test-230720-0/nvidia-smi.log &
-predict3dunet --config <CONFIG> 2>&1 | tee -a ~/data/outputs/test-230719-0/predict3dunet.output
-predict3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/test_config-230720-0.yml
-    # with the same patch and stride shape as when training this particular model:
-    ...
-    Error with the torch.Size([]) requested, but valid ranges ...
-# => TBD: crop all images to the same size and retry the train3dunet and predict3dunet from scratch.
 ```
 
 ### <u>Instructions on the ScienceCluster UZH</u>
