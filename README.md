@@ -85,10 +85,11 @@ train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/
 
 In these `train_config.yml` files the patch size & stride shape are given in [z, y, x]. This is implied from pytorch-3dunet's github repo README.md, under [Input Data Format](https://github.com/wolny/pytorch-3dunet#input-data-format).
 
-The `patch_shape` and `stride_shape` parameters in the `train_config.yml` (below is the relevant structure of such a .yml file) have to follow certain rules which are not apparent. The following **is required**:
+The terms "patch shape" and "patch size" are used equivalently. The `patch_shape` and `stride_shape` parameters in the `train_config.yml` (below is the relevant structure of such a .yml file) have to follow certain rules which are not apparent. The following **is required**:
 - `patch_shape` must be bigger than `stride_shape`
 - `stride_shape` can not be [0,0,0]
-- z, y, x of `patch_shape` have to be >64 each, as written on pytorch-3dunet's github page
+- `patch_shape` must be at least (image_resolution - stride_shape) / 2
+- z, y, x of `patch_shape` have to be >64 (or >=64 ?TBD) each, as written on pytorch-3dunet's github page
 - Input images have to be the same size. Prediction will not work otherwise. The error message from `predict3dunet` when it's given images of varying size is about an error with the `torch.Size([])` requested. Therefore, it is simplest when the input images are all of the same size during training and testing the model, and additionally when the training images are of the same size as the images the model is applied to during research.
   - The records of the corresponding `predict3dunet` attempt can be found in the `230720-0` folders/files, the dataset used was dataset02, the yml file used was `cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/test_config-230720-0.yml`.
 

@@ -43,9 +43,32 @@ squeue -u dwalth -i 5  # squeue request sent every 5 seconds
 
 bash essentials:
 ```bash
-# assigning a variable in-line in a bash shell
+# assigning a variable in-line in a bash shell (takes as string, I think)
 today=230829-0
 checkdir=~/data/outputs/chpt-230829-0
+
+# duplicate the stdout to a file (but still print it to stdout, thus duplicating it):
+# runs 'command' normally, prints output to stdout (...or stderr - also console output) normally, duplicates stdout and stderr output to 'output.file', -a for 'append or create if empty/new file'
+<command> 2>&1 | tee -a output.file
+```
+
+other useful commands
+```bash
+# name of the gpu
+nvidia-smi --list-gpus
+    # GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-3e262d5d-0626-9183-de73-27b629371d47)
+
+# copy stdout to a file with 'tee'. file named after running command (instead of 'console.output')
+train3dunet --config <config_file_path> 2>&1 | tee -a <checkpoint_dir>/train3dunet.output
+
+# slurm session stuff
+squeue -s -u dwalth -i 5
+    # displays updated output every -i 5 seconds
+squeue -s -u dwalth
+    # $JOBID.stepno  # need both ID & stepno to attach to this node from another node
+# attach to an existing slurm session
+sattach $JOBID.$stepno
+    # insert values from squeue output
 ```
 
 ## <u>Installation commands</u>
@@ -100,26 +123,26 @@ However, when giving the config location to the `train3dunet` command, symbolic 
 train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/train_config.yml
 ```
 
+### <u>`train3dunet` commands</u>
+
 ```bash
 ssh ...
 tmux
-module load a100
-srun --pty -n 1 --gres=gpu:1 --time=12:00:00 --mail-type=BEGIN,END,FAIL --mail-user=daniel.walther@uzh.ch bash -l
+#module load a100
+module load v100-32g
+srun --pty -n 1 -c 8 --mem=32G --gres=gpu:1 --time=12:00:00 --mail-type=BEGIN,END,FAIL --mail-user=daniel.walther@uzh.ch bash -l
 cd ~/data/cloud
+today=230901
+screen -S 3dunet-$today-4
 bash pull-script.sh
-bash createDirs.sh
-checkdir=~/data/outputs/chpt-230830-0
-today=230830-0
-screen -S 3dunet-$today
-    #screen -S 3dunet-230829-0
+bash createChptDirs.sh
+#checkdir=~/data/outputs/chpt-230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
+#session=230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
 module load anaconda3
 source activate 3dunet
 tensorboard --logdir $checkdir
-    #tensorboard --logdir ~/data/outputs/chpt-230829-0
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f $checkdir/nvidia-smi.log &
-    #nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230829-0/nvidia-smi.log &
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$today.yml 2>&1 | tee -a $checkdir/train3dunet.output
-    #train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230829-0.yml 2>&1 | tee -a ~/data/outputs/chpt-230829-0/train3dunet.output
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$session.yml 2>&1 | tee -a $checkdir/train3dunet.output
 # screen detach: <ctrl + a> <d>
 # verify 'train3dunet' is running
 top -u dwalth
@@ -127,29 +150,6 @@ top -u dwalth
 # verify slurm session is running
 squeue -u dwalth
 # cluster logout: <ctrl + d>
-```
-
-useful commands
-```bash
-# name of the gpu
-nvidia-smi --list-gpus
-    # GPU 0: Tesla V100-SXM2-16GB (UUID: GPU-3e262d5d-0626-9183-de73-27b629371d47)
-
-# copy stdout to a file with 'tee'. file named after running command (instead of 'console.output')
-train3dunet --config <config_file_path> 2>&1 | tee -a <checkpoint_dir>/train3dunet.output
-
-# slurm session stuff
-squeue -s -u dwalth -i 5
-    # displays updated output every -i 5 seconds
-squeue -s -u dwalth
-    # $JOBID.stepno  # need both ID & stepno to attach to this node from another node
-# attach to an existing slurm session
-sattach $JOBID.$stepno
-    # insert values from squeue output
-
-# duplicate the stdout to a file (but still print it to stdout, thus duplicating it):
-# runs 'command' normally, prints output to stdout (...or stderr - also console output) normally, duplicates stdout and stderr output to 'output.file', -a for 'append or create if empty/new file'
-<command> 2>&1 | tee -a output.file
 ```
 
 
