@@ -138,6 +138,7 @@ bash pull-script.sh
 bash createChptDirs.sh
 #checkdir=~/data/outputs/chpt-230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
 #session=230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
+
 module load anaconda3
 source activate 3dunet
 tensorboard --logdir $checkdir
