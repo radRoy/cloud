@@ -89,6 +89,8 @@ The terms "patch shape" and "patch size" are used equivalently. The `patch_shape
 - `patch_shape` must be bigger than `stride_shape`
 - `stride_shape` can not be [0,0,0]
 - `patch_shape` must be at least (image_resolution - stride_shape) / 2
+- `patch_shape` coordinates $cp_i$ (each - z, y, and x) appear to work reliably when they are a 3rd power of 2 with an even base $bp_i$, i.e., $cp_i = bp_i * 2^3$.
+- `stride_shape` coordinates $cs_i$ (each - z, y, and x) appear to work reliably when they are a 3rd power of 2 with an even base $bs_i$, i.e., $cs_i = bs_i * 2^3$.
 - z, y, x of `patch_shape` have to be >64 (or >=64 ?TBD) each, as written on pytorch-3dunet's github page
 - Input images have to be the same size. Prediction will not work otherwise. The error message from `predict3dunet` when it's given images of varying size is about an error with the `torch.Size([])` requested. Therefore, it is simplest when the input images are all of the same size during training and testing the model, and additionally when the training images are of the same size as the images the model is applied to during research.
   - The records of the corresponding `predict3dunet` attempt can be found in the `230720-0` folders/files, the dataset used was dataset02, the yml file used was `cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/test_config-230720-0.yml`.
