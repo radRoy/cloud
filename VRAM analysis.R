@@ -38,6 +38,39 @@ for (name in variables) {
 }
 #colnames(dd[1]) <- 'valid session'
 colnames(dd)
+dd <- na.omit(dd)
+dd <- dd[dd$`valid session`==1,]
 
 
 ##### ANALYSIS #####
+
+
+# EDA
+dd$patch_volume = dd$`patch z` * dd$`patch y` * dd$`patch x`
+plot(dd$`VRAM usage (MiB)` ~ dd$patch_volume)
+
+# SLR
+mod <- lm(`VRAM usage (MiB)` ~ patch_volume, data = dd)
+summary(mod)
+plot(mod)
+
+plot(dd$`VRAM usage (MiB)` ~ dd$patch_volume)
+abline(mod)
+title("VRAM usage is proportional to the patch volume")
+
+intercept <- mod$coefficients[1]
+slope <- mod$coefficients[2]
+intercept
+slope
+# VRAM cap = intercept + patch vol * slope
+# patch vol = (VRAM cap - intercept) / slope
+patch_vol_max_V100_32 <- (dd$`VRAM capacity (MiB)`[1] - intercept) / slope
+paste("patch volume for 80.0 GiB VRAM: ", round(patch_vol_max_V100_32,0), " pixels", sep = "")
+  # 14842850 (14.84 MP, 3x16bit raw channels, 1x8bit label channel, with V100's 32 GiB VRAM (not 32 GB as on website))
+patch_vol_max_A100_80 <- (76293.9 - intercept) / slope
+  # 80.0 GiB = 81920 MiB
+paste("patch volume for 80.0 GiB VRAM: ", round(patch_vol_max_A100_80,0), " pixels", sep = "")
+  # 35509830 (35.51 MP, 3x16bit raw cahnnels, 1x8bit label channel, with A100's 80 GiB VRAM (not 80 GB as on website))
+
+paste("intercept:", intercept)
+paste("slope:", slope)
