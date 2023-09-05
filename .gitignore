@@ -26,3 +26,6 @@ pytorch-3dunet/.github
 
 # pycharm stuff
 venv
+.Rproj.user
+.RData
+.Rhistory
