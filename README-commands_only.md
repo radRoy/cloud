@@ -128,12 +128,12 @@ train3dunet --config ~/data/pytorch-3dunet/resources/3DUnet_lightsheet_boundary/
 ```bash
 ssh ...
 tmux
-#module load a100
-module load v100-32g
-srun --pty -n 1 -c 8 --mem=32G --gres=gpu:1 --time=12:00:00 --mail-type=BEGIN,END,FAIL --mail-user=daniel.walther@uzh.ch bash -l
+module load a100
+#module load v100-32g
+srun --pty -n 1 -c 6 --mem=32G --gres=gpu:1 --time=12:00:00 --mail-type=BEGIN,END,FAIL --mail-user=daniel.walther@uzh.ch bash -l
 cd ~/data/cloud
-today=230901
-screen -S 3dunet-$today-4
+today=230905
+screen -S 3dunet-$today-0
 bash pull-script.sh
 bash createChptDirs.sh
 #checkdir=~/data/outputs/chpt-230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
