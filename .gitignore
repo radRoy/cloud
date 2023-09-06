@@ -29,3 +29,4 @@ venv
 .Rproj.user
 .RData
 .Rhistory
+.vscode/settings.json
