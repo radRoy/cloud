@@ -158,8 +158,10 @@ squeue -u dwalth
 ```bash
 ssh ...
 tmux
-
-screen -S 3dunet-$session
+cd ~/data/cloud
+bash pull-script.sh
+source ./getNextSession.sh
+session=$(nextSession)
 sbatch slurm_job-$session.sh
 ```
 

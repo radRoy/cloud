@@ -1,7 +1,7 @@
 #!/bin/bash
 # creates an empty directory at a pre-determined location somewhere on the Science Cluster
 
-function checkpoint {
+function getCheckpoint {
   date=$(date '+chpt-%y%m%d')  # works
 
   prefix="../outputs/"

@@ -1,26 +1,24 @@
 #!/bin/bash
 # creates an empty directory at a pre-determined location somewhere on the Science Cluster
 
-function checkpoint {
-  date=$(date '+chpt-%y%m%d')  # works
+function createCheckpoint {
+  date=$(date '+chpt-%y%m%d')
 
   prefix="../outputs/"
-  i=0  # works
-  dateString="${date}-$i"  # works
+  i=0
+  dateString="${date}-$i"
 
   while [ 1 ]
   do
-    dateString="${date}-$i"  # works
+    dateString="${date}-$i"
     dir="${prefix}${dateString}"
     # if [ directory <argument> exists]
-    if [ -d "$dir" ]; then  # works (checks if directory "$dir" exists)
-      #echo $i  # exists
+    if [ -d "$dir" ]; then  # checks if directory "$dir" exists
       ((i++))
       continue
     
     else  # if dir does not exist
       mkdir "$dir"
-      #echo "Created directory ${dir}"
       output="~/data/outputs/${dateString}"
       break
     fi
