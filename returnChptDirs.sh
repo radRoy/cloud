@@ -19,7 +19,7 @@ function checkpoint {
       continue
     
     else  # if dir does not exist
-      mkdir "$dir"
+      #mkdir "$dir"
       #echo "Created directory ${dir}"
       output="~/data/outputs/${dateString}"
       break
