@@ -27,5 +27,5 @@ function checkpoint {
 
   done
 
-  return output
+  echo $output
 }
