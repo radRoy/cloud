@@ -2,7 +2,7 @@
 # gets the current session id (yymmdd-x)
 
 function nextSession {
-  date=$(date '+chpt-%y%m%d')
+  date=$(date '+%y%m%d')
   chpt_date="chpt-${date}"
 
   folder="../outputs/"
@@ -13,7 +13,7 @@ function nextSession {
   do
     dateString="${chpt_date}-$i"
     dir="${folder}${dateString}"
-    
+
     # if [ directory <argument> exists]
     if [ -d "$dir" ]; then  # checks if directory "$dir" exists
       ((i++))
