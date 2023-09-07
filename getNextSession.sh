@@ -3,22 +3,24 @@
 
 function nextSession {
   date=$(date '+chpt-%y%m%d')
+  chpt_date="chpt-${date}"
 
-  prefix="../outputs/"
+  folder="../outputs/"
   i=0
-  dateString="${date}-$i"
+  dateString="${chpt_date}-$i"
 
   while [ 1 ]
   do
-    dateString="${date}-$i"
-    dir="${prefix}${dateString}"
+    dateString="${chpt_date}-$i"
+    dir="${folder}${dateString}"
+    
     # if [ directory <argument> exists]
     if [ -d "$dir" ]; then  # checks if directory "$dir" exists
       ((i++))
       continue
     
     else  # if dir does not exist
-      output="${dateString}"
+      output="${date}-$i"
       break
     fi
 

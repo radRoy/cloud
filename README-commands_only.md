@@ -139,7 +139,7 @@ bash createChptDirs.sh
 #checkdir=~/data/outputs/chpt-230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
 #session=230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
 
-module load anaconda3   
+module load anaconda3
 source activate 3dunet
 #tensorboard --logdir $checkdir
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f $checkdir/nvidia-smi.log &
@@ -162,7 +162,7 @@ cd ~/data/cloud
 bash pull-script.sh
 source ./getNextSession.sh
 session=$(nextSession)
-sbatch slurm_job-$session.sh
+sbatch ~/data/cloud/slurmJobs/named_copies/slurm_job-$session.sh
 ```
 
 
