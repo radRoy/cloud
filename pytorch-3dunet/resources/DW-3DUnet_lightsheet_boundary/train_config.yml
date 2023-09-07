@@ -49,16 +49,16 @@ trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
   # path to the checkpoint directory
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-230906-1
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-230907-0
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
   # make sure to decrease the learning rate in the optimizer config accordingly
   pre_trained: null
   # how many iterations between validations (originally: 1000) (in first working train run (single channel data): 100)
-  validate_after_iters: 100
+  validate_after_iters: 12
   # how many iterations between tensorboard logging (originally: 500) (in first working train run (single channel data): 25)
-  log_after_iters: 25
+  log_after_iters: 6
   # max number of epochs (originally: 1000) (in first working train run (single channel data): 5000) (IMO, this should be (max_num_iterations/n_train_images))
   max_num_epochs: 50000
   # max number of iterations (originally: 150000)

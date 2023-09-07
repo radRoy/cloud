@@ -1,7 +1,7 @@
 #!/bin/bash
 # gets the current session id (yymmdd-x)
 
-function session {
+function nextSession {
   date=$(date '+chpt-%y%m%d')
 
   prefix="../outputs/"

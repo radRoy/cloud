@@ -130,7 +130,7 @@ ssh ...
 tmux
 module load a100
 #module load v100-32g
-srun --pty -n 1 -c 6 --mem=32G --gres=gpu:1 --time=12:00:00 --mail-type=BEGIN,END,FAIL --mail-user=daniel.walther@uzh.ch bash -l
+srun --pty -n 1 -c 8 --mem=32G --gres=gpu:1 --time=24:00:00 --mail-type=BEGIN,END,FAIL --mail-user=daniel.walther@uzh.ch bash -l
 cd ~/data/cloud
 today=230905
 screen -S 3dunet-$today-0
@@ -139,7 +139,7 @@ bash createChptDirs.sh
 #checkdir=~/data/outputs/chpt-230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
 #session=230830-0  # assign in-line on cluster from 'bash createChptDirs.sh'
 
-module load anaconda3
+module load anaconda3   
 source activate 3dunet
 #tensorboard --logdir $checkdir
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f $checkdir/nvidia-smi.log &
@@ -151,6 +151,16 @@ top -u dwalth
 # verify slurm session is running
 squeue -u dwalth
 # cluster logout: <ctrl + d>
+```
+
+### <u>`train3dunet` commands with using slurm job scripts</u>
+
+```bash
+ssh ...
+tmux
+
+screen -S 3dunet-$session
+sbatch slurm_job-$session.sh
 ```
 
 
