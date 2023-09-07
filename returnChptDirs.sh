@@ -21,7 +21,7 @@ function checkpoint {
     else  # if dir does not exist
       #mkdir "$dir"
       #echo "Created directory ${dir}"
-      output"~/data/outputs/${dateString}"
+      output="~/data/outputs/${dateString}"
       break
     fi
 
