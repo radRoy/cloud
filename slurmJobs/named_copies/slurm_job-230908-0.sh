@@ -28,11 +28,11 @@ source activate 3dunet
 
 #touch $checkdir/nvidia-smi.log
 touch ~/data/outputs/chpt-230908-0/nvidia-smi.log
-srun nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230908-0/nvidia-smi.log &
+nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230908-0/nvidia-smi.log &
 
 #touch $checkdir/train3dunet.output
 touch ~/data/outputs/chpt-230908-0/train3dunet.output
-srun train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$session.yml 2>&1 | tee -a ~/data/outputs/chpt-230908-0/train3dunet.output
+train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$session.yml 2>&1 | tee -a ~/data/outputs/chpt-230908-0/train3dunet.output
 
 # copying outputs (gets executed only when the model training finishes by itself)
 #backup_checkdir=~/data/backup_outputs/$chpt_session
