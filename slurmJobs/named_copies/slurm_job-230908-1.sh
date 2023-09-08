@@ -3,7 +3,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=16G
 #SBATCH --gres=gpu:A100:1
-#SBATCH --time=01:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=daniel.walther@uzh.ch
 
@@ -14,7 +14,7 @@ bash pull-script.sh
 # creating the session & chpt-session strings
 #source ./getNextSession.sh
 #session=$(nextSession)
-session=230908-0
+session=230908-1
 chpt_session="chpt-${session}"
 
 # creating the checkpoint directory & getting its path string
@@ -27,12 +27,12 @@ module load anaconda3
 source activate 3dunet
 
 #touch $checkdir/nvidia-smi.log
-touch ~/data/outputs/chpt-230908-0/nvidia-smi.log
-srun nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230908-0/nvidia-smi.log &
+touch ~/data/outputs/chpt-230908-1/nvidia-smi.log
+srun nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f ~/data/outputs/chpt-230908-1/nvidia-smi.log &
 
 #touch $checkdir/train3dunet.output
-touch ~/data/outputs/chpt-230908-0/train3dunet.output
-srun train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$session.yml 2>&1 | tee -a ~/data/outputs/chpt-230908-0/train3dunet.output
+touch ~/data/outputs/chpt-230908-1/train3dunet.output
+srun train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$session.yml 2>&1 | tee -a ~/data/outputs/chpt-230908-1/train3dunet.output
 
 # copying outputs (gets executed only when the model training finishes by itself)
 #backup_checkdir=~/data/backup_outputs/$chpt_session

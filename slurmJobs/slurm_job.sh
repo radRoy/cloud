@@ -9,7 +9,7 @@
 
 # navigating directories and pulling newest committed files
 cd ~/data/cloud
-bash pull-script.sh
+bash pull-script.sh  # in case that got forgotten
 
 # creating the session & chpt-session strings
 source ./getNextSession.sh
