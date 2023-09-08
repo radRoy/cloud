@@ -66,7 +66,7 @@ trainer:
 # Configure training and validation loaders
 loaders:
   # how many subprocesses to use for data loading (originally: 8, but optimum depends on hardware spec.s)
-  num_workers: 1
+  num_workers: 8
   # path to the raw data within the H5 (originally: /raw)
   raw_internal_path: /raw
   # path to the the label data withtin the H5 (originally: /label)
