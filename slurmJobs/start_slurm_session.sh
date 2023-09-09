@@ -23,9 +23,10 @@ slurmout=slurm-$session.out
 sbatch /home/dwalth/data/cloud/slurmJobs/named_copies/slurm_job-$session.sh $session $checkdir $slurmout
 
 # copying outputs (should get executed after the slurm job has finished, for whatever reason)
-backup_checkdir="/home/dwalth/data/backup_outputs/chpt-${session}"  # without trailing slash
-if ! [ -d "$backup_checkdir" ]; then
-    mkdir $backup_checkdir
-fi
-mv $slurmout $checkdir/
-cp $checkdir/* $backup_checkdir/
+### This does not work, currently. Need to find a way to wait for above 'sbatch' process to finish before executing these lines.
+## backup_checkdir="/home/dwalth/data/backup_outputs/chpt-${session}"  # without trailing slash
+## if ! [ -d "$backup_checkdir" ]; then
+##     mkdir $backup_checkdir
+## fi
+## mv $slurmout $checkdir/
+## cp $checkdir/* $backup_checkdir/
