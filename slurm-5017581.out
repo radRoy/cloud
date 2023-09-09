@@ -1,0 +1,202 @@
+Already up to date.
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	slurm-5017577.out
+	slurm-5017581.out
+
+nothing added to commit but untracked files present (use "git add" to track)
+2023-09-08 21:52:59,607 [MainThread] INFO TrainingSetup - {'model': {'name': 'ResidualUNet3D', 'in_channels': 3, 'out_channels': 1, 'layer_order': 'gcr', 'f_maps': 32, 'num_groups': 8, 'final_sigmoid': True}, 'loss': {'name': 'BCEDiceLoss', 'ignore_index': None, 'skip_last_target': True}, 'optimizer': {'learning_rate': 0.0002, 'weight_decay': 1e-05}, 'eval_metric': {'name': 'BoundaryAdaptedRandError', 'threshold': 0.4, 'use_last_target': True, 'use_first_input': True}, 'lr_scheduler': {'name': 'ReduceLROnPlateau', 'mode': 'min', 'factor': 0.5, 'patience': 10}, 'trainer': {'eval_score_higher_is_better': False, 'checkpoint_dir': '/home/dwalth/data/outputs/chpt-230908-0', 'resume': None, 'pre_trained': None, 'validate_after_iters': 12, 'log_after_iters': 6, 'max_num_epochs': 50000, 'max_num_iterations': 150000}, 'loaders': {'num_workers': 8, 'raw_internal_path': '/raw', 'label_internal_path': '/label', 'train': {'file_paths': ['/home/dwalth/scratch/datasets/dataset04/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/train/'], 'slice_builder': {'name': 'FilterSliceBuilder', 'patch_shape': [112, 800, 400], 'stride_shape': [6, 184, 7], 'threshold': 0.6, 'slack_acceptance': 0.01}, 'transformer': {'raw': [{'name': 'Standardize'}, {'name': 'RandomFlip'}, {'name': 'RandomRotate90'}, {'name': 'RandomRotate', 'axes': [[2, 1]], 'angle_spectrum': 45, 'mode': 'reflect'}, {'name': 'ElasticDeformation', 'spline_order': 3}, {'name': 'GaussianBlur3D', 'execution_probability': 0.5}, {'name': 'AdditiveGaussianNoise', 'execution_probability': 0.2}, {'name': 'AdditivePoissonNoise', 'execution_probability': 0.2}, {'name': 'ToTensor', 'expand_dims': True}], 'label': [{'name': 'RandomFlip'}, {'name': 'RandomRotate90'}, {'name': 'RandomRotate', 'axes': [[2, 1]], 'angle_spectrum': 45, 'mode': 'reflect'}, {'name': 'ElasticDeformation', 'spline_order': 0}, {'name': 'StandardLabelToBoundary', 'append_label': True}, {'name': 'ToTensor', 'expand_dims': False}]}}, 'val': {'file_paths': ['/home/dwalth/scratch/datasets/dataset04/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/val/'], 'slice_builder': {'name': 'FilterSliceBuilder', 'patch_shape': [112, 800, 400], 'stride_shape': [6, 184, 7], 'threshold': 0.6, 'slack_acceptance': 0.01}, 'transformer': {'raw': [{'name': 'Standardize'}, {'name': 'ToTensor', 'expand_dims': True}], 'label': [{'name': 'StandardLabelToBoundary', 'append_label': True}, {'name': 'ToTensor', 'expand_dims': False}]}}}, 'device': 'cuda'}
+2023-09-08 21:53:02,427 [MainThread] INFO UNetTrainer - Number of learnable params 28437825
+2023-09-08 21:53:02,427 [MainThread] INFO Dataset - Creating training and validation set loaders...
+2023-09-08 21:53:02,427 [MainThread] WARNING Dataset - Cannot find dataset class in the config. Using default 'StandardHDF5Dataset'.
+2023-09-08 21:53:02,661 [MainThread] INFO HDF5Dataset - Loading train set from: /home/dwalth/scratch/datasets/dataset04/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/train/id03-cropNorm-bicubic-scaled0.25-multiChannel(CZYX)-Ch405,488,561nm-h5.h5...
+2023-09-08 21:53:03,224 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [112, 800, 400], 'stride_shape': [6, 184, 7], 'threshold': 0.6, 'slack_acceptance': 0.01}
+2023-09-08 21:53:05,543 [MainThread] INFO HDF5Dataset - Number of patches: 1
+2023-09-08 21:53:05,544 [MainThread] INFO HDF5Dataset - Loading train set from: /home/dwalth/scratch/datasets/dataset04/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/train/id02-cropNorm-bicubic-scaled0.25-multiChannel(CZYX)-Ch405,488,561nm-h5.h5...
+2023-09-08 21:53:06,109 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [112, 800, 400], 'stride_shape': [6, 184, 7], 'threshold': 0.6, 'slack_acceptance': 0.01}
+2023-09-08 21:53:08,356 [MainThread] INFO HDF5Dataset - Number of patches: 1
+2023-09-08 21:53:08,357 [MainThread] INFO HDF5Dataset - Loading train set from: /home/dwalth/scratch/datasets/dataset04/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/train/id05-cropNorm-bicubic-scaled0.25-multiChannel(CZYX)-Ch405,488,561nm-h5.h5...
+2023-09-08 21:53:09,010 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [112, 800, 400], 'stride_shape': [6, 184, 7], 'threshold': 0.6, 'slack_acceptance': 0.01}
+2023-09-08 21:53:11,233 [MainThread] INFO HDF5Dataset - Number of patches: 1
+2023-09-08 21:53:11,234 [MainThread] INFO HDF5Dataset - Loading train set from: /home/dwalth/scratch/datasets/dataset04/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/train/id01-cropNorm-bicubic-scaled0.25-multiChannel(CZYX)-Ch405,488,561nm-h5.h5...
+2023-09-08 21:53:12,039 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [112, 800, 400], 'stride_shape': [6, 184, 7], 'threshold': 0.6, 'slack_acceptance': 0.01}
+2023-09-08 21:53:14,303 [MainThread] INFO HDF5Dataset - Number of patches: 1
+2023-09-08 21:53:14,303 [MainThread] INFO HDF5Dataset - Loading train set from: /home/dwalth/scratch/datasets/dataset04/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/train/id04-cropNorm-bicubic-scaled0.25-multiChannel(CZYX)-Ch405,488,561nm-h5.h5...
+2023-09-08 21:53:15,046 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [112, 800, 400], 'stride_shape': [6, 184, 7], 'threshold': 0.6, 'slack_acceptance': 0.01}
+2023-09-08 21:53:17,295 [MainThread] INFO HDF5Dataset - Number of patches: 1
+2023-09-08 21:53:17,296 [MainThread] INFO HDF5Dataset - Loading val set from: /home/dwalth/scratch/datasets/dataset04/raw-cropNorm-bicubic-scaled0.25-autofluo-multiChannel(CZYX)-Ch405,488,561nm-h5/val/id06-cropNorm-bicubic-scaled0.25-multiChannel(CZYX)-Ch405,488,561nm-h5.h5...
+2023-09-08 21:53:17,984 [MainThread] INFO Dataset - Slice builder config: {'name': 'FilterSliceBuilder', 'patch_shape': [112, 800, 400], 'stride_shape': [6, 184, 7], 'threshold': 0.6, 'slack_acceptance': 0.01}
+2023-09-08 21:53:20,269 [MainThread] INFO HDF5Dataset - Number of patches: 1
+2023-09-08 21:53:20,269 [MainThread] INFO Dataset - Number of workers for train/val dataloader: 8
+2023-09-08 21:53:20,269 [MainThread] INFO Dataset - Batch size for train/val loader: 1
+/home/dwalth/data/conda/envs/3dunet/lib/python3.11/site-packages/torch/utils/data/dataloader.py:560: UserWarning: This DataLoader will create 8 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+2023-09-08 21:53:20,273 [MainThread] INFO UNetTrainer - ResidualUNet3D(
+  (encoders): ModuleList(
+    (0): Encoder(
+      (basic_module): ResNetBlock(
+        (conv1): Conv3d(3, 32, kernel_size=(1, 1, 1), stride=(1, 1, 1))
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 32, eps=1e-05, affine=True)
+          (conv): Conv3d(32, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 32, eps=1e-05, affine=True)
+          (conv): Conv3d(32, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+    (1): Encoder(
+      (pooling): MaxPool3d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (basic_module): ResNetBlock(
+        (conv1): Conv3d(32, 64, kernel_size=(1, 1, 1), stride=(1, 1, 1))
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 64, eps=1e-05, affine=True)
+          (conv): Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 64, eps=1e-05, affine=True)
+          (conv): Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+    (2): Encoder(
+      (pooling): MaxPool3d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (basic_module): ResNetBlock(
+        (conv1): Conv3d(64, 128, kernel_size=(1, 1, 1), stride=(1, 1, 1))
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 128, eps=1e-05, affine=True)
+          (conv): Conv3d(128, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 128, eps=1e-05, affine=True)
+          (conv): Conv3d(128, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+    (3): Encoder(
+      (pooling): MaxPool3d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (basic_module): ResNetBlock(
+        (conv1): Conv3d(128, 256, kernel_size=(1, 1, 1), stride=(1, 1, 1))
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 256, eps=1e-05, affine=True)
+          (conv): Conv3d(256, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 256, eps=1e-05, affine=True)
+          (conv): Conv3d(256, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+    (4): Encoder(
+      (pooling): MaxPool3d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+      (basic_module): ResNetBlock(
+        (conv1): Conv3d(256, 512, kernel_size=(1, 1, 1), stride=(1, 1, 1))
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 512, eps=1e-05, affine=True)
+          (conv): Conv3d(512, 512, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 512, eps=1e-05, affine=True)
+          (conv): Conv3d(512, 512, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+  )
+  (decoders): ModuleList(
+    (0): Decoder(
+      (upsampling): TransposeConvUpsampling(
+        (upsample): ConvTranspose3d(512, 256, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+      )
+      (basic_module): ResNetBlock(
+        (conv1): Identity()
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 256, eps=1e-05, affine=True)
+          (conv): Conv3d(256, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 256, eps=1e-05, affine=True)
+          (conv): Conv3d(256, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+    (1): Decoder(
+      (upsampling): TransposeConvUpsampling(
+        (upsample): ConvTranspose3d(256, 128, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+      )
+      (basic_module): ResNetBlock(
+        (conv1): Identity()
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 128, eps=1e-05, affine=True)
+          (conv): Conv3d(128, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 128, eps=1e-05, affine=True)
+          (conv): Conv3d(128, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+    (2): Decoder(
+      (upsampling): TransposeConvUpsampling(
+        (upsample): ConvTranspose3d(128, 64, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+      )
+      (basic_module): ResNetBlock(
+        (conv1): Identity()
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 64, eps=1e-05, affine=True)
+          (conv): Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 64, eps=1e-05, affine=True)
+          (conv): Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+    (3): Decoder(
+      (upsampling): TransposeConvUpsampling(
+        (upsample): ConvTranspose3d(64, 32, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+      )
+      (basic_module): ResNetBlock(
+        (conv1): Identity()
+        (conv2): SingleConv(
+          (groupnorm): GroupNorm(8, 32, eps=1e-05, affine=True)
+          (conv): Conv3d(32, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+          (ReLU): ReLU(inplace=True)
+        )
+        (conv3): SingleConv(
+          (groupnorm): GroupNorm(8, 32, eps=1e-05, affine=True)
+          (conv): Conv3d(32, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1), bias=False)
+        )
+        (non_linearity): ReLU(inplace=True)
+      )
+    )
+  )
+  (final_conv): Conv3d(32, 1, kernel_size=(1, 1, 1), stride=(1, 1, 1))
+  (final_activation): Sigmoid()
+)
+2023-09-08 21:53:20,273 [MainThread] INFO UNetTrainer - eval_score_higher_is_better: False
+2023-09-08 21:54:12,151 [MainThread] INFO UNetTrainer - Training iteration [1/150000]. Epoch [0/49999]
+2023-09-08 21:57:12,708 [MainThread] INFO UNetTrainer - Training iteration [2/150000]. Epoch [0/49999]
+2023-09-08 21:57:14,634 [MainThread] INFO UNetTrainer - Training iteration [3/150000]. Epoch [0/49999]
+2023-09-08 21:57:33,113 [MainThread] INFO UNetTrainer - Training iteration [4/150000]. Epoch [0/49999]
+2023-09-08 21:57:51,766 [MainThread] INFO UNetTrainer - Training iteration [5/150000]. Epoch [0/49999]
+slurmstepd: error: Detected 3 oom-kill event(s) in StepId=5017581.batch. Some of your processes may have been killed by the cgroup out-of-memory handler.
