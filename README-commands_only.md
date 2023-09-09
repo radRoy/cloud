@@ -160,10 +160,8 @@ ssh ...
 tmux
 cd ~/data/cloud
 bash pull-script.sh
-source ./getNextSession.sh
-session=$(nextSession)
-echo $session
-sbatch ~/data/cloud/slurmJobs/named_copies/slurm_job-$session.sh
+screen -S 3dunet-230909-0
+bash slurmJobs/start_slurm_session.sh
 ```
 
 
