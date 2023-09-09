@@ -4,14 +4,14 @@
 function createCheckpoint {
   date=$(date '+chpt-%y%m%d')
 
-  prefix="../outputs/"
+  path="/home/dwalth/data/outputs"
   i=0
   dateString="${date}-$i"
 
   while [ 1 ]
   do
     dateString="${date}-$i"
-    dir="${prefix}${dateString}"
+    dir="${path}/${dateString}"
     # if [ directory <argument> exists]
     if [ -d "$dir" ]; then  # checks if directory "$dir" exists
       ((i++))
@@ -19,11 +19,11 @@ function createCheckpoint {
     
     else  # if dir does not exist
       mkdir "$dir"
-      output="~/data/outputs/${dateString}"
+      output=$dir
       break
     fi
 
   done
 
-  echo $output
+  echo $output  # absolute folder path starting with "/home/dwalth/..." without trailing slash
 }
