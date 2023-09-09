@@ -3,6 +3,7 @@
 # session variables
 session=$1  # "yymmdd-id"
 checkdir=$2  # starting with "/home/dwalth/..." without trailing slash
+slurmout=$3
 
 #SBATCH --ntasks=1         # is this a problem ("job step creation disabled")?
 #SBATCH --cpus-per-task=1  # is this a problem ("job step creation disabled")?
@@ -11,7 +12,7 @@ checkdir=$2  # starting with "/home/dwalth/..." without trailing slash
 #SBATCH --time=24:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=daniel.walther@uzh.ch
-#SBATCH --output=slurm-$session.out
+#SBATCH --output=$slurmout
 
 # train3dunet commands
 module load anaconda3

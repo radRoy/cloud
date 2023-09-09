@@ -19,11 +19,13 @@ if ! [ -d "$checkdir" ]; then
 else
 
 # calling the slurm job file (containing the train3dunet command, for example)
-sbatch /home/dwalth/data/cloud/slurmJobs/named_copies/slurm_job-$session.sh $session $checkdir
+slurmout=slurm-$session.out
+sbatch /home/dwalth/data/cloud/slurmJobs/named_copies/slurm_job-$session.sh $session $checkdir $slurmout
 
 # copying outputs (should get executed after the slurm job has finished, for whatever reason)
 backup_checkdir="/home/dwalth/data/backup_outputs/chpt-${session}"  # without trailing slash
 if ! [ -d "$backup_checkdir" ]; then
     mkdir $backup_checkdir
 else
+mv $slurmout $checkdir/
 cp $checkdir/* $backup_checkdir/
