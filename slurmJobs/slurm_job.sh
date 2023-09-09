@@ -6,7 +6,7 @@ checkdir=$2  # starting with "/home/dwalth/..." without trailing slash
 slurmout=$3
 
 #SBATCH --ntasks=1         # is this a problem ("job step creation disabled")?
-#SBATCH --cpus-per-task=1  # is this a problem ("job step creation disabled")?
+#SBATCH --cpus-per-task=8  # is this a problem ("job step creation disabled")? I now set it to the number of workers in train3dunet's train_config.yml (default is 8)
 #SBATCH --mem=16G
 #SBATCH --gres=gpu:A100:1
 #SBATCH --time=24:00:00
