@@ -1,31 +1,28 @@
 #!/bin/bash
-# creates an empty directory at a pre-determined location somewhere on the Science Cluster
+# returns the next would-be created directory by cloud/createChptDirs.sh
 
-function getCheckpoint {
-  date=$(date '+chpt-%y%m%d')  # works
+function f_returnCheckpoint {
+  date=$(date '+chpt-%y%m%d')
 
-  prefix="../outputs/"
-  i=0  # works
-  dateString="${date}-$i"  # works
+  path="/home/dwalth/data/outputs"
+  i=0
+  dateString="${date}-$i"
 
   while [ 1 ]
   do
-    dateString="${date}-$i"  # works
-    dir="${prefix}${dateString}"
+    dateString="${date}-$i"
+    dir="${path}/${dateString}"
     # if [ directory <argument> exists]
-    if [ -d "$dir" ]; then  # works (checks if directory "$dir" exists)
-      #echo $i  # exists
+    if [ -d "$dir" ]; then  # checks if directory "$dir" exists
       ((i++))
       continue
     
     else  # if dir does not exist
-      #mkdir "$dir"
-      #echo "Created directory ${dir}"
-      output="~/data/outputs/${dateString}"
+      output=$dir
       break
     fi
 
   done
 
-  echo $output
+  echo $output  # absolute folder path starting with "/home/dwalth/..." without trailing slash
 }
