@@ -19,7 +19,7 @@ if ! [ -d "$checkdir" ]; then
 fi
 
 # calling the slurm job file (containing the train3dunet command, for example)
-slurmout=slurm-$session.out
+slurmout=$checkdir/slurm-$session.out
 sbatch --output=$slurmout /home/dwalth/data/cloud/slurmJobs/named_copies/slurm_job-$session.sh $session $checkdir $slurmout
 
 # copying outputs (should get executed after the slurm job has finished, for whatever reason)
