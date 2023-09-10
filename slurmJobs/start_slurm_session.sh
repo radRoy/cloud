@@ -20,7 +20,7 @@ fi
 
 # calling the slurm job file (containing the train3dunet command, for example)
 slurmout=slurm-$session.out
-sbatch /home/dwalth/data/cloud/slurmJobs/named_copies/slurm_job-$session.sh $session $checkdir $slurmout
+sbatch --output=$slurmout /home/dwalth/data/cloud/slurmJobs/named_copies/slurm_job-$session.sh $session $checkdir $slurmout
 
 # copying outputs (should get executed after the slurm job has finished, for whatever reason)
 ### This does not work, currently. Need to find a way to wait for above 'sbatch' process to finish before executing these lines.
