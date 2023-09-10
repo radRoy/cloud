@@ -49,7 +49,7 @@ trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
   # path to the checkpoint directory
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-230909-0
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-2309010-0
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -83,7 +83,7 @@ loaders:
       # patch & stride shape stuff, debugging, etc.:
         # 
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better) (originally: [80, 170, 170], but depends on the input data)
-      patch_shape: [98,784,384]  # dataset03 resolution: 125,1169,414
+      patch_shape: [96,784,384]  # dataset03 resolution: 125,1169,414
       # train stride between patches (originally: [20, 40, 40]) (in [z, y, x])
       stride_shape: [14,192,15]
       # minimum volume of the labels in the patch (QU: unit of measurement? pixels? um?)
@@ -137,7 +137,7 @@ loaders:
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [98,784,384]  # dataset03 resolution: 125,1169,414
+      patch_shape: [96,784,384]  # dataset03 resolution: 125,1169,414
       # train stride between patches
       stride_shape: [14,192,15]
       # minimum volume of the labels in the patch
