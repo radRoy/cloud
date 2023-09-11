@@ -56,7 +56,7 @@ trainer:
   # make sure to decrease the learning rate in the optimizer config accordingly
   pre_trained: null
   # how many iterations between validations (originally: 1000) (in first working train run (single channel data): 100)
-  validate_after_iters: 120
+  validate_after_iters: 1000
   # how many iterations between tensorboard logging (originally: 500) (in first working train run (single channel data): 25)
   log_after_iters: 50
   # max number of epochs (originally: 1000) (in first working train run (single channel data): 5000)
