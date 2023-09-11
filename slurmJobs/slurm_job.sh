@@ -9,8 +9,8 @@
 
 # info: do not use `srun` in sbatch scripts, except job step creation is enabled (I think this would be done by setting --ntasks to more than 1)
 
-cd ~/data/cloud
-bash pull-script.sh
+cd ~/data/cloud  # this line appears to be required for below nvidia-smi logging (writing to file) to work.
+# bash pull-script.sh
 
 # session variables
 session=$1  # "yymmdd-id"
