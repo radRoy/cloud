@@ -50,6 +50,21 @@ checkdir=~/data/outputs/chpt-230829-0
 # duplicate the stdout to a file (but still print it to stdout, thus duplicating it):
 # runs 'command' normally, prints output to stdout (...or stderr - also console output) normally, duplicates stdout and stderr output to 'output.file', -a for 'append or create if empty/new file'
 <command> 2>&1 | tee -a output.file
+
+# print a file's contents to stdout
+cat file
+
+# print a file's first x (e.g. x=15) lines to stdout
+head -n file
+
+# print a file's last x (e.g. x=15) lines to stdout
+tail -n file
+
+# print a selected line of a file (e.g. line 2, counting starts at 1)
+sed -n '2p' file
+
+# print a selected slice of lines of a file (e.g. line 2 to 4, including lower and upper index, counting starts at 1)
+sed -n '2,4p' file
 ```
 
 other useful commands
