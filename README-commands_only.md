@@ -64,7 +64,7 @@ tail -n file
 sed -n '2p' file
 
 # print a selected slice of lines of a file (e.g. line 2 to 4, including lower and upper index, counting starts at 1)
-sed -n '2,4p' file
+sed -n '2,4p' data/outputs/chpt-230910-7/train3dunet.output
 ```
 
 other useful commands
