@@ -7,7 +7,7 @@ cd /home/dwalth/data/cloud
 source ./getNextSession.sh
 
 # defining the number of sessions to be run (and prepared for) today (230930)
-n=18
+n=((18))
 
 # getting today's date
 date=$(date '+%y%m%d')
