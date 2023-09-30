@@ -13,7 +13,7 @@ n=18
 date=$(date '+%y%m%d')
 
 # iteratively starting/submitting all prepared slurm jobs
-for i in {1..(${n}-1)}; do
+for i in {1..${n}-1}; do
     session="${date}-${i}"
     echo "i: ${i}, session: ${session}"
     echo "=> bash slurmJobs/start_slurm_session.sh $session"
