@@ -6,7 +6,7 @@
 model:
   name: ResidualUNet3D
   # number of input channels to the model
-  in_channels: 3
+  in_channels: 1
   # number of output channels
   out_channels: 1
   # determines the order of operators in a single layer (crg - Conv3d+ReLU+GroupNorm)
