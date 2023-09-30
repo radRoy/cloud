@@ -26,6 +26,9 @@ while ((i < n)); do
     
     echo "entering command: bash ./slurmJobs/start_slurm_session.sh $session"
     bash ./slurmJobs/start_slurm_session.sh $session
+
+    # sleep 5m  # pause execution of this script for 5 minutes (run time of each slurm session is 15 minutes - so at most 3 running at one time. without pausing, only about a third of all runs was not cancelled prematurely.)
+
     ((i++))
 
 done
