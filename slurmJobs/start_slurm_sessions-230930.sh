@@ -16,6 +16,13 @@ n=$((18))
 while ((i < n)); do
     
     session=$(nextSession)
+    
+    # creating the session's checkpoint directory if necessary
+    checkdir="/home/dwalth/data/outputs/chpt-${session}"
+    if ! [ -d "$checkdir" ]; then
+        mkdir $checkdir
+    fi
+
     echo "i: $i, session: ${session}"
     echo " bash ./slurmJobs/start_slurm_session.sh $session"
 
