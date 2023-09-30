@@ -5,6 +5,7 @@ cd /home/dwalth/data/cloud
 # bash pull-script.sh  # in case that got forgotten
 
 # creating the session string (makes it possible to give a custom session name as input, defaults to current date and a number yymmdd-id)
+# session example: '230930-0'
 if ! [ $# -eq 0 ]; then
     session=$1
 else

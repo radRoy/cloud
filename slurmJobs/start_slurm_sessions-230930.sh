@@ -15,6 +15,7 @@ n=$((18))
 # iteratively starting/submitting all prepared slurm jobs
 while ((i < n)); do
     
+    # getting the next session (the next to be created checkpoint output directory at ~/data/outputs/chpt-$session)
     session=$(nextSession)
     
     # creating the session's checkpoint directory if necessary
@@ -22,9 +23,9 @@ while ((i < n)); do
     if ! [ -d "$checkdir" ]; then
         mkdir $checkdir
     fi
-
-    echo "i: $i, session: ${session}"
-    echo " bash ./slurmJobs/start_slurm_session.sh $session"
-
+    
+    echo "entering command: bash ./slurmJobs/start_slurm_session.sh $session"
+    bash ./slurmJobs/start_slurm_session.sh $session
     ((i++))
+
 done
