@@ -13,7 +13,7 @@ n=18
 date=$(date '+%y%m%d')
 
 # iteratively starting/submitting all prepared slurm jobs
-while [ $i -lt $n ]; do
+while (( $i < $n )); do
     
     session="${date}-${i}"
     echo "i: ${i}, session: ${session}"
