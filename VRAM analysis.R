@@ -4,9 +4,18 @@
 ##### FILE HANDLING #####
 
 
-# import file
-library(readr)
-dd_raw <- read_delim("VRAM patch stride table, tab delim.txt", delim = "\t", escape_double = FALSE, trim_ws = TRUE)
+# import file (txt)
+# library(readr)
+# dd_raw <- read_delim("VRAM patch stride table, tab delim.txt", delim = "\t", escape_double = FALSE, trim_ws = TRUE)
+
+# import file (excel)
+library(readxl)
+X3dunet_session_annotations <- read_excel("cloud/3dunet session annotations.xlsx", 
+                                          range = "A1:BA63",
+                                          col_types = c("text", "text", "skip", "skip", "skip", "skip", "skip", "skip", "skip", "skip", "skip", "skip", "skip", "skip", "numeric",
+                                                        "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text"))
+View(X3dunet_session_annotations)
+dd_raw <- X3dunet_session_annotations
 
 
 ##### DATA WRANGLING #####
