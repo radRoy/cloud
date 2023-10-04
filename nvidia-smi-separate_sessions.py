@@ -179,25 +179,30 @@ def main(arg="C:/Users/Dancer/Documents/cluster/data/outputs/chpt-230901-0/nvidi
         VRAM_gpu.pop(-1)
         VRAM_capacity.pop(-1)
 
-    print("")
     for i, (gpu_j, vram_used, vram_free, vram_cap) in enumerate(zip(VRAM_gpu, VRAM_usage, VRAM_free, VRAM_capacity)):
         print(f"session {i}, gpu: {gpu_j}, mem_used_MiB: {vram_used}, mem_free_MiB: {vram_free}, mem_cap_MiB: {vram_cap}.")
 
 
 if __name__ == "__main__":
-    # print(sys.argv)
+    for a, arg in enumerate(sys.argv):
+        print(f"argument {a}: {arg}")
         # the first element (index 0) in sys.argv is always the absolute file path of the current python script.
+
     if len(sys.argv) > 1:
         for i, arg in enumerate(sys.argv):
             print(f"\nnvidia-smi-separate_sessions.py: file {i} {arg}")
             main(arg)
+
     else:
         # for local (Dancer) testing with a default file, write "" as list element.
-        static_arguments = [""]
+        # default file: "C:/Users/Dancer/Documents/cluster/data/outputs/chpt-230901-0/nvidia-smi.log"
+        static_arguments = ["C:/Users/Dancer/Documents/cluster/data/outputs/chpt-230901-0/nvidia-smi.log", "C:/Users/Dancer/Documents/cluster/data/outputs/chpt-230905-1/nvidia-smi.log"]
         for i, arg in enumerate(static_arguments):
+
             if arg == "":
                 print(f"\nnvidia-smi-separate_sessions.py: file {i} '{arg}'")
                 main()
+
             else:
                 print(f"\nnvidia-smi-separate_sessions.py: file {i} '{arg}'")
                 main(arg)
