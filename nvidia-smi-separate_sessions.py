@@ -189,7 +189,7 @@ if __name__ == "__main__":
         # the first element (index 0) in sys.argv is always the absolute file path of the current python script.
 
     if len(sys.argv) > 1:
-        for i, arg in enumerate(sys.argv):
+        for i, arg in enumerate(sys.argv[1:]):
             print(f"\nnvidia-smi-separate_sessions.py: file {i} {arg}")
             main(arg)
 
