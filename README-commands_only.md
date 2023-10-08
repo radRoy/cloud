@@ -103,6 +103,7 @@ pip install pyyaml
 pip install h5py
 pip install tensorboard
 pip install scikit-image
+pip install tqdm  # required for 'predict3dunet'
 train3dunet
     # usage: train3dunet [-h] --config CONFIG
     # train3dunet: error: the following arguments are required: --config
