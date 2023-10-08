@@ -19,12 +19,17 @@ checkdir=$2  # starting with "/home/dwalth/..." without trailing slash
 echo " ${0}: checkdir: ${checkdir}"
 echo " ${0}: slurm output file name: ${3}"
 
-# train3dunet commands
+# 3dunet commands
 module load anaconda3
 source activate 3dunet
 
 touch $checkdir/nvidia-smi.log
 nvidia-smi -i $CUDA_VISIBLE_DEVICES -l 2 --query-gpu=gpu_name,memory.used,memory.free --format=csv -f $checkdir/nvidia-smi.log &
 
-touch $checkdir/train3dunet.output
-train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$session.yml 2>&1 | tee -a $checkdir/train3dunet.output
+# train3dunet commands
+# touch $checkdir/train3dunet.output
+# train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-$session.yml 2>&1 | tee -a $checkdir/train3dunet.output
+
+# predict3dunet commands
+touch $checkdir/predict3dunet.output
+predict3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/test_config-$session.yml 2>&1 | tee -a $checkdir/predict3dunet.output

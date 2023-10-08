@@ -12,6 +12,7 @@ function createCheckpoint {
   do
     dateString="${date}-$i"
     dir="${path}/${dateString}"
+    
     # if [ directory <argument> exists]
     if [ -d "$dir" ]; then  # checks if directory "$dir" exists
       ((i++))
