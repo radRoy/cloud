@@ -20,7 +20,7 @@ predictor:
   name: 'StandardPredictor'
 loaders:
   # save predictions to output_dir (PATH_TO_OUTPUT_DIR)
-  output_dir: /home/dwalth/data/outputs/chpt-231010-0/  # /home/dwalth/data/outputs/test-230720-0/best_checkpoint.pytorch
+  output_dir: /home/dwalth/data/outputs/chpt-231017-0/  # /home/dwalth/data/outputs/test-230720-0/best_checkpoint.pytorch
   # batch dimension; if number of GPUs is N > 1, then a batch_size of N * batch_size will automatically be taken for DataParallel
   batch_size: 1
   # how many subprocesses to use for data loading
@@ -35,12 +35,12 @@ loaders:
       
       # patch_shape:  # original: [80, 170, 170]
         # TBD: NOTE SHAPES & REASONING WHEN A SESSION WORKED: <session>: dataset07 resolution (all zyx): 125,1169,414. patch = <[z,y,x]>
-      patch_shape: [96,784,384]
+      patch_shape: [64,752,352]
         # previously [64,896,160]
       
       # stride_shape:  # original: [40, 90, 90]
         # TBD: NOTE SHAPES & REASONING WHEN A SESSION WORKED: <session>: dataset07 resolution (all zyx): 125,1169,414. stride = <[z,y,x]>
-      stride_shape: [0,0,0]
+      stride_shape: [16,16,16]
         # previously [32,128,80]
         # wolny: make sure that they overlap each other for averaging patches in the end.
 
