@@ -1,0 +1,20 @@
+- core drive:
+  - M:\data\d.walther\cluster\data\outputs\
+  - M:\data\d.walther\cloud\chpts\
+  - M:\data\d.walther\cloud\wolny\chpts\
+  - M:\data\d.walther\cloud\checkpoints_5val_iter\
+This is it for this location.
+
+- popsicle_cell:
+  - C:\Users\popsicle_cell\Documents\cloud\ - see the LFS list in the cloud repo
+  - C:\Users\popsicle_cell\Documents\cloud outputs incl large ,pytorch checkpoint files\
+This is it for this device.
+
+- Dancer:
+  - tbd
+
+- Group drive:
+  - tbd
+
+- cluster:
+  - tbd
