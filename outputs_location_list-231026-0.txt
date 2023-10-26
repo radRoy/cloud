@@ -1,3 +1,15 @@
+- radroy/cloud (same on all devices):
+  - see the dedicated file ~'output-file_list....txt' for this information.
+
+- radroy/imageProcessTif (same on all devices):
+  - None.
+
+- radroy/myData (same on all devices):
+  - None.
+
+- radroy/MSc (same on all devices):
+  - None.
+
 - core drive:
   - M:\data\d.walther\cluster\data\outputs\
   - M:\data\d.walther\cloud\chpts\
@@ -11,7 +23,7 @@ This is it for this location.
 This is it for this device.
 
 - Dancer:
-  - tbd
+  - C:\Users\Dancer\Documents\cluster\data\outputs
 
 - Group drive:
   - tbd
