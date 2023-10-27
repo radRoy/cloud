@@ -33,4 +33,6 @@ This is it for this device.
   - None.
 
 - cluster:
-  - tbd
+  - /home/dwalth/data/
+    - /home/dwalth/data/outputs/
+	- /home/dwalth/data/wolny/chpts/
