@@ -26,7 +26,11 @@ This is it for this device.
   - C:\Users\Dancer\Documents\cluster\data\outputs
 
 - Group drive:
-  - tbd
+  - Y:\Users\DWalther\unet\3dunet\outputs\
+    => moved to: core drive M:\data\d.walther\unet\3dunet\outputs\
+
+- Lab Home:
+  - None.
 
 - cluster:
   - tbd
