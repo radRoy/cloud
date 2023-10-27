@@ -21,3 +21,7 @@ d3a4fabbc2 - checkpoints_5val_iter/last_checkpoint.pytorch
 e30e4ab1a0 - chpts/checkpoints_230427/confocal-sampledata-test/logs/events.out.tfevents.1682602560.u20-computeibmgpu-vesta11.2759083.0
 5a80e82148 - chpts/checkpoints_230427/confocalReduced-sampledata-test/logs/events.out.tfevents.1682599128.u20-computeibmgpu-vesta11.2751466.0
 d9de1309b2 - chpts/checkpoints_230503/babb2.1-autofluo-3-1-1/more_iter/logs/events.out.tfevents.1683214140.u20-computeibmgpu-vesta6.1294381.0
+
+
+- - -
+now in: M:\data\d.walther\cluster\data\outputs-copy-231027-4-popsicle_cell-documents,cloud_LFS_files\
