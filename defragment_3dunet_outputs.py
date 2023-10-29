@@ -22,6 +22,7 @@ import string  # python Lib/string.py, doc: https://github.com/python/cpython/bl
 import tkinter as tk
 
 import numpy as np
+from tqdm import trange
 
 # This program must be run by first opening this projects parent folder "Documents" as a pycharm project. How this works in the MSc thesis end product is unclear, currently.
 import imageProcessTif.fileHandling as fH
@@ -43,26 +44,51 @@ def extract_unique_log_names_from_text_file(file_path):
         if fragment.startswith("events.out.tfevents."):
             logs.append(fragment)
 
-    return np.unique(logs)
+    return np.unique(logs)  # np.ndarray of a string list
 
 
-def export_unique_logs_to_file_from_text_file(file_path):
+def export_unique_logs_to_file_from_text_file(unique_logs: np.ndarray[str], export_path: str):
+    with open(export_path, "w") as g:
+        for log in unique_logs:
+            g.write(log)
+            g.write("\n")
+    g.close()
+    return None
 
-    unique_logs = extract_unique_log_names_from_text_file(file_path)
 
-    pass
-
-
-if __name__ == "__main__":
+def main():
 
     # tell python / tkinter explicitly to initialise the window creation process (and hide the init window)
     root = tk.Tk()
     root.withdraw()
 
-    file_paths = fH.get_file_path_list()  # have to choose folder if called without input arguments like this.
-    file_paths = fH.get_string_list_filtered_by_wanted_substring(l=file_paths, s="file_tree")
-    file_paths = fH.get_string_list_filtered_by_unwanted_substring(l=file_paths, s=",")
-    fH.iterate_function_args_over_iterable(file_paths, print)
+    # input and output file paths
+    input_paths = fH.get_file_path_list()  # have to choose folder if called without input arguments like this.
+    input_paths = fH.get_string_list_filtered_by_wanted_substring(l=input_paths, s="file_tree")
+    input_paths = fH.get_string_list_filtered_by_unwanted_substring(l=input_paths, s=",")
+    print(f"\ninput paths:")
+    fH.iterate_function_args_over_iterable(input_paths, print)
+    output_paths = fH.get_output_from_input_file_path_list_and_suffix(input_paths, suffix="-unique_logs")
+    print(f"\noutput paths:")
+    fH.iterate_function_args_over_iterable(output_paths, print)
 
-    logs_0 = extract_unique_log_names_from_text_file(file_paths[0])
-    print(logs_0)
+    # logs_0 = extract_unique_log_names_from_text_file(input_paths[0])
+
+    reference_logs = extract_unique_log_names_from_text_file(file_path=input_paths[0])  # assumes that the file containing the reference logs file tree is the first in the ascendingly sorted file path list
+    # - - -
+    # hier stehengeblieben
+    # - - -
+
+    print("\n")
+    for i_file, (file_path, export_path) in enumerate(zip(input_paths, output_paths)):
+        print(f"main: Opening file no. {i_file}: {file_path}")
+        unique_logs = extract_unique_log_names_from_text_file(file_path)
+
+    print("\n")
+    for export_path in output_paths:
+        export_unique_logs_to_file_from_text_file(unique_logs, export_path)
+        print(f"main: Wrote to file {export_path}")
+
+
+if __name__ == "__main__":
+    main()  # lets choose folder, reads all file_tree...txt files, exports unique log names compared to reference tree file.
