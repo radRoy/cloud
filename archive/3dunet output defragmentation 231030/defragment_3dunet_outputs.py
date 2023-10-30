@@ -47,8 +47,10 @@ def extract_unique_log_names_from_text_file(file_path):
     return np.unique(logs)  # np.ndarray of a string list
 
 
-def export_unique_logs_to_file_from_text_file(unique_logs: np.ndarray[str], export_path: str):
+def export_unique_logs_to_file_from_text_file(
+        reference_logs_file_path, unique_logs_file_path, unique_logs: np.ndarray[str], export_path: str):
     with open(export_path, "w") as g:
+        g.write(f"reference logs origin: {reference_logs_file_path}\nunique logs origin: {unique_logs_file_path}\n")
         for log in unique_logs:
             g.write(log)
             g.write("\n")
@@ -62,32 +64,43 @@ def main():
     root = tk.Tk()
     root.withdraw()
 
-    # input and output file paths
+    # input file paths (assumed to be sorted ascendingly by name)
     input_paths = fH.get_file_path_list()  # have to choose folder if called without input arguments like this.
     input_paths = fH.get_string_list_filtered_by_wanted_substring(l=input_paths, s="file_tree")
     input_paths = fH.get_string_list_filtered_by_unwanted_substring(l=input_paths, s=",")
+    suffix = "-unique_logs"
+    input_paths = fH.get_string_list_filtered_by_unwanted_substring(l=input_paths, s=suffix)
     print(f"\ninput paths:")
     fH.iterate_function_args_over_iterable(input_paths, print)
-    output_paths = fH.get_output_from_input_file_path_list_and_suffix(input_paths, suffix="-unique_logs")
+
+    # output file paths
+    output_paths = fH.get_output_from_input_file_path_list_and_suffix(input_paths, suffix=suffix)
     print(f"\noutput paths:")
     fH.iterate_function_args_over_iterable(output_paths, print)
 
-    # logs_0 = extract_unique_log_names_from_text_file(input_paths[0])
-
+    # reference 3dunet output logs (log filenames of 3dunet sessions, contained in PowerShell-created 'tree /f' file tree outputs)
     reference_logs = extract_unique_log_names_from_text_file(file_path=input_paths[0])  # assumes that the file containing the reference logs file tree is the first in the ascendingly sorted file path list
-    # - - -
-    # hier stehengeblieben
-    # - - -
+    export_unique_logs_to_file_from_text_file(input_paths[0], input_paths[0], reference_logs, output_paths[0])
 
-    print("\n")
-    for i_file, (file_path, export_path) in enumerate(zip(input_paths, output_paths)):
-        print(f"main: Opening file no. {i_file}: {file_path}")
-        unique_logs = extract_unique_log_names_from_text_file(file_path)
+    for i_file in range(1, len(input_paths)):
+        print("\n")
 
-    print("\n")
-    for export_path in output_paths:
-        export_unique_logs_to_file_from_text_file(unique_logs, export_path)
-        print(f"main: Wrote to file {export_path}")
+        # extracting only the unique log filenames of one file tree text file (from a 3dunet output backup-fragment location)
+        print(f"main: Opening file no. {i_file}: {input_paths[i_file]}")
+        unique_logs = extract_unique_log_names_from_text_file(input_paths[i_file])
+        print(f"len(unique logs) before operation: {len(unique_logs)}")
+
+        # remove all logs which are not contained in reference_logs
+        for log in unique_logs:
+            if log in reference_logs:
+                unique_logs = np.delete(unique_logs, np.where(log == unique_logs))
+            else:
+                np.append(reference_logs, [log])
+        print(f"len(unique logs) before operation: {len(unique_logs)}")
+
+        # export unique logs to its output file
+        export_unique_logs_to_file_from_text_file(input_paths[0], input_paths[i_file], unique_logs, output_paths[i_file])
+        print(f"main: Wrote to file {output_paths[i_file]}")
 
 
 if __name__ == "__main__":

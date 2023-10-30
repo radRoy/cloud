@@ -1,0 +1,8 @@
+reference logs origin: C:/Users/Dancer/Documents/cloud/outputs-file_tree-231027--1-cluster-data_outputs.txt
+unique logs origin: C:/Users/Dancer/Documents/cloud/outputs-file_tree-231027-0-cluster-data_wolny_chpts.txt
+events.out.tfevents.1683883057.u20-computeibmgpu-vesta8.2793861.0
+events.out.tfevents.1683883154.u20-computeibmgpu-vesta8.2795083.0
+events.out.tfevents.1683884923.u20-computeibmgpu-vesta8.2801743.0
+events.out.tfevents.1683892218.u20-computeibmgpu-vesta12.1244576.0
+events.out.tfevents.1683996184.u20-computeibmgpu-vesta20.827371.0
+events.out.tfevents.1684137240.u20-computeibmgpu-vesta8.3736296.0

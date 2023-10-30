@@ -1,0 +1,3 @@
+reference logs origin: C:/Users/Dancer/Documents/cloud/outputs-file_tree-231027--1-cluster-data_outputs.txt
+unique logs origin: C:/Users/Dancer/Documents/cloud/outputs-file_tree-231027-5-popsicle_cell-documents_cloud_OutputsInclLargePytorchCheckpointFiles.txt
+events.out.tfevents.1680184535.u20-computeibmgpu-vesta11.391875.0
