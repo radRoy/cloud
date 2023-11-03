@@ -1,0 +1,31 @@
+reference logs origin: C:/Users/Dancer/Documents/cloud/outputs-file_tree-231027--1-cluster-data_outputs.txt
+unique logs origin: C:/Users/Dancer/Documents/cloud/outputs-file_tree-231027-6-Dancer-documents_cluster_data_outputs.txt
+events.out.tfevents.1694202172.u20-computeibmgpu-vesta16.268934.0
+events.out.tfevents.1694202800.u20-computeibmgpu-vesta16.271034.0
+events.out.tfevents.1694279158.u20-compute-m3.817503.0
+events.out.tfevents.1694302973.u20-computeibmgpu-vesta16.385695.0
+events.out.tfevents.1694351208.u20-computeibmgpu-vesta19.501382.0
+events.out.tfevents.1694353843.u20-computeibmgpu-vesta19.504570.0
+events.out.tfevents.1694354899.u20-computeibmgpu-vesta19.505896.0
+events.out.tfevents.1694355395.u20-computeibmgpu-vesta19.506649.0
+events.out.tfevents.1694357653.u20-computeibmgpu-vesta16.444696.0
+events.out.tfevents.1694358729.u20-computeibmgpu-vesta16.446053.0
+events.out.tfevents.1694424545.u20-computeibmgpu-vesta20.522392.0
+events.out.tfevents.1696087273.u20-computeibmgpu-vesta20.303750.0
+events.out.tfevents.1696087278.u20-computeibmgpu-vesta16.3679403.0
+events.out.tfevents.1696088183.u20-computeibmgpu-vesta16.3680631.0
+events.out.tfevents.1696088195.u20-computeibmgpu-vesta20.305173.0
+events.out.tfevents.1696089110.u20-computeibmgpu-vesta20.307130.0
+events.out.tfevents.1696089112.u20-computeibmgpu-vesta16.3686866.0
+events.out.tfevents.1696090042.u20-computeibmgpu-vesta20.312727.0
+events.out.tfevents.1696090052.u20-computeibmgpu-vesta16.3688478.0
+events.out.tfevents.1696090969.u20-computeibmgpu-vesta16.3689815.0
+events.out.tfevents.1696090979.u20-computeibmgpu-vesta20.314326.0
+events.out.tfevents.1696091903.u20-computeibmgpu-vesta20.315454.0
+events.out.tfevents.1696091907.u20-computeibmgpu-vesta16.3696080.0
+events.out.tfevents.1696092832.u20-computeibmgpu-vesta20.321726.0
+events.out.tfevents.1696092840.u20-computeibmgpu-vesta16.3698436.0
+events.out.tfevents.1696093760.u20-computeibmgpu-vesta16.3699849.0
+events.out.tfevents.1696093771.u20-computeibmgpu-vesta20.323180.0
+events.out.tfevents.1696094689.u20-computeibmgpu-vesta20.324367.0
+events.out.tfevents.1696094691.u20-computeibmgpu-vesta16.3705620.0

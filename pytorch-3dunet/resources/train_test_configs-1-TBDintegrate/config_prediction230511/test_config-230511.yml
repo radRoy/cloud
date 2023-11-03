@@ -1,0 +1,43 @@
+# Download test data from: https://osf.io/8jz7e/
+model_path: /home/dwalth/data/wolny/checkpoints/autofluo_proof/afluo3-increasing_val_eval_score/best_checkpoint.pytorch
+model:
+  name: UNet3D
+  # number of input channels to the model
+  in_channels: 1
+  # number of output channels
+  out_channels: 1
+  # determines the order of operators in a single layer (crg - Conv3d+ReLU+GroupNorm)
+  layer_order: gcr
+  # initial number of feature maps
+  f_maps: 32
+  # number of groups in the groupnorm
+  num_groups: 8
+  # apply element-wise nn.Sigmoid after the final 1x1x1 convolution, otherwise apply nn.Softmax
+  final_sigmoid: true
+predictor:
+  name: 'StandardPredictor'
+loaders:
+  # save predictions to output_dir
+  output_dir: /home/dwalth/data/wolny/checkpoints/prediction230511/
+  # batch dimension; if number of GPUs is N > 1, then a batch_size of N * batch_size will automatically be taken for DataParallel
+  batch_size: 1
+  # mirror pad the raw data in each axis for sharper prediction near the boundaries of the volume
+  mirror_padding: [16, 32, 32]
+  # how many subprocesses to use for data loading
+  num_workers: 8
+  # test loaders configuration
+  test:
+    file_paths:
+      - /home/dwalth/scratch/wolny/data/babb02_230509/val/
+
+    slice_builder:
+      name: SliceBuilder
+      # image resolution is [90,217,332]
+      patch_shape: [45, 105, 165]
+      stride_shape: [25, 55, 85]  # make sure that they overlap each other for averaging patches in the end.
+
+    transformer:
+      raw:
+        - name: Standardize
+        - name: ToTensor
+          expand_dims: true
