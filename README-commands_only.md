@@ -178,7 +178,7 @@ tmux
 cd ~/data/cloud
 bash pull-script.sh
 screen -S 3dunet-230909-0
-bash slurmJobs/start_slurm_session.sh
+bash slurmJobs/00-start_slurm_session.sh
 ```
 
 
