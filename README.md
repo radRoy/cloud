@@ -27,8 +27,8 @@ For further information on the datasets' creation, etc., refer to a separate ded
 Just follow the instructions step by step, even if a certain step does not make sense at face value (at first glance).
 
 ```bash
-srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=10G bash -l
 ssh dwalth@login1.cluster.s3it.uzh.ch
+srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=10G bash -l
 module load anaconda3
 conda create -n 3dunet
 source activate 3dunet
@@ -69,6 +69,23 @@ Test the new, apparently fixed, installation with actual datasets (dataset03):
 train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/named_copies/train_config-230821-0.yml
     # the first line of the console output of 'train3dunet' should not contain "CUDA not available, using CPU instead"
     # if 'train3dunet' finishes multiple training iterations, it works.
+```
+
+### <u>Building an alternative 3dunet conda environment with pytorch-3dunet 1.8.0 and pytorch-cuda 12.1 (to fix torch.size error in `predict3dunet` in conda env `3dunet` (pytorch-3dunet 1.6.0))</u>
+
+Installing from github page [`wolny/pytorch-3dunet`](https://github.com/wolny/pytorch-3dunet/tree/1.8.0).
+
+```bash
+ssh dwalth@login1.cluster.s3it.uzh.ch
+srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=10G bash -l
+nvidia-smi  # CUDA Version: 12.0 (T4, assume the same version on all cluster gpu nodes)
+module load anaconda3  # loaded the most recently installed conda version on the cluster anaconda3/2023.09-0
+# now following https://github.com/wolny/pytorch-3dunet/tree/1.8.0#installation
+conda install -c conda-forge mamba  # solving environment takes some time
+
+# TBD
+mamba create -n 3dunet1.8.0 -c pytorch -c nvidia -c conda-forge pytorch pytorch-cuda=12.1 pytorch-3dunet
+source activate 3dunet1.8.0  # s3it advices to prefer source over conda
 ```
 
 ## <u>Usage of pytorch-3dunet</u>
