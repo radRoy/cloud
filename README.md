@@ -99,6 +99,7 @@ tmux
 srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=10G bash -l
 nvidia-smi  # CUDA Version: 12.0 (T4, assume the same version on all cluster gpu nodes)
 module load mamba  # loaded the most recently installed mamba version on the cluster mamba/23.3.1-1
+  # I actually forgot that mamba is already installed on the cluster and did not realise it when reading the module list dozens of times throughout the last half year. Maybe now that I can follow the `mamba` installation commands from wolny's pytorch-3dunet, predict3dunet might work.
 
 mamba create -n 3dunet1.8.0 -c pytorch -c nvidia -c conda-forge pytorch pytorch-cuda=12.1 pytorch-3dunet
 source activate 3dunet1.8.0
@@ -143,6 +144,7 @@ mamba list pytorch-3dunet
     # Name                    Version                   Build  Channel
     pytorch-3dunet            1.8.0              pyhd8ed1ab_0    conda-forge
 # DW: Success. The conda env name 3dunet1.8.0 is accurate.
+# DW: Interestingly, when running mamba list in the 3dunet env, cuda is installed under torch2.0.1+cu118, included in the torch package (which stands for pytorch, installed with pip), but when running mamba list in the 3dunet1.8.0 env, which was set up via mamba and not manually via pip like the other 3dunet env, cuda is installed under pytorch-cuda, separately from pytorch (not named torch now), and is listed just like any other package with its own version, which is 23.1. This makes me slightly optimistic for the anticipated results from predict3dunet outputs of these 3dunet1.8.0 predict3dunet commands run today (but waiting until resource allocation, probably done tomorrow).
 ```
 
 #### <u>3. fix idea: Load cuda version 12.1 into conda env `3dunet`</u>
