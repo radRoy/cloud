@@ -21,7 +21,7 @@ predictor:
   name: 'StandardPredictor'
 loaders:
   # save predictions to output_dir (PATH_TO_OUTPUT_DIR)
-  output_dir: /home/dwalth/data/outputs/chpt-231212-2/  # /home/dwalth/data/outputs/test-230720-0/best_checkpoint.pytorch
+  output_dir: /home/dwalth/data/outputs/chpt-231212-6/  # /home/dwalth/data/outputs/test-230720-0/best_checkpoint.pytorch
   # batch dimension; if number of GPUs is N > 1, then a batch_size of N * batch_size will automatically be taken for DataParallel
   batch_size: 1
   # how many subprocesses to use for data loading

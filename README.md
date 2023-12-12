@@ -71,21 +71,93 @@ train3dunet --config ~/data/cloud/pytorch-3dunet/resources/DW-3DUnet_lightsheet_
     # if 'train3dunet' finishes multiple training iterations, it works.
 ```
 
-### <u>Building an alternative 3dunet conda environment with pytorch-3dunet 1.8.0 and pytorch-cuda 12.1 (to fix torch.size error in `predict3dunet` in conda env `3dunet` (pytorch-3dunet 1.6.0))</u>
+### <u>Debugging the torch.size serror in `predict3dunet` in conda env `3dunet` (pytorch-3dunet 1.6.0)</u>
+
+Started writing this section incl. subsections on 231212.
+
+As I got the same torch.size error again when trying `predict3dunet` with my 3dunet model `231130-0` trained on wolny's sample data as I got with my own data's models, the cause of this error is not the input data. I fundamentally assume that Adrian Wolny has tested his sample data sets, train configs and test configs, regardless of pytorch-3dunet versions (i.e., already for earlier versions than I used, i.e., <1.6.0).
+
+When comparing changes between [pytorch-3dunet 1.6.0 and 1.8.0](https://github.com/wolny/pytorch-3dunet/compare/1.6.0...1.8.0), go to `Files changed` and then look at `README.md`, there, a new line under pytorch-3dunet 1.8.0 in the installation commands changes the pytorch cuda version to be installed into the 3dunet conda environment to specifically 12.1, whereas I had installed cu118 into my extisting 3dunet conda environment (documented above). This inspired a few ideas to fix the error.
+
+Alongside below new fix ideas, I also tried out a few last patch and stride shape combinations for the wolny sample data self-trained model `chpt-231130-0` (outcome TBA, expect errors).
+
+#### <u>1. fix idea: Try some new patch and stride shapes in the config yml in `predict3dunet --config test_config.yml`:
+
+See the `3dunet session annotations ... .xlsx` file, sessions `231211-x` and `231212-x` for what shapes I tried and why. These shapes I think are good candidates to try out for my other torch.size error fix ideas below.
+
+#### <u>2. fix idea: Building an alternative 3dunet conda environment with pytorch-3dunet 1.8.0 and pytorch-cuda 12.1</u>
 
 Installing from github page [`wolny/pytorch-3dunet`](https://github.com/wolny/pytorch-3dunet/tree/1.8.0).
 
+Conda env `3dunet`'s pytorch version 2.0.1 (`torch 2.0.1+cu118` under `conda list` output from inside the conda env) is compatible with cuda version 11.8 according to the [relevant pytorch website](https://pytorch.org/get-started/previous-versions/#v201).
+
+Following [pytorch-3dunet 1.8.0's installation notes](https://github.com/wolny/pytorch-3dunet/tree/1.8.0#installation) (and maybe my previous install notes if some stuff does not work):
+
 ```bash
 ssh dwalth@login1.cluster.s3it.uzh.ch
+tmux
 srun --pty -n 1 --time=8:00:00 --gres gpu:1  --mem=10G bash -l
 nvidia-smi  # CUDA Version: 12.0 (T4, assume the same version on all cluster gpu nodes)
-module load anaconda3  # loaded the most recently installed conda version on the cluster anaconda3/2023.09-0
-# now following https://github.com/wolny/pytorch-3dunet/tree/1.8.0#installation
-conda install -c conda-forge mamba  # solving environment takes some time
+module load mamba  # loaded the most recently installed mamba version on the cluster mamba/23.3.1-1
 
-# TBD
 mamba create -n 3dunet1.8.0 -c pytorch -c nvidia -c conda-forge pytorch pytorch-cuda=12.1 pytorch-3dunet
-source activate 3dunet1.8.0  # s3it advices to prefer source over conda
+source activate 3dunet1.8.0
+train3dunet
+  # /home/dwalth/data/conda/envs/3dunet1.8.0/lib/python3.11/site-packages/h5py/__init__.py:36: UserWarning: h5py is running against HDF5 1.14.3 when it was built against 1.14.2, this may cause problems                                                                                                                     _warn(("h5py is running against HDF5 {0} when it was built against {1}, " 
+  # solution: pip uninstall then install h5py, as suggested in one answer here: https://stackoverflow.com/questions/60367297/yet-another-h5py-is-running-against-hdf5-1-10-5-when-it-was-built-against-1-10
+pip uninstall h5py
+pip install h5py
+train3dunet
+    usage: train3dunet [-h] --config CONFIG [--model_path MODEL_PATH] [--loaders.output_dir LOADERS.OUTPUT_DIR [LOADERS.OUTPUT_DIR ...]]
+                    [--loaders.test.file_paths LOADERS.TEST.FILE_PATHS]
+                    [--loaders.test.slice_builder.patch_shape LOADERS.TEST.SLICE_BUILDER.PATCH_SHAPE [LOADERS.TEST.SLICE_BUILDER.PATCH_SHAPE ...]]
+                    [--loaders.test.slice_builder.stride_shape LOADERS.TEST.SLICE_BUILDER.STRIDE_SHAPE [LOADERS.TEST.SLICE_BUILDER.STRIDE_SHAPE ...]]
+    train3dunet: error: the following arguments are required: --config
+# DW: Success.
+predict3dunet
+    usage: predict3dunet [-h] --config CONFIG [--model_path MODEL_PATH] [--loaders.output_dir LOADERS.OUTPUT_DIR [LOADERS.OUTPUT_DIR ...]]
+                        [--loaders.test.file_paths LOADERS.TEST.FILE_PATHS]
+                        [--loaders.test.slice_builder.patch_shape LOADERS.TEST.SLICE_BUILDER.PATCH_SHAPE [LOADERS.TEST.SLICE_BUILDER.PATCH_SHAPE ...]]
+                        [--loaders.test.slice_builder.stride_shape LOADERS.TEST.SLICE_BUILDER.STRIDE_SHAPE [LOADERS.TEST.SLICE_BUILDER.STRIDE_SHAPE ...]]
+    predict3dunet: error: the following arguments are required: --config
+# DW: Success.
+
+## verify that cuda works (should return 1; 0; True; 2.0..+cu116 or greater, see pytorch-3dunet git repo)
+python << EOF
+import torch
+print(torch.cuda.device_count())
+print(torch.cuda.current_device())
+print(torch.cuda.is_available())
+print(torch.__version__)
+print(torch.version.cuda)
+EOF
+    1
+    0
+    True
+    2.1.1
+    12.1
+# DW: Success, everything as it should be.
+mamba list pytorch-3dunet
+    # packages in environment at /home/dwalth/data/conda/envs/3dunet1.8.0:
+    #
+    # Name                    Version                   Build  Channel
+    pytorch-3dunet            1.8.0              pyhd8ed1ab_0    conda-forge
+# DW: Success. The conda env name 3dunet1.8.0 is accurate.
+```
+
+#### <u>3. fix idea: Load cuda version 12.1 into conda env `3dunet`</u>
+
+On the cluster gpus, CUDA version 12.0 is installed (can see by executin `nvidia-smi` when on a gpu node), maybe this causes some problems with `3dunet`'s pytorch in `self.output_padding`. The solution attempt would be to load the necessary cluster modules before running `predict3dunet` (or `train3dunet` for that matter, but that one works already) - this means editing the (now edited) `01.1-slurm_job-predict3dunet` in the `cloud` repo, having inserted following lines:
+
+```bash
+...
+# ~3. fix idea's 231212 added cluster modules to attempt fixing predict3dunet's torch.size error in self.output_padding
+module load a100 cuda/12.2.1  # automatically loads multigpu as well. I think this should not be a problem for sbatch job submission resource requests as suggested to be possible here: https://docs.s3it.uzh.ch/cluster/job_submission/#gpu-jobs
+
+# 3dunet commands
+module load anaconda3
+source activate 3dunet
+...
 ```
 
 ## <u>Usage of pytorch-3dunet</u>
