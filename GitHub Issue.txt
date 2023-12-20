@@ -1,0 +1,53 @@
+
+
+"/conda/envs/3dunet/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding:
+    raise ValueError((
+
+test_config.yml:
+patch_shape: [64,128,128]
+stride_shape: [32,96,96]
+
+
+...
+2023-12-13 17:13:13,780 [MainThread] INFO Dataset - Loading test set from: /home/dwalth/scratch/datasets/wolny_lightsheet_boundary/test/Movie2_T00010_crop_gt.h5...
+2023-12-13 17:13:13,780 [MainThread] INFO UNetPredictor - Processing '/home/dwalth/scratch/datasets/wolny_lightsheet_boundary/test/Movie2_T00010_crop_gt.h5'...
+2023-12-13 17:13:13,780 [MainThread] INFO UNetPredictor - Running inference on 1020 batches
+2023-12-13 17:13:13,780 [MainThread] INFO UNetPredictor - The shape of the output prediction maps (CDHW): (1, 403, 450, 1590)
+2023-12-13 17:13:13,782 [MainThread] INFO UNetPredictor - Allocating prediction and normalization arrays...
+  0%|          | 0/1020 [00:02<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/dwalth/data/conda/envs/3dunet/bin/predict3dunet", line 33, in <module>
+    sys.exit(load_entry_point('pytorch3dunet', 'console_scripts', 'predict3dunet')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/dwalth/pytorch-3dunet/pytorch3dunet/predict.py", line 55, in main
+    predictor(test_loader)
+  File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/predictor.py", line 131, in __call__
+    prediction = self.model(input)
+                 ^^^^^^^^^^^^^^^^^
+  File "/home/dwalth/data/conda/envs/3dunet/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/model.py", line 91, in forward
+    x = decoder(encoder_features, x)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dwalth/data/conda/envs/3dunet/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 338, in forward
+    x = self.upsampling(encoder_features=encoder_features, x=x)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dwalth/data/conda/envs/3dunet/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/dwalth/pytorch-3dunet/pytorch3dunet/unet3d/buildingblocks.py", line 418, in forward
+    return self.upsample(x, output_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dwalth/data/conda/envs/3dunet/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dwalth/data/conda/envs/3dunet/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 1104, in forward
+    output_padding = self._output_padding(
+                     ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dwalth/data/conda/envs/3dunet/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 662, in _output_padding
+    raise ValueError((
+ValueError: requested an output size of torch.Size([9, 17, 17]), but valid sizes range from [7, 15, 15] to [8, 16, 16] (for an input of torch.Size([4, 8, 8]))
