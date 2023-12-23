@@ -1,4 +1,5 @@
 # Download test data from: https://osf.io/tn4xj/
+# folder of origin: 3DUnet_lightsheet_boundary
 
 # PATH_TO_BEST_CHECKPOINT (a file path, pointing to "best_checkpoint.pytorch" file)
 model_path: /home/dwalth/data/outputs/chpt-231130-0/best_checkpoint.pytorch

@@ -1,4 +1,5 @@
 # Download test data from: https://osf.io/8jz7e/
+# folder of origin: 3DUnet_confocal_boundary
 model_path: PATH_TO_BEST_CHECKPOINT
 model:
   name: UNet3D

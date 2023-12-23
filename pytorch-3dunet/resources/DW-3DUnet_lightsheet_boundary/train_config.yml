@@ -3,8 +3,9 @@
 # Download training data from: https://osf.io/9x3g2/
 # Download validation data from: https://osf.io/vs6gb/
 # Download test data from: https://osf.io/tn4xj/
+# folder of origin: 3DUnet_lightsheet_boundary
 model:
-  name: ResidualUNet3D
+  name: UNet3D  # originally: ResidualUNet3D
   # number of input channels to the model
   in_channels: 1
   # number of output channels
@@ -49,7 +50,7 @@ trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
   # path to the checkpoint directory
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-231130-0
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-231223-4
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -75,7 +76,7 @@ loaders:
   train:
     # path to the training datasets
     file_paths:
-    - /home/dwalth/scratch/datasets/wolny_lightsheet_boundary/train/
+    - /home/dwalth/scratch/datasets/dataset07/dataset07.0/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -83,9 +84,9 @@ loaders:
       # patch & stride shape stuff, debugging, etc.:
         # 
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better) (originally: [80, 170, 170], but depends on the input data)
-      patch_shape: [80,240,240]  # dataset03 resolution: 125,1169,414
+      patch_shape: [96,960,256]  # dataset03 resolution: 125,1169,414  # wolny lightsheet boundary min resolution: 190,960,1370
       # train stride between patches (originally: [20, 40, 40]) (in [z, y, x])
-      stride_shape: [64,144,144]
+      stride_shape: [14,104,79]
       # minimum volume of the labels in the patch (QU: unit of measurement? pixels? um?)
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
@@ -131,15 +132,15 @@ loaders:
   val:
     # path to the val datasets
     file_paths:
-      - /home/dwalth/scratch/datasets/wolny_lightsheet_boundary/val/
+      - /home/dwalth/scratch/datasets/dataset07/dataset07.0/val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch  # QU: Why is this section duplicated? does not make much sense to me to give two different patch_shapes &/ stride_shapes...
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [80,240,240]  # dataset03 resolution: 125,1169,414
+      patch_shape: [96,960,256]  # dataset03 resolution: 125,1169,414
       # train stride between patches
-      stride_shape: [64,144,144]
+      stride_shape: [14,104,79]
       # minimum volume of the labels in the patch
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
