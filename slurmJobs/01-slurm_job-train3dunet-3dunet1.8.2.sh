@@ -20,7 +20,7 @@ echo " ${0}: checkdir: ${checkdir}"
 echo " ${0}: slurm output file name: ${3}"
 
 # 3dunet commands
-module load anaconda3
+module load mamba  # using mamba not conda, 3dunet1.8.2 was built using mamba, maybe it makes a difference, now.
 source activate 3dunet1.8.2
 
 touch $checkdir/nvidia-smi.log
