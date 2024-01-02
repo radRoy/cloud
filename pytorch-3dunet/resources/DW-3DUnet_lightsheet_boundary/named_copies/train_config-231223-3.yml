@@ -3,7 +3,7 @@
 # Download training data from: https://osf.io/9x3g2/
 # Download validation data from: https://osf.io/vs6gb/
 # Download test data from: https://osf.io/tn4xj/
-# folder of origin: 3DUnet_lightsheet_boundary
+# folder of origin: 3DUnet_lightsheet_boundary (3dunet 1.6.0)
 model:
   name: ResidualUNet3D  # originally: ResidualUNet3D
   # number of input channels to the model
