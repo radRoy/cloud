@@ -21,7 +21,7 @@ echo " ${0}: slurm output file name: ${3}"
 
 # 3dunet commands
 #module load mamba  # using mamba not conda, 3dunet1.8.2 was built using mamba, maybe it makes a difference, now.
-module load mamba/23.3.1-1  # above line causes an error `Lmod has detected the following error: The following module(s) are unknown: "mamba"`
+module load mamba/23.3.1-1  # above line causes an error `Lmod has detected the following error: The following module(s) are unknown: "mamba"`, this results in the end in a gcc related error.
 source activate 3dunet1.8.2
 
 touch $checkdir/nvidia-smi.log
