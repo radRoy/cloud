@@ -2,7 +2,7 @@
 
 # folder of origin: pytorch-3dunet1.8.2, 3DUnet_lightsheet_boundary
 
-model_path: /home/dwalth/data/outputs/chpt-240111-1/last_checkpoint.pytorch  # PATH_TO_BEST_CHECKPOINT
+model_path: /home/dwalth/data/outputs/chpt-240111-1/best_checkpoint.pytorch  # PATH_TO_BEST_CHECKPOINT
 model:
   name: ResidualUNet3D
   # number of input channels to the model
@@ -21,7 +21,7 @@ predictor:
   name: 'StandardPredictor'
 loaders:
   # save predictions to output_dir
-  output_dir: /home/dwalth/data/outputs/chpt-240115-3
+  output_dir: /home/dwalth/data/outputs/chpt-240115-2
   # batch dimension; if number of GPUs is N > 1, then a batch_size of N * batch_size will automatically be taken for DataParallel
   batch_size: 1
   # how many subprocesses to use for data loading
