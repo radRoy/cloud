@@ -71,12 +71,12 @@ def main():
     suffix = "-unique_logs"
     input_paths = fH.get_string_list_filtered_by_unwanted_substring(l=input_paths, s=suffix)
     print(f"\ninput paths:")
-    fH.iterate_function_args_over_iterable(input_paths, print)
+    fH.iterate_function_args_over_iterable(print, input_paths)
 
     # output file paths
     output_paths = fH.get_output_from_input_file_path_list_and_suffix(input_paths, suffix=suffix)
     print(f"\noutput paths:")
-    fH.iterate_function_args_over_iterable(output_paths, print)
+    fH.iterate_function_args_over_iterable(print, output_paths)
 
     # reference 3dunet output logs (log filenames of 3dunet sessions, contained in PowerShell-created 'tree /f' file tree outputs)
     reference_logs = extract_unique_log_names_from_text_file(file_path=input_paths[0])  # assumes that the file containing the reference logs file tree is the first in the ascendingly sorted file path list
