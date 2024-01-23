@@ -78,7 +78,7 @@ loaders:
   train:
     # path to the training datasets
     file_paths:  # PATH_TO_TRAIN_DIR
-      - /home/dwalth/scratch/datasets/dataset10.b/train/
+      - /home/dwalth/scratch/datasets/dataset10.b/input h5/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -132,7 +132,7 @@ loaders:
   val:
     # path to the val datasets
     file_paths:  # PATH_TO_VAL_DIR
-      - /home/dwalth/scratch/datasets/dataset10.b/val/
+      - /home/dwalth/scratch/datasets/dataset10.b/input h5val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
