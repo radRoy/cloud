@@ -31,3 +31,6 @@ venv
 .Rhistory
 .vscode/settings.json
 ~$3dunet session annotations.xlsx
+
+# cluster ignores
+core
