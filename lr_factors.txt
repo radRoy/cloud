@@ -1,0 +1,86 @@
+# learning rate decay factors so that the last learning rate is close to 1e-6, the threshold below which the pytorch-3dunet model is considered finished.
+# refer to script `calculate_LR_steps.py` in [cloud] for how these numbers were generated.
+1 lr steps:  factor = 0.0046
+2 lr steps:  factor = 0.070
+3 lr steps:  factor = 0.170
+4 lr steps:  factor = 0.265
+5 lr steps:  factor = 0.346
+6 lr steps:  factor = 0.413
+7 lr steps:  factor = 0.468
+8 lr steps:  factor = 0.515
+9 lr steps:  factor = 0.554
+10 lr steps: factor = 0.588  #
+11 lr steps: factor = 0.617
+12 lr steps: factor = 0.642
+13 lr steps: factor = 0.665
+14 lr steps: factor = 0.684
+15 lr steps: factor = 0.702
+16 lr steps: factor = 0.718
+17 lr steps: factor = 0.732
+18 lr steps: factor = 0.744
+19 lr steps: factor = 0.756
+20 lr steps: factor = 0.767
+
+min: factor 1e-11: 1 lr steps - not sensible
+max: factor 0.004615615625555555: 1 lr steps
+
+min: factor 0.005384884894814815: 2 lr steps
+max: factor 0.07027027027027027: 2 lr steps
+
+verified: factor 0.071: 3 lr steps
+min: factor 0.07102102102102102: 3 lr steps - 0.1
+max: factor 0.17087087087087088: 3 lr steps
+
+min: factor 0.17147147147147146: 4 lr steps - 0.2
+max: factor 0.26576576576576577: 4 lr steps
+
+min: factor 0.26636636636636635: 5 lr steps - 0.3
+max: factor 0.3462462462462462: 5 lr steps
+
+min: factor 0.34684684684684686: 6 lr steps - 0.4
+max: factor 0.4135135135135135: 6 lr steps
+
+min: factor 0.41411411411411414: 7 lr steps
+max: factor 0.4687687687687687: 7 lr steps
+
+min: factor 0.46936936936936935: 8 lr steps - 0.5
+max: factor 0.5156156156156156: 8 lr steps
+
+min: factor 0.5162162162162162: 9 lr steps
+max: factor 0.5546546546546547: 9 lr steps
+
+min: factor 0.5552552552552552: 10 lr steps
+max: factor 0.5882882882882883: 10 lr steps
+
+min: factor 0.5888888888888889: 11 lr steps - 0.6
+max: factor 0.6177177177177177: 11 lr steps
+
+min: factor 0.6183183183183183: 12 lr steps
+max: factor 0.6429429429429429: 12 lr steps
+
+min: factor 0.6435435435435435: 13 lr steps
+max: factor 0.6651651651651651: 13 lr steps
+
+min: factor 0.6657657657657657: 14 lr steps
+max: factor 0.6848458458458458: 14 lr steps
+
+min: factor 0.6849304304304304: 15 lr steps - 0.7
+max: factor 0.7023548548548549: 15 lr steps
+
+min: factor 0.7024394394394394: 16 lr steps
+max: factor 0.7180875875875876: 16 lr steps
+
+min: factor 0.7181721721721722: 17 lr steps
+max: factor 0.7322132132132132: 17 lr steps
+
+min: factor 0.7322977977977978: 18 lr steps
+max: factor 0.7449854854854855: 18 lr steps
+
+min: factor 0.7450700700700701: 19 lr steps
+max: factor 0.7565735735735736: 19 lr steps
+
+min: factor 0.7566581581581582: 20 lr steps
+max: factor 0.7672312312312312: 20 lr steps
+
+factor 0.7673158158158158: 21 lr steps
+...
