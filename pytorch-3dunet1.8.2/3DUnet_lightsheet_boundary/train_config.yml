@@ -23,7 +23,7 @@ model:
 # loss function to be used during training
 loss:
   name: BCEDiceLoss
-  # a target value that is ignored and does not contribute to the input gradient
+  # a target value that is ignored and does not contribute to the input gradient  # DW: use "ignore_index: -1" for sparsely unlabeled regions/slices
   ignore_index: null
   # skip the last channel in the target (i.e. when last channel contains data not relevant for the loss)
   skip_last_target: true

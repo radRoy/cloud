@@ -2,7 +2,8 @@
 
 # folder of origin: pytorch-3dunet1.8.2, 3DUnet_lightsheet_boundary
 
-model_path: /home/dwalth/data/outputs/chpt-240111-1/last_checkpoint.pytorch  # PATH_TO_BEST_CHECKPOINT
+# PATH_TO_BEST_CHECKPOINT
+model_path: /home/dwalth/data/outputs/chpt-240111-1/last_checkpoint.pytorch
 model:
   name: ResidualUNet3D
   # number of input channels to the model
@@ -28,8 +29,8 @@ loaders:
   num_workers: 8
   # test loaders configuration
   test:
-    file_paths:
-      - /scratch/dwalth/datasets/dataset04/dataset04.c/seg/  # PATH_TO_TEST_DIR
+    file_paths:  # PATH_TO_TEST_DIR
+      - /scratch/dwalth/datasets/dataset04/dataset04.c/seg/
 
     slice_builder:
       name: SliceBuilder
