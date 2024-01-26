@@ -12,27 +12,14 @@
 cd ~/data/cloud  # this line appears to be required for below nvidia-smi logging (writing to file) to work.
 # bash pull-script.sh
 
-
-## session variables
-
-#session=$1  # "yymmdd-id"
-$session_argument=$1  # "yymmdd-id" ~
-$current_session=$2  # "yymmdd-id"
-echo " ${0}: Input 1, custom session argument: ${session_argument}"
-echo " ${0}: Input 2, current session: ${current_session}"
-
-#checkdir=$2  # starting with "/home/dwalth/..." without trailing slash
-$checkpoint_dir=$3  # starting with "/home/dwalth/..." without trailing slash
-$output_dir=$4  # starting with "/home/dwalth/..." without trailing slash
-echo " ${0}: Input 3, checkpoint directory: ${checkpoint_dir}"
-echo " ${0}: Input 4, output directory: ${output_dir}"
-
-$slurmout=$5
+# session variables
+session=$1  # "yymmdd-id"
+echo " ${0}: session: ${session}"
+checkdir=$2  # starting with "/home/dwalth/..." without trailing slash
+echo " ${0}: checkdir: ${checkdir}"
 echo " ${0}: slurm output file name: ${3}"
 
-
-## 3dunet commands
-
+# 3dunet commands
 #module load mamba  # using mamba not conda, 3dunet1.8.2 was built using mamba, maybe it makes a difference, now.
 module load mamba/23.3.1-1  # above line causes an error `Lmod has detected the following error: The following module(s) are unknown: "mamba"`, this results in the end in a gcc related error.
 source activate 3dunet1.8.2

@@ -7,6 +7,8 @@
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=daniel.walther@uzh.ch
 
+$session_argument $current_session $checkpoint_dir $output_dir $slurmout
+
 # info: do not use `srun` in sbatch scripts, except job step creation is enabled (I think this would be done by setting --ntasks to more than 1)
 
 cd ~/data/cloud  # this line appears to be required for below nvidia-smi logging (writing to file) to work.
