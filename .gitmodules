@@ -1,3 +1,6 @@
 [submodule "pytorch-3dunet"]
 	path = pytorch-3dunet
 	url = https://github.com/wolny/pytorch-3dunet
+[submodule "bash_scripts"]
+	path = bash_scripts
+	url = https://github.com/radRoy/bash_scripts.git
