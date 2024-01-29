@@ -1,7 +1,7 @@
 #!/bin/bash
 # gets the current session id (yymmdd-x)
 
-function nextSession {
+function f_get_next_session () {
   date=$(date '+%y%m%d')
   chpt_date="chpt-${date}"
 

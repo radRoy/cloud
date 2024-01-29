@@ -1,35 +1,13 @@
 #!/bin/bash
 
-promptyn () {  # credit goes to https://stackoverflow.com/a/12202793
-    while true; do
-        read -p "$1 " yn
-        case $yn in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
-}
-
-# <variable>
-# <variable for output to sbatch script> #
-##  list of variables ##
-# (nextSession) (function)
-# current_session #
-# output_root
-# 3dunet_type
-# input_session
-# input_dir #
-# 
-# output_dir #
-# slurm_out file #
+source ~/(dirname $0)/../bash_scripts/prompt_yn.sh  # f_prompt_yn
 
 # navigating directories and pulling newest committed files
-cd /home/dwalth/data/cloud  # set working directory
+cd /home/dwalth/data/cloud  # set working directory (only works on the ScienceCluster (uzh))
 bash pull-script.sh  # in case that got forgotten
 
-source ./getNextSession.sh
-current_session=$(nextSession)
+source ./bashScripts/getNextSession.sh
+current_session=$(f_get_next_session)
 
 output_root="/home/dwalth/data/outputs"
 
@@ -81,7 +59,7 @@ if [ 3dunet_type == "train" ]; then
 
     output_dir=$output_root/chpt-$current_session
     if [ -d output_dir ]; then
-        if promptyn "Warning, the output directory ${output_dir} already exists. Continue? [y/n]"; then
+        if f_prompt_yn "Warning, the output directory ${output_dir} already exists. Continue? [y/n]"; then
             echo "Continuing with this ${3dunet_type}3dunet output directory."
         else
             echo "Error in ${3dunet_type}3dunet pipeline: output directory ${output_dir} already exists."
@@ -92,6 +70,9 @@ if [ 3dunet_type == "train" ]; then
     fi
 
     # check if the slurm bash script exists
+    3dunet_bash_script=./named_copies/slurm_job
+
+    # check whether the config yaml exists
         
     slurm_out=$output_dir/slurm-$current_session.out  # file path to the slurm output file
 
@@ -107,8 +88,9 @@ else  # 3dunet_type must be either 'train' or 'predict' as checked above
     fi
     
     output_dir=$input_dir/chpt-$current_session
+    output_dir=$(get_output_dir())
     if [ -d output_dir ]; then
-        if promptyn "Warning, the output directory ${output_dir} already exists. Continue? [y/n]"; then
+        if f_prompt_yn "Warning, the output directory ${output_dir} already exists. Continue? [y/n]"; then
             echo "Continuing with this ${3dunet_type}3dunet output directory."
         else
             echo "Error in ${3dunet_type}3dunet pipeline: output directory ${output_dir} already exists."
@@ -119,6 +101,8 @@ else  # 3dunet_type must be either 'train' or 'predict' as checked above
     fi
 
     # check if the slurm bash script exists
+
+    # check whether the config yaml exists
 
     slurm_out=$output_dir/slurm-$current_session.out  # file path to the slurm output file
 
