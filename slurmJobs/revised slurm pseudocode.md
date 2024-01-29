@@ -1,3 +1,52 @@
+set working directory to cloud
+git pull
+
+read input arguments
+if there is an input argument
+    **case 1**
+    - 3dunet_type (predict or train)
+    - input_session
+    - input_dir
+otherwise
+    **case 0 no input**
+    echo error
+
+variables that must be handled (= defined)
+- the unique ID of the current computing session  **all cases**
+```bash
+source ./getNextSession.sh
+current_session=$(nextSession)
+```
+- where to save outputs (same dir for all: slurm, nvidia log, program)  **all cases**
+```bash
+output_dir="..."
+slurm_output="${output_dir}/slurm-${current_session}.out
+```
+
+For printing train3dunet info into slurm.out:
+- input session **case 1**
+- input dir  **case 1**
+- current session
+- output dir
+- slurm.out file
+
+For printing predict3dunet info into slurm.out:
+- input session  **case 1 - always for predict**
+- input (=checkpoint) dir
+- current session
+- output dir
+- slurm.out file
+
+```bash
+$slurm_bash_script="/home/dwalth/data/cloud/slurmJobs/named_copies/slurm_job-${current_session.sh}"
+sbatch --output=$slurmout $slurm_bash_script $input_session $input_dir $current_session $output_dir $slurm_output
+```
+
+
+
+
+
+
 #!/bin/bash
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8

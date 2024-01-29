@@ -1,23 +1,165 @@
 #!/bin/bash
 
-# navigating directories and pulling newest committed files
-cd /home/dwalth/data/cloud
-# bash pull-script.sh  # in case that got forgotten
+promptyn () {  # credit goes to https://stackoverflow.com/a/12202793
+    while true; do
+        read -p "$1 " yn
+        case $yn in
+            [Yy]* ) return 0;;
+            [Nn]* ) return 1;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+}
 
-# creating the session string (makes it possible to give a custom session name as input, defaults to current date and a number yymmdd-id)
-# session example: '230930-0'
-if ! [ $# -eq 0 ]; then
-    session=$1
+# <variable>
+# <variable for output to sbatch script> #
+##  list of variables ##
+# (nextSession) (function)
+# current_session #
+# output_root
+# 3dunet_type
+# input_session
+# input_dir #
+# 
+# output_dir #
+# slurm_out file #
+
+# navigating directories and pulling newest committed files
+cd /home/dwalth/data/cloud  # set working directory
+bash pull-script.sh  # in case that got forgotten
+
+source ./getNextSession.sh
+current_session=$(nextSession)
+
+output_root="/home/dwalth/data/outputs"
+
+# creating the session string (makes it possible to give a custom session name as input, defaults to current date and a number yymmdd-id), e.g.: '230930-0'
+if [ $# -eq 0 ]; then
+    echo "Error. At least 1 input argument required (3dunet_type: 'train' or 'predict')."
+    exit
+
 else
-    source ./getNextSession.sh
-    session=$(nextSession)
+    3dunet_type=$1
+    if ! [ 3dunet_type == "train" || 3dunet_type == "predict" ]; then
+        echo "Error. The 1st argument 3dunet_type must be either 'train' or 'predict'."
+        exit
+    fi
+
+    if [ $# -gt 2 ]; then
+        echo "Error. At most 2 input arguments expected (3dunet_type, input_session). More input arguments are not supported yet."
+        exit
+    
+    elif [ $# -eq 2 ]; then
+        input_session=$2
+        echo "Input session provided: ${input_session}"
+        if [ input_session == current_session ]; then
+            echo "Error. The input session ID = current session ID (input ${input_session}, current ${current_session})."
+            exit
+        fi
+
+        input_dir=$output_root/chpt-$input_session
+        if ! [ -d input_dir ]; then
+            echo "Error. Input directory '${input_dir}' does not exist."
+            exit
+        else
+            echo "Input directory: ${input_dir}"
+        fi
+    
+    else
+        input_session="-"
+        input_dir="-"
+    fi
 fi
+
+if [ 3dunet_type == "train" ]; then
+    # perform all the checks (does sbatch script exist? etc.)
+    
+    if [ input_session != "-" ]; then
+        echo "Error. Continuing training with pre-trained weights is not supported yet by my bash scripts, sorry. I'm sure train3dunet can handle it if you do it manually, though."
+        exit
+    fi
+
+    output_dir=$output_root/chpt-$current_session
+    if [ -d output_dir ]; then
+        if promptyn "Warning, the output directory ${output_dir} already exists. Continue? [y/n]"; then
+            echo "Continuing with this ${3dunet_type}3dunet output directory."
+        else
+            echo "Error in ${3dunet_type}3dunet pipeline: output directory ${output_dir} already exists."
+            exit
+        fi
+    else
+        mkdir $output_dir
+    fi
+
+    # check if the slurm bash script exists
+        
+    slurm_out=$output_dir/slurm-$current_session.out  # file path to the slurm output file
+
+    # run the train3dunet sbatch script
+    sbatch --output=$slurmout
+
+else  # 3dunet_type must be either 'train' or 'predict' as checked above
+    # perform all the checks (does sbatch script exist? etc.)
+
+    if [ input_session == "-" ]; then
+        echo "Error. When running predict3dunet, the 'input_session' must be provided so this script can deduce where to take the pytorch checkpoint file from."
+        exit
+    fi
+    
+    output_dir=$input_dir/chpt-$current_session
+    if [ -d output_dir ]; then
+        if promptyn "Warning, the output directory ${output_dir} already exists. Continue? [y/n]"; then
+            echo "Continuing with this ${3dunet_type}3dunet output directory."
+        else
+            echo "Error in ${3dunet_type}3dunet pipeline: output directory ${output_dir} already exists."
+            exit
+        fi
+    else
+        mkdir $output_dir
+    fi
+
+    # check if the slurm bash script exists
+
+    slurm_out=$output_dir/slurm-$current_session.out  # file path to the slurm output file
+
+    # run the predict3dunet sbatch script
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################
+####################### old code below #######################
+##############################################################
+
+
+
 
 # creating the session's checkpoint directory if necessary
 checkdir="/home/dwalth/data/outputs/chpt-${session}"
 if ! [ -d "$checkdir" ]; then
     mkdir $checkdir
 fi
+
+###############################################################
+# automated sbatch input argument handling would be done here #
+###############################################################
 
 # calling the slurm job file (containing the train3dunet command, for example)
 slurmout=$checkdir/slurm-$session.out
