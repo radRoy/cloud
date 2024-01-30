@@ -1,6 +1,6 @@
-# Download test data from: https://osf.io/tn4xj/
-
 # folder of origin: pytorch-3dunet1.8.2, 3DUnet_lightsheet_boundary
+
+# Download test data from: https://osf.io/tn4xj/
 
 # PATH_TO_BEST_CHECKPOINT
 model_path: /home/dwalth/data/outputs/chpt-240111-1/last_checkpoint.pytorch

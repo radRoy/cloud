@@ -3,11 +3,9 @@
 # Download training data from: https://osf.io/9x3g2/
 # Download validation data from: https://osf.io/vs6gb/
 # Download test data from: https://osf.io/tn4xj/
-
-# folder of origin: pytorch-3dunet1.8.2, 3DUnet_lightsheet_boundary
-
+# folder of origin: 3DUnet_lightsheet_boundary
 model:
-  name: ResidualUNet3D
+  name: UNet3D  # originally: ResidualUNet3D
   # number of input channels to the model
   in_channels: 1
   # number of output channels
@@ -23,7 +21,7 @@ model:
 # loss function to be used during training
 loss:
   name: BCEDiceLoss
-  # a target value that is ignored and does not contribute to the input gradient  # DW: use "ignore_index: -1" for sparsely unlabeled regions/slices
+  # a target value that is ignored and does not contribute to the input gradient
   ignore_index: null
   # skip the last channel in the target (i.e. when last channel contains data not relevant for the loss)
   skip_last_target: true
@@ -46,48 +44,50 @@ lr_scheduler:
   name: ReduceLROnPlateau
   # make sure to use the 'min' mode cause lower AdaptedRandError is better
   mode: min
-  factor: 0.588  # originally 0.2  # DW: The factor the learning rate (lr) is multiplied by when the lr_reduction criterion is met. The training is finished when lr < 1e-6.  # DW: choose 0.588 for 10 lr steps.
-  patience: 20  # DW: originally 20  # DW: I assume the higher the number the more (train/val?) iterations need to happen with the lr decrease criterion being met
+  factor: 0.3  # originally 0.2
+  patience: 15  # originally 20
 trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
-  # path to the checkpoint directory  # CHECKPOINT_DIR
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-240125-9
+  # path to the checkpoint directory
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-231223-4
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
   # make sure to decrease the learning rate in the optimizer config accordingly
   pre_trained: null
-  # how many iterations between validations  # DW: originally 1000 (but sample data set has manyfold times more images)
+  # how many iterations between validations (originally: 1000) (in first working train run (single channel data): 100)
   validate_after_iters: 20
-  # how many iterations between tensorboard logging  # DW: originally 500 (but sample data set has manyfold times more images)
+  # how many iterations between tensorboard logging (originally: 500) (in first working train run (single channel data): 25)
   log_after_iters: 10
-  # max number of epochs
-  max_num_epochs: 10000
-  # max number of iterations
+  # max number of epochs (originally: 1000) (in first working train run (single channel data): 5000) (currently, this is = (max_num_iterations/n_train_images))
+  max_num_epochs: 1000
+  # max number of iterations (originally: 150000)
   max_num_iterations: 150000
 # Configure training and validation loaders
 loaders:
-  # how many subprocesses to use for data loading
+  # how many subprocesses to use for data loading (originally: 8, but optimum depends on hardware spec.s)
   num_workers: 8
-  # path to the raw data within the H5
+  # path to the raw data within the H5 (originally: /raw)
   raw_internal_path: /raw
-  # path to the the label data within the H5
+  # path to the the label data withtin the H5 (originally: /label)
   label_internal_path: /label
   # configuration of the train loader
   train:
     # path to the training datasets
-    file_paths:  # PATH_TO_TRAIN_DIR
-      - /home/dwalth/scratch/datasets/dataset10.c.1/train/
+    file_paths:
+    - /home/dwalth/scratch/datasets/dataset07/dataset07.0/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
       name: FilterSliceBuilder
-      # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)  # DW: originally [80, 170, 170]
-      patch_shape: [144,512,384]
-      # train stride between patches  # DW: originally [20, 40, 40]
-      stride_shape: [14,115,25]
-      # minimum volume of the labels in the patch  # DW: originally 0.6. When 0.01, not the whole but maybe almost no label is included in the patch and no other patches 
+      # patch & stride shape stuff, debugging, etc.:
+        # 
+      # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better) (originally: [80, 170, 170], but depends on the input data)
+      patch_shape: [96,960,256]  # dataset03 resolution: 125,1169,414  # wolny lightsheet boundary min resolution: 190,960,1370
+      # train stride between patches (originally: [20, 40, 40]) (in [z, y, x])
+      stride_shape: [14,104,79]
+      # minimum volume of the labels in the patch (QU: unit of measurement? pixels? um?)
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
       slack_acceptance: 0.01
@@ -131,17 +131,17 @@ loaders:
   # configuration of the val loader
   val:
     # path to the val datasets
-    file_paths:  # PATH_TO_VAL_DIR
-      - /home/dwalth/scratch/datasets/dataset10.c.1/val/
+    file_paths:
+      - /home/dwalth/scratch/datasets/dataset07/dataset07.0/val/
 
-    # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
+    # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch  # QU: Why is this section duplicated? does not make much sense to me to give two different patch_shapes &/ stride_shapes...
     slice_builder:
       name: FilterSliceBuilder
-      # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)  # DW: originally [80, 170, 170]
-      patch_shape: [144,512,384]
-      # train stride between patches  # DW: originally [80, 170, 170]
-      stride_shape: [14,115,25]
-      # minimum volume of the labels in the patch  # DW: originally 0.6. When 0.01, not the whole but maybe almost no label is included in the patch and no other patches are created.
+      # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
+      patch_shape: [96,960,256]  # dataset03 resolution: 125,1169,414
+      # train stride between patches
+      stride_shape: [14,104,79]
+      # minimum volume of the labels in the patch
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
       slack_acceptance: 0.01
