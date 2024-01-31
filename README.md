@@ -14,6 +14,8 @@ Although this is redundant regarding above guides, I recommend to [generate a ne
 
 Another redundant but useful information is how to actually clone (this repo) via ssh from the CLI (e.g., via Git Bash), assuming correct set up of ssh key pairs (above guides): `git clone git@github.com:radRoy/cloud.git`.
 
+To get the fingerprint of a previously generated ssh key, use the command `ssh-keygen -l` as documented on [man(7)'s ssh-keygen(1) - Linux manual page](https://www.man7.org/linux/man-pages/man1/ssh-keygen.1.html). This command starts an interaction with the user where the terminal asks for the file containing the key.
+
 ## <u>Overview over my data sets used for training 3dunet</u>
 
 The image processing done on multichannel data sets since the meeting on 2023.06.08 (June) has resulted in an h5 data set of the format (TBD reconstruct by opening h5 image in Fiji).
