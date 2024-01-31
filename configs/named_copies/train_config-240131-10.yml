@@ -9,7 +9,7 @@
 model:
   name: ResidualUNet3D
   # number of input channels to the model
-  in_channels: 3
+  in_channels: 1
   # number of output channels
   out_channels: 1
   # determines the order of operators in a single layer (crg - Conv3d+ReLU+GroupNorm)
@@ -52,7 +52,7 @@ trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
   # path to the checkpoint directory  # CHECKPOINT_DIR
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-240131-9
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-240131-10
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -78,7 +78,7 @@ loaders:
   train:
     # path to the training datasets
     file_paths:  # PATH_TO_TRAIN_DIR
-      - /home/dwalth/scratch/datasets/dataset10.c/train/
+      - /home/dwalth/scratch/datasets/dataset10.c.1/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -132,7 +132,7 @@ loaders:
   val:
     # path to the val datasets
     file_paths:  # PATH_TO_VAL_DIR
-      - /home/dwalth/scratch/datasets/dataset10.c/val/
+      - /home/dwalth/scratch/datasets/dataset10.c.1/val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
