@@ -3,7 +3,7 @@
 # Download test data from: https://osf.io/tn4xj/
 
 # PATH_TO_BEST_CHECKPOINT
-model_path: /home/dwalth/data/outputs/chpt-240125-7/last_checkpoint.pytorch
+model_path: /home/dwalth/data/outputs/chpt-240125-7/best_checkpoint.pytorch
 model:
   name: ResidualUNet3D
   # number of input channels to the model
@@ -22,7 +22,7 @@ predictor:
   name: 'StandardPredictor'
 loaders:
   # save predictions to output_dir
-  output_dir: /home/dwalth/data/outputs/chpt-240131-7
+  output_dir: /home/dwalth/data/outputs/chpt-240131-6
   # batch dimension; if number of GPUs is N > 1, then a batch_size of N * batch_size will automatically be taken for DataParallel
   batch_size: 1
   # how many subprocesses to use for data loading

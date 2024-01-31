@@ -3,11 +3,11 @@
 # Download test data from: https://osf.io/tn4xj/
 
 # PATH_TO_BEST_CHECKPOINT
-model_path: /home/dwalth/data/outputs/chpt-240125-7/last_checkpoint.pytorch
+model_path: /home/dwalth/data/outputs/chpt-240124-0/best_checkpoint.pytorch
 model:
   name: ResidualUNet3D
   # number of input channels to the model
-  in_channels: 1
+  in_channels: 3
   # number of output channels
   out_channels: 1
   # determines the order of operators in a single layer (crg - Conv3d+ReLU+GroupNorm)
@@ -22,7 +22,7 @@ predictor:
   name: 'StandardPredictor'
 loaders:
   # save predictions to output_dir
-  output_dir: /home/dwalth/data/outputs/chpt-240131-7
+  output_dir: /home/dwalth/data/outputs/chpt-240131-0
   # batch dimension; if number of GPUs is N > 1, then a batch_size of N * batch_size will automatically be taken for DataParallel
   batch_size: 1
   # how many subprocesses to use for data loading
@@ -30,7 +30,7 @@ loaders:
   # test loaders configuration
   test:
     file_paths:  # PATH_TO_TEST_DIR
-      - /home/dwalth/scratch/datasets/dataset10.c/test
+      - /home/dwalth/scratch/datasets/dataset10.b/input h5/test
 
     slice_builder:
       name: SliceBuilder
