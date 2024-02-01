@@ -30,7 +30,7 @@ loaders:
   # test loaders configuration
   test:
     file_paths:  # PATH_TO_TEST_DIR
-      - /home/dwalth/scratch/datasets/dataset10.b/input\ h5/test/
+      - /home/dwalth/scratch/datasets/dataset10.b/input h5/test/
 
     slice_builder:
       name: SliceBuilder
