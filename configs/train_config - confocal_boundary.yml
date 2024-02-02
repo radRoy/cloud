@@ -1,13 +1,12 @@
-# folder of origin: pytorch-3dunet1.8.2, 3DUnet_lightsheet_boundary
+# folder of origin: pytorch-3dunet1.8.2, 3DUnet_confocal_boundary
 
-# Sample configuration file for training a 3D U-Net on a task of predicting the boundaries in 3D stack of the Arabidopsis lateral root
-# acquired with the lightsheet microscope. Training done with a combination of Binary Cross-Entropy and DiceLoss.
-# Download training data from: https://osf.io/9x3g2/
-# Download validation data from: https://osf.io/vs6gb/
-# Download test data from: https://osf.io/tn4xj/
-
+# Sample configuration file for training a 3D U-Net on a task of predicting the boundaries in 3D stack of the Arabidopsis
+# ovules acquired with the confocal microscope. Training done with a combination of Binary Cross-Entropy and DiceLoss.
+# Download train data from: https://osf.io/x9yns/
+# Download validation data from: https://osf.io/xp5uf/
+# Download test data from: https://osf.io/8jz7e/
 model:
-  name: ResidualUNet3D
+  name: ResidualUNet3D  # DW: originally UNet3D
   # number of input channels to the model
   in_channels: 1
   # number of output channels
@@ -23,7 +22,7 @@ model:
 # loss function to be used during training
 loss:
   name: BCEDiceLoss
-  # a target value that is ignored and does not contribute to the input gradient  # DW: use "ignore_index: -1" for sparsely unlabeled regions/slices
+  # a target value that is ignored and does not contribute to the input gradient
   ignore_index: null
   # skip the last channel in the target (i.e. when last channel contains data not relevant for the loss)
   skip_last_target: true
@@ -46,48 +45,47 @@ lr_scheduler:
   name: ReduceLROnPlateau
   # make sure to use the 'min' mode cause lower AdaptedRandError is better
   mode: min
-  factor: 0.265  # originally 0.2  # DW: The factor the learning rate (lr) is multiplied by when the lr_reduction criterion is met. The training is finished when lr < 1e-6.  # DW: choose 0.588 for 10, .413 for 6, .265 for 4 lr steps. Refer to cloud/lr_factors.txt for more values.
-  patience: 10  # DW: originally 20  # DW: I assume the higher the number the more (train/val?) iterations need to happen with the lr decrease criterion being met
+  factor: 0.265  # DW: originally 0.5
+  patience: 10  # DW: originally 30
 trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
-  # path to the checkpoint directory  # CHECKPOINT_DIR
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-240202-1
+  # path to the checkpoint directory (CHECKPOINT_DIR)
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-240202-2
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
-  # make sure to decrease the learning rate in the optimizer config accordingly
   pre_trained: null
-  # how many iterations between validations  # DW: originally 1000 (but sample data set has manyfold times more images)
-  validate_after_iters: 20
-  # how many iterations between tensorboard logging  # DW: originally 500 (but sample data set has manyfold times more images)
-  log_after_iters: 10
+  # how many iterations between validations
+  validate_after_iters: 10  # DW: originally 1000
+  # how many iterations between tensorboard logging
+  log_after_iters: 10  # DW: originally 500
   # max number of epochs
-  max_num_epochs: 10000
+  max_num_epochs: 10000  # DW: originally 1000
   # max number of iterations
-  max_num_iterations: 150000
+  max_num_iterations: 150000  # DW: originally 150000
 # Configure training and validation loaders
 loaders:
   # how many subprocesses to use for data loading
   num_workers: 8
   # path to the raw data within the H5
   raw_internal_path: /raw
-  # path to the the label data within the H5
+  # path to the the label data withtin the H5
   label_internal_path: /label
   # configuration of the train loader
   train:
-    # path to the training datasets
-    file_paths:  # PATH_TO_TRAIN_DIR
+    # path to the training datasets (PATH_TO_TRAIN_DIR)
+    file_paths:
       - /home/dwalth/scratch/datasets/wolny_sample_ovule/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
       name: FilterSliceBuilder
-      # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)  # DW: originally [80, 170, 170]
-      patch_shape: [192,384,384]
-      # train stride between patches  # DW: originally [20, 40, 40]
-      stride_shape: [4,8,8]
-      # minimum volume of the labels in the patch  # DW: originally 0.6. When 0.01, not the whole but maybe almost no label is included in the patch and no other patches 
+      # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
+      patch_shape: [192,384,384]  # DW: originally [80, 170, 170]
+      # train stride between patches
+      stride_shape: [4,8,8]  # DW: originally [20, 40, 40]
+      # minimum volume of the labels in the patch
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
       slack_acceptance: 0.01
@@ -130,18 +128,18 @@ loaders:
 
   # configuration of the val loader
   val:
-    # path to the val datasets
-    file_paths:  # PATH_TO_VAL_DIR
+    # path to the val datasets (PATH_TO_VAL_DIR)
+    file_paths:
       - /home/dwalth/scratch/datasets/wolny_sample_ovule/val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
       name: FilterSliceBuilder
-      # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)  # DW: originally [80, 170, 170]
-      patch_shape: [192,384,384]
-      # train stride between patches  # DW: originally [80, 170, 170]
-      stride_shape: [4,8,8]
-      # minimum volume of the labels in the patch  # DW: originally 0.6. When 0.01, not the whole but maybe almost no label is included in the patch and no other patches are created.
+      # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
+      patch_shape: [192,384,384]  # DW: originally [80, 170, 170]
+      # train stride between patches
+      stride_shape: [4,8,8]  # DW: originally [80, 170, 170]
+      # minimum volume of the labels in the patch
       threshold: 0.6
       # probability of accepting patches which do not fulfil the threshold criterion
       slack_acceptance: 0.01
