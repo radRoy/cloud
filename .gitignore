@@ -32,5 +32,8 @@ venv
 .vscode/settings.json
 ~$3dunet session annotations.xlsx
 
+# sample data ignore
+configs/sample data
+
 # cluster ignores
 core
