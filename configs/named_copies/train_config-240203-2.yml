@@ -27,7 +27,7 @@ model:
 # trainer configuration
 trainer:
   # path to the checkpoint directory (CHECKPOINT_DIR)
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-240202-0
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-240203-2
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -99,9 +99,9 @@ loaders:
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [192,384,384]  # DW: originally [80, 170, 170]
+      patch_shape: [100,200,200]  # DW: originally [80, 170, 170]
       # train stride between patches
-      stride_shape: [4,8,8]  # DW: originally [20, 40, 40]
+      stride_shape: [16,33,33]  # DW: originally [20, 40, 40]
       # minimum volume of the labels in the patch
       threshold: 0.6  # DW: originally 0.01
       # probability of accepting patches which do not fulfil the threshold criterion
@@ -155,9 +155,9 @@ loaders:
     slice_builder:
       name: FilterSliceBuilder
       # train patch size given to the network (adapt to fit in your GPU mem, generally the bigger patch the better)
-      patch_shape: [192,384,384]  # DW: originally [80, 170, 170]
+      patch_shape: [100,200,200]  # DW: originally [80, 170, 170]
       # train stride between patches
-      stride_shape: [4,8,8]  # DW: originally [80, 170, 170]
+      stride_shape: [16,33,33]  # DW: originally [80, 170, 170]
       # minimum volume of the labels in the patch
       threshold: 0.6  # DW: originally 0.01
       # probability of accepting patches which do not fulfil the threshold criterion
