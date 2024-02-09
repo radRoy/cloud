@@ -35,7 +35,7 @@ loaders:
     # paths to the test datasets; if a given path is a directory all H5 files ('*.h5', '*.hdf', '*.hdf5', '*.hd5')
     # inside this this directory will be included as well (non-recursively) (TEST_DIR)
     file_paths:
-      - /home/dwalth/scratch/datasets/dataset10.b.2/test/
+      - /home/dwalth/scratch/datasets/dataset10.b.2/test_last/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
