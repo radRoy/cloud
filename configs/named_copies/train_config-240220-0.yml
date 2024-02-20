@@ -52,7 +52,7 @@ trainer:
   # model with lower eval score is considered better
   eval_score_higher_is_better: False
   # path to the checkpoint directory  # CHECKPOINT_DIR
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-240220-2
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-240220-0
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -78,7 +78,7 @@ loaders:
   train:
     # path to the training datasets
     file_paths:  # PATH_TO_TRAIN_DIR
-      - /home/dwalth/scratch/datasets/dataset11.a.2/train/
+      - /home/dwalth/scratch/datasets/dataset11.a.0/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -132,7 +132,7 @@ loaders:
   val:
     # path to the val datasets
     file_paths:  # PATH_TO_VAL_DIR
-      - /home/dwalth/scratch/datasets/dataset11.a.2/val/
+      - /home/dwalth/scratch/datasets/dataset11.a.0/val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
