@@ -27,7 +27,7 @@ model:
 # trainer configuration
 trainer:
   # path to the checkpoint directory (CHECKPOINT_DIR)
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-240221-5
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-240221-3
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -93,7 +93,7 @@ loaders:
   train:
     # paths to the training datasets (TRAIN_DIR)
     file_paths:
-      - /home/dwalth/scratch/datasets/dataset11.b.2/train/
+      - /home/dwalth/scratch/datasets/dataset11.b.0/train/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
@@ -149,7 +149,7 @@ loaders:
   val:
     # paths to the val datasets (VAL_DIR)
     file_paths:
-      - /home/dwalth/scratch/datasets/dataset11.b.2/val/
+      - /home/dwalth/scratch/datasets/dataset11.b.0/val/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
