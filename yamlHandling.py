@@ -12,7 +12,7 @@ import copy
 today_date = datetime.date.today()  # today's date in yyyy-mm-dd format, <class 'datetime.date'>
 today = str(today_date)[2:].replace('-', '')  # mutate yyyy-mm-dd date string to yymmdd, e.g. 230823
 
-config_testing_yaml = 'pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config_testing.yml'
+config_testing_yaml = 'H:/cloud/configs/pytorch-3dunet 1.6.0/DW-3DUnet_lightsheet_boundary/train_config_testing.yml'
 config_yaml = 'pytorch-3dunet/resources/DW-3DUnet_lightsheet_boundary/train_config.yml'
 
 with open(config_testing_yaml, 'r') as train_config:
