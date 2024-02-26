@@ -1,5 +1,5 @@
 # path to the checkpoint file containing the model (PATH_TO_BEST_CHECKPOINT)
-model_path: /home/dwalth/data/outputs/chpt-240221-5/last_checkpoint.pytorch
+model_path: /home/dwalth/data/outputs/chpt-240221-4/best_checkpoint.pytorch
 # model configuration
 model:
   # model class
@@ -35,7 +35,7 @@ loaders:
     # paths to the test datasets; if a given path is a directory all H5 files ('*.h5', '*.hdf', '*.hdf5', '*.hd5')
     # inside this this directory will be included as well (non-recursively) (TEST_DIR)
     file_paths:
-      - /home/dwalth/scratch/datasets/dataset11.b.2/test_last/
+      - /home/dwalth/scratch/datasets/dataset11.b.1/test_best/
 
     # SliceBuilder configuration, i.e. how to iterate over the input volume patch-by-patch
     slice_builder:
