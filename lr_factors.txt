@@ -1,25 +1,28 @@
 # learning rate decay factors so that the last learning rate is close to 1e-6, the threshold below which the pytorch-3dunet model is considered finished.
 # refer to script `calculate_LR_steps.py` in [cloud] for how these numbers were generated.
 1 lr steps:  factor = 0.0046
-2 lr steps:  factor = 0.070
-3 lr steps:  factor = 0.170
-4 lr steps:  factor = 0.265
-5 lr steps:  factor = 0.346
-6 lr steps:  factor = 0.413
-7 lr steps:  factor = 0.468
-8 lr steps:  factor = 0.515
-9 lr steps:  factor = 0.554
-10 lr steps: factor = 0.588  #
-11 lr steps: factor = 0.617
-12 lr steps: factor = 0.642
-13 lr steps: factor = 0.665
-14 lr steps: factor = 0.684
-15 lr steps: factor = 0.702
-16 lr steps: factor = 0.718
-17 lr steps: factor = 0.732
-18 lr steps: factor = 0.744
-19 lr steps: factor = 0.756
-20 lr steps: factor = 0.767
+2 lr steps:  factor = 0.006
+                    = 0.00539 (more precise)
+3 lr steps:  factor = 0.072
+                    = 0.0711 (more precise)
+4 lr steps:  factor = 0.172
+5 lr steps:  factor = 0.267
+6 lr steps:  factor = 0.347
+7 lr steps:  factor = 0.415
+8 lr steps:  factor = 0.470
+9 lr steps:  factor = 0.517
+10 lr steps: factor = 0.556  #
+11 lr steps: factor = 0.589
+12 lr steps: factor = 0.619
+13 lr steps: factor = 0.644
+14 lr steps: factor = 0.666
+15 lr steps: factor = 0.685
+16 lr steps: factor = 0.703
+17 lr steps: factor = 0.719
+18 lr steps: factor = 0.733
+19 lr steps: factor = 0.746
+20 lr steps: factor = 0.757
+21 lr steps: factor = 0.768
 
 min: factor 1e-11: 1 lr steps - not sensible
 max: factor 0.004615615625555555: 1 lr steps
@@ -82,5 +85,23 @@ max: factor 0.7565735735735736: 19 lr steps
 min: factor 0.7566581581581582: 20 lr steps
 max: factor 0.7672312312312312: 20 lr steps
 
-factor 0.7673158158158158: 21 lr steps
+min: factor 0.7673158158158158: 21 lr steps
 ...
+
+
+
+0.4141
+0.4693
+0.5162
+0.5552
+0.5888
+0.6183
+0.6435
+0.6657
+0.6849
+0.7024
+0.7181
+0.7322
+0.7450
+0.7566
+0.7673
