@@ -27,14 +27,14 @@ model:
 # trainer configuration
 trainer:
   # path to the checkpoint directory (CHECKPOINT_DIR)
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-240314-7
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-240314-5
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
   # make sure to decrease the learning rate in the optimizer config accordingly
   pre_trained: null
   # how many iterations between validations
-  validate_after_iters: 40  # DW: originally 1000
+  validate_after_iters: 20  # DW: originally 1000
   # how many iterations between tensorboard logging
   log_after_iters: 10  # DW: originally 100
   # max number of epochs

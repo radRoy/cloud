@@ -27,7 +27,7 @@ model:
 # trainer configuration
 trainer:
   # path to the checkpoint directory (CHECKPOINT_DIR)
-  checkpoint_dir: /home/dwalth/data/outputs/chpt-240314-7
+  checkpoint_dir: /home/dwalth/data/outputs/chpt-240314-6
   # path to latest checkpoint; if provided the training will be resumed from that checkpoint
   resume: null
   # path to the best_checkpoint.pytorch; to be used for fine-tuning the model with additional ground truth
@@ -71,7 +71,7 @@ lr_scheduler:
   # factor by which learning rate will be reduced
   factor: 0.619  # DW: originally 0.2
   # number of *validation runs* with no improvement after which learning rate will be reduced
-  patience: 20  # DW: originally 8
+  patience: 10  # DW: originally 8
 
 # data loaders configuration
 loaders:
